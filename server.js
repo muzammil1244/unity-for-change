@@ -3,9 +3,9 @@ import dotenv from "dotenv"
 import  authroutes  from "./routes/authroutes.js"
 import { DBconnection } from "./db/DB.js"
 import Adminroutes from "./routes/Adminroutes.js"
-
+import clientroutes from "./routes/clientroutes.js"
 const app = express()
-const PORT = process.env.PORT || 8001
+const PORT = process.env.PORT || 8000
 dotenv.config()
 
 
@@ -22,5 +22,6 @@ DBconnection(process.env.MONGO_DB)
 
 app.use("/auth",authroutes)
 app.use("/api",Adminroutes)
+app.use("/api",clientroutes)
 
 app.listen(PORT,()=>console.log("server started at",PORT))

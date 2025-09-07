@@ -18,7 +18,7 @@ const NewsPostSchea = new mongoose.Schema({
 
     
     likes:[
-                {type:mongoose.Schema.Types.ObjectId}
+{type:mongoose.Schema.Types.ObjectId,ref:"ProfileData"}
 
     ]
 
@@ -30,7 +30,7 @@ const NewsPostSchea = new mongoose.Schema({
 
 
     comment_by_id:{
-type:mongoose.Schema.Types.ObjectId
+type:mongoose.Schema.Types.ObjectId,ref:"ProfileData"
 },
 comment_content:{
     type:String,
@@ -48,7 +48,7 @@ comment_content:{
         required:true
     },
 
-    discription:{
+    description:{
         type:String
     }
 

@@ -9,22 +9,25 @@ export const Post = (req, res) => {
 }
 
 export const NewsPos = async (req, res) => {
-  const { title, comments } = req.body
+  const { title, comments , description} = req.body
   const Images = req.file
+  console.log(title, comments , description)
   try {
-
+if(!title, !comments , !description){
+return res.status(200).send("all field essential")
+}
     console.log("started ")
     const postdata = await PostDB({
       title: title,
        comments: [
         {
-          comment_content,
-          comment_by_id: req.user?._id // optional
+          comment_content:comments,
+          comment_by_id:req.user?._id
         }
       ],
 
-      Images: [`/uploads/${Images.filename}`]
-
+      Images: [`/uploads/${Images.filename}`],
+description:description
     })
     await postdata.save(); // ✅ Save to MongoD
 
@@ -158,8 +161,11 @@ export const ReportMessage = async (req, res) => {
 }
 
 export const Suggestion = async (req, res) => {
-  const messages = await AdminDB.find()
+
   try {
+  const messages = await AdminDB.find().populate("suggestion.create_by_id","email username profileimage")
+
+
     if (!messages) {
       return res.status(500).send("internal server problem ")
     }

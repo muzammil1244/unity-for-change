@@ -2,14 +2,15 @@ import mongoose from "mongoose";
 
 const Admindata = new mongoose.Schema({
     report:[{
+        user_id:{type:mongoose.Schema.Types.ObjectId,ref:"ProfileData"},
         report_by_id:{type:mongoose.Schema.Types.ObjectId,ref:"ProfileData"},
         report_content:{type:String,required:true}
 }],
 
 suggestion:[
     {
-        create_by_id:{type:mongoose.Schema.Types.ObjectId,red:"ProfileData"},
-        message:{type:String,ref:"ProfileData"}
+        create_by_id:{type:mongoose.Schema.Types.ObjectId,ref:"ProfileData"},
+        message:{type:String,required:true}
     }
 ]
 
