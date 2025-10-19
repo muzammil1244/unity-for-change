@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import 'tailwind-scrollbar-hide/v4';
+@theme {
+    --color-primary: #2563eb;   /* Blue - trust */
+  --color-secondary: #16a34a; /* Green - growth/hope */
+  --color-accent: #f97316;    /* Orange - call to action */
+  --color-light: #f3f4f6;     /* Light gray background */
+  --color-dark: #111827; 
+}
