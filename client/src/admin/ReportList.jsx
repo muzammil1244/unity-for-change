@@ -49,25 +49,18 @@ export const ReportList = ({activeMessage}) => {
 
   const handleDelete = (item) => {
 
-    const data = fetch(`http://localhost:8000/api/${item}/admin//news`)
+    const data = fetch(`https://unity-for-change-ggbn.onrender.com/api/${item}/admin//news`)
 
 
 
     };
 
 
-  const handleRemoveReport = (item) => {
-    console.log("Remove Report:", item);
-  };
-
-  const handleMessage = (item) => {
-    console.log("Message:", item);
-  };
-
+  
 
   useEffect(async()=>{
 
-    const data = fetch("http://localhost:8000/api/admin/reports",{
+    const data = fetch("https://unity-for-change-ggbn.onrender.com/api/admin/reports",{
 
     })
 
@@ -87,7 +80,7 @@ setReposts(repordata)
             {/* Left section (user + repost msg) */}
             <div className="flex gap-4">
               <img
-                src={`http://localhost:8000/uploads/${item.user_id.profileimage}`}
+                src={`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`}
                 alt={item.user_id.username}
                 className="size-12 rounded-full border"
               />

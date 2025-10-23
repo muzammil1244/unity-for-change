@@ -23,7 +23,7 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
         title: postToUpdate.title || "",
         image: postToUpdate.Images
           ? postToUpdate.Images.map((img) => ({
-            preview: `http://localhost:8000${img}`,
+            preview: `https://unity-for-change-ggbn.onrender.com${img}`,
             existing: true,   // yeh batayega ki purani image hai
             path: img,        // db wala path
           }))
@@ -80,11 +80,11 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
         }
       });
 
-      let url = "http://localhost:8000/api/client/news";
+      let url = "https://unity-for-change-ggbn.onrender.com/api/client/news";
       let method = "POST";
 
       if (mode === "update" && postToUpdate) {
-        url = `http://localhost:8000/api/admin/${postToUpdate._id}/updatenews`;
+        url = `https://unity-for-change-ggbn.onrender.com/api/admin/${postToUpdate._id}/updatenews`;
         method = "PATCH";
       }
 

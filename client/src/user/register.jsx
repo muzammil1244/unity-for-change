@@ -77,7 +77,7 @@ set_active_spinner(true)
     api_register_data.append("password",register_data.user_password)
     api_register_data.append("gender",register_data.user_gender)
 
-    const api_data = await fetch("http://localhost:8000/auth/register",{
+    const api_data = await fetch("https://unity-for-change-ggbn.onrender.com/auth/register",{
       method:"POST",
       body: api_register_data
     })

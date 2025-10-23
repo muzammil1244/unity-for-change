@@ -57,8 +57,8 @@ export const PostForm = ({ postData, close_tab }) => {
 
         try {
             const url = postData
-                ? `http://localhost:8000/api/admin/update_post/${postData._id}`
-                : "http://localhost:8000/api/admin/main_post";
+                ? `https://unity-for-change-ggbn.onrender.com/api/admin/update_post/${postData._id}`
+                : "https://unity-for-change-ggbn.onrender.com/api/admin/main_post";
 
             const method = postData ? "PUT" : "POST";
 

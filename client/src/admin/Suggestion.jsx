@@ -9,7 +9,7 @@ export const Suggestion = ({ user_data,activeMessage }) => {
  useEffect(() => {
   const fetchSuggestions = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/admin/suggestions");
+      const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/admin/suggestions");
       const data = await res.json();
 
       // Flatten kar do suggestions array
@@ -34,7 +34,7 @@ export const Suggestion = ({ user_data,activeMessage }) => {
   const handleDelete = async (suggestionId) => {
   try {
     const res = await fetch(
-      `http://localhost:8000/api/admin/${suggestionId._id}`,
+      `https://unity-for-change-ggbn.onrender.com/api/admin/${suggestionId._id}`,
       {
         method: "DELETE",
       }
@@ -73,7 +73,7 @@ console.log(suggestionId)
             <div key={item._id} className="...">
     <div className="flex items-center gap-4">
       <img
-        src={`http://localhost:8000/uploads/${item.create_by_id.profileimage}`}
+        src={`https://unity-for-change-ggbn.onrender.com/uploads/${item.create_by_id.profileimage}`}
         alt={item.create_by_id.username}
         className="w-12 h-12 rounded-full border"
       />

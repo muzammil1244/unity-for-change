@@ -20,7 +20,11 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 8000
 
-app.use(cors());
+
+app.use(cors({
+  origin: "https://unity-for-change-ggbn.onrender.com"
+}));
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

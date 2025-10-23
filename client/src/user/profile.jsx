@@ -59,7 +59,7 @@ const [active_aboute,set_active_aboute]= useState(false)
     const handle_get_profile = async () => {
 
 
-        const data = await fetch("http://localhost:8000/api/client/profile", {
+        const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/profile", {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` }
         })
@@ -84,7 +84,7 @@ const [active_aboute,set_active_aboute]= useState(false)
     const get_follower_list_data = async () => {
 
         try {
-            const data = await fetch("http://localhost:8000/api/user/followers", {
+            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/user/followers", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -103,7 +103,7 @@ const [active_aboute,set_active_aboute]= useState(false)
 
         try {
             const response = await fetch(
-                `http://localhost:8000/api/user/remove_follower/${user_id}`,
+                `https://unity-for-change-ggbn.onrender.com/api/user/remove_follower/${user_id}`,
                 {
                     method: "POST",
                     headers: {
@@ -122,7 +122,7 @@ window.location.reload()
 
     const handle_list_following = async () => {
         try {
-            const data = await fetch("http://localhost:8000/api/user/following", {
+            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/user/following", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -143,7 +143,7 @@ window.location.reload()
 
         try {
             const response = await fetch(
-                `http://localhost:8000/api/user/remove_following/${user_id}`,
+                `https://unity-for-change-ggbn.onrender.com/api/user/remove_following/${user_id}`,
                 {
                     method: "POST",
                     headers: {
@@ -165,7 +165,7 @@ window.location.reload()
 
         try {
 
-            const data = await fetch("http://localhost:8000/api/client/all/post", {
+            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/post", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -191,7 +191,7 @@ window.location.reload()
 
         try {
 
-            const data = await fetch(`http://localhost:8000/api/client/comment/${items}`, {
+            const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/comment/${items}`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -224,7 +224,7 @@ window.location.reload()
   ); // pehle UI update kar diya
 
   try {
-    await fetch(`http://localhost:8000/api/client/like/${postId}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+    await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/like/${postId}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
   } catch (err) {
     console.log(err);
     // rollback karna ho to yahan karo
@@ -237,7 +237,7 @@ window.location.reload()
 
        try {
 
-            const data = await fetch(`http://localhost:8000/api/admin/${item}/delete`, {
+            const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/admin/${item}/delete`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -267,7 +267,7 @@ window.location.reload()
 
     set_posts_all((prev=> prev.map((p)=>p._id === postId?{...p,likes:p.likes.filter(id=>id !== profile_data._id)}:p )))
   try {
-    const res = await fetch(`http://localhost:8000/api/client/${postId}/unlike`, {
+    const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/${postId}/unlike`, {
       method: "PATCH",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -332,9 +332,9 @@ const is_liked=(post)=>{
         <div onMouseEnter={() => setcommentindex(null)} className="w-full h-full  overflow-x-hidden px-4 overflow-y-scroll ">
             <div className=" relative w-full md:h-1/3 h-25  bg-gray-500">
                 <IoMdArrowRoundBack onClick={off_profile} className=" absolute hover:scale-110 cursor-pointer  z-2 top-2 left-2 z-2" />
-                <img className=" w-full h-full  bg-cover " src={ profile_data.cover_image &&  profile_data.cover_image.trim() !== "" ? `http://localhost:8000/uploads/${profile_data.cover_image}`:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"} alt="" />
+                <img className=" w-full h-full  bg-cover " src={ profile_data.cover_image &&  profile_data.cover_image.trim() !== "" ? `https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.cover_image}`:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"} alt="" />
                 <div className=" absolute md:size-30 size-20 transform bg-cover -translate-x-1/4 translate-y-1/2 overflow-hidden   bottom-0 left-1/6 rounded-full border-white border-2   bg-green-400">
-                    <img className="  w-full h-full  " src={ profile_data.profileimage&&  profile_data.profileimage.trim() !== ""?`http://localhost:8000/uploads/${profile_data.profileimage}`:randomImage} alt="" />
+                    <img className="  w-full h-full  " src={ profile_data.profileimage&&  profile_data.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.profileimage}`:randomImage} alt="" />
                 </div>
                 <div className="absolute backdrop-blur-[4px] bg-white/20 md:bottom-5 bottom-2 md:right-5 right-2  w-fit h-fit md:px-3 px-2 py-1  border border-white/20 scale-80 hover:bg-gray-50/20 duration-200  cursor-pointer  rounded-2xl ">
                     <h1 onClick={() => setactiveprofileupdate(!activeupdateprofile)} className=" font-bold md:text-sm  text-[12px] text-gray-300">Edite Image</h1>
@@ -452,7 +452,7 @@ const is_liked=(post)=>{
                                         <div className="flex gap-3 items-center">
                                             <img
                                                 className="w-10 h-10 rounded-full object-cover"
-                                                src={profile_data.profileimage && profile_data.profileimage.trim() !== ""? `http://localhost:8000/uploads/${profile_data.profileimage}`:randomImage}
+                                                src={profile_data.profileimage && profile_data.profileimage.trim() !== ""? `https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.profileimage}`:randomImage}
                                                 alt="profile"
                                             />
                                             <div className="flex flex-col">
@@ -503,7 +503,7 @@ const is_liked=(post)=>{
                                     <div className="w-full">
                                                                 {items.Images.length === 1 && (
                                                                     items.Images.map((file, i) => {
-                                                                        const fileUrl = `http://localhost:8000${file}`;
+                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                         const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                         return isVideo ? (
@@ -529,7 +529,7 @@ const is_liked=(post)=>{
                                                                 {items.Images.length === 2 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {items.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return isVideo ? (
@@ -555,7 +555,7 @@ const is_liked=(post)=>{
                                                                 {items.Images.length === 3 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {items.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return (
@@ -624,7 +624,7 @@ const is_liked=(post)=>{
                                                             <div className='flex-col  gap-2 items-center '>
 
                                                                 <div className='flex gap-2'>
-                                                                    <img className='size-8 bg-cover rounded-full' src={item.comment_by_id.profileimage && item.comment_by_id.profileimage.trim() !== ""?`http://localhost:8000/uploads/${item.comment_by_id.profileimage}`:randomImage} alt="" />
+                                                                    <img className='size-8 bg-cover rounded-full' src={item.comment_by_id.profileimage && item.comment_by_id.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${item.comment_by_id.profileimage}`:randomImage} alt="" />
 
                                                                     <h1 className='text-sm font-bold '>{item.comment_by_id.username}</h1>
                                                                 </div>    <p className='text-sm mt-3'>{item.comment_content}</p>
@@ -637,7 +637,7 @@ const is_liked=(post)=>{
                                             </div>
 
                                             <div className='px-2 py-3 w-full  flex justify-around items-center  bg-green h-fit'>
-                                                <img className='size-8 rounded-full' src={profile_data.profileimage && profile_data.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${profile_data.profileimage}` : randomImage} alt="" />
+                                                <img className='size-8 rounded-full' src={profile_data.profileimage && profile_data.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.profileimage}` : randomImage} alt="" />
 
                                                 <input type="text" value={comment_data} onChange={(e) => set_cooment_data(e.target.value)} className='px-4  py-1 border border-gray-500 textc rounded-2xl' placeholder='you comment' />
                                                 <HiArrowCircleUp onClick={() => {
@@ -668,7 +668,7 @@ const is_liked=(post)=>{
                         follower_list.followers.map((item, index) => {
                             return <div key={index} className=" relative bg-white shadow flex justify-between px-3  py-2 ">
                                 <div className="flex gap-2">
-                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?`http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
+                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
                                     <h1 className="text-[12px] md:text-sm">{item.user_id.username}</h1>
 
                                 </div>
@@ -698,7 +698,7 @@ const is_liked=(post)=>{
                         following_list.following.map((item, index) => {
                             return <div key={index} className=" relative bg-white shadow flex justify-between px-3 py-2">
                                 <div className="flex gap-2">
-                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?`http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
+                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
                                     <h1 className=" md:text-sm  text-[12px]">{item.user_id.username}</h1>
 
                                 </div>

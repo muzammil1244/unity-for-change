@@ -19,7 +19,7 @@ export const View_Post = ({ post_data, close }) => {
         <div className="flex items-center gap-3 mb-2">
           {post_data.create_by_id?.profileimage ? (
             <img
-              src={`http://localhost:8000/uploads/${post_data.create_by_id.profileimage}`}
+              src={`https://unity-for-change-ggbn.onrender.com/uploads/${post_data.create_by_id.profileimage}`}
               alt="User"
               className="w-10 h-10 rounded-full object-cover"
             />
@@ -47,14 +47,14 @@ export const View_Post = ({ post_data, close }) => {
   return isVideo ? (
     <video
       key={index}
-      src={`http://localhost:8000${media}`}
+      src={`https://unity-for-change-ggbn.onrender.com${media}`}
       controls
       className="w-full bg-gray-200 h-70 col-span-1 row-span-1 rounded-xl object-contain"
     />
   ) : (
     <img
       key={index}
-      src={`http://localhost:8000${media}`}
+      src={`https://unity-for-change-ggbn.onrender.com${media}`}
       alt="Reported Post"
       className="w-full bg-gray-200 h-70 col-span-1 row-span-1 rounded-xl object-contain"
     />

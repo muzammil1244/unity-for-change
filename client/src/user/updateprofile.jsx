@@ -38,7 +38,7 @@ export const UpdateProfile = ({ activeprofileupdat }) => {
       formData.append("aboute_user", updatedata.description);
       formData.append("gender", updatedata.gender);
 
-      const res = await fetch("http://localhost:8000/api/client/update_profile", {
+      const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/update_profile", {
         method: "PUT",
         headers:{
 "Authorization":` Bearer ${token}`

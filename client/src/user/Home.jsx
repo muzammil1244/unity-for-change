@@ -130,7 +130,7 @@ export const Home = () => {
 
 
         try {
-            const response = await fetch(`http://localhost:8000/api/client/comment/mainpost/${items._id}`, {
+            const response = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/comment/mainpost/${items._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -166,7 +166,7 @@ export const Home = () => {
 
         try {
 
-            const data = await fetch("http://localhost:8000/api/client/all/news", {
+            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/news", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -205,7 +205,7 @@ export const Home = () => {
 
     const user_profile = async () => {
         try {
-            const response = await fetch("http://localhost:8000/api/client/profile", {
+            const response = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/profile", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -245,7 +245,7 @@ export const Home = () => {
         ); // pehle UI update kar diya
 
         try {
-            await fetch(`http://localhost:8000/api/client/like/${postId}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+            await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/like/${postId}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
         } catch (err) {
             console.log(err);
             // rollback karna ho to yahan karo
@@ -256,7 +256,7 @@ export const Home = () => {
 
         set_all_post((prev => prev.map((p) => p._id === postId ? { ...p, likes: p.likes.filter(id => id !== profile_data._id) } : p)))
         try {
-            const res = await fetch(`http://localhost:8000/api/client/${postId}/unlike`, {
+            const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/${postId}/unlike`, {
                 method: "PATCH",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -280,7 +280,7 @@ export const Home = () => {
 
         try {
 
-            const data = await fetch(`http://localhost:8000/api/client/comment/${items}`, {
+            const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/comment/${items}`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -307,7 +307,7 @@ export const Home = () => {
 
         try {
 
-            const data = await fetch("http://localhost:8000/api/client/user", {
+            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/user", {
                 method: "GET",
                 headers: {
                     "Authorization": `Beater ${token}`
@@ -332,7 +332,7 @@ export const Home = () => {
         // 🔐 JWT token localStorage ya context se lo
         const token = localStorage.getItem("token"); // ya context se
 
-        const response = await fetch("http://localhost:8000/api/client/following/post", {
+        const response = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/following/post", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -366,7 +366,7 @@ export const Home = () => {
     // main post data
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/admin/get_post")
+        fetch("https://unity-for-change-ggbn.onrender.com/api/admin/get_post")
             .then((res) => res.json())
             .then((data) => {
                 setPosts(data);
@@ -442,7 +442,7 @@ export const Home = () => {
 
         try {
 
-            const data = await fetch("http://localhost:8000/api/Ai", {
+            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/Ai", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -549,7 +549,7 @@ window.location.reload()
                                 }} className='flex md:gap-3 gap-1 md:p-4 p-2  cursor-pointer hover:scale-105 duration-200 hover:shadow-2xl hover:shadow-green-200 duration-200 bg-white shadow rounded'>
 
                                     <div className='md:size-10 size-7 rounded bg-cover overflow-hidden'>
-                                        <img className='h-full w-full' src={ items?.profileimage && items.profileimage.trim() !== ''? `http://localhost:8000/uploads/${items.profileimage}`:randomImage}
+                                        <img className='h-full w-full' src={ items?.profileimage && items.profileimage.trim() !== ''? `https://unity-for-change-ggbn.onrender.com/uploads/${items.profileimage}`:randomImage}
                                             alt="" />
                                     </div>
 
@@ -646,7 +646,7 @@ window.location.reload()
                                                                 <div className="flex md:gap-3 gap-2 items-center">
                                                                     <img
                                                                         className="md:w-10 md:h-10 h-7 w-7 rounded-full object-cover"
-                                                                        src={items.create_by_id.profileimage &&  items.create_by_id.profileimage.trim() !== ''? `http://localhost:8000/uploads/${items.create_by_id.profileimage}`:randomImage}
+                                                                        src={items.create_by_id.profileimage &&  items.create_by_id.profileimage.trim() !== ''? `https://unity-for-change-ggbn.onrender.com/uploads/${items.create_by_id.profileimage}`:randomImage}
 
                                                                     />
                                                                     <div className="flex flex-col">
@@ -695,7 +695,7 @@ window.location.reload()
                                                             <div className="w-full">
                                                                 {items.Images.length === 1 && (
                                                                     items.Images.map((file, i) => {
-                                                                        const fileUrl = `http://localhost:8000${file}`;
+                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                         const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                         return isVideo ? (
@@ -721,7 +721,7 @@ window.location.reload()
                                                                 {items.Images.length === 2 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {items.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return isVideo ? (
@@ -747,7 +747,7 @@ window.location.reload()
                                                                 {items.Images.length === 3 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {items.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return (
@@ -818,7 +818,7 @@ window.location.reload()
                                                                                     <div className='flex-col  gap-2 items-center '>
 
                                                                                         <div className='flex gap-2'>
-                                                                                            <img className='size-8 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${items.comment_by_id.profileimage}`:randomImage} />
+                                                                                            <img className='size-8 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${items.comment_by_id.profileimage}`:randomImage} />
 
                                                                                             <h1 className='text-sm font-bold '>{items.comment_by_id.username}</h1>
                                                                                         </div>    <p className='text-sm mt-3'>{items.comment_content}</p>
@@ -967,7 +967,7 @@ window.location.reload()
                                                         >
                                                             {items.images.map((file, i) => {
                                                                 // create full URL
-                                                                const fileUrl = `http://localhost:8000/${file}`;
+                                                                const fileUrl = `https://unity-for-change-ggbn.onrender.com/${file}`;
                                                                 // check if file is video (based on extension)
                                                                 const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
@@ -1030,7 +1030,7 @@ window.location.reload()
                                                                 return <div className='flex rounded-xl p-3 shadow flex-col gap-3'>
 
                                                                     <div className='flex gap-5 items-center'>
-                                                                        <img className='md:size-5 size-3 object-cover rounded' src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?  `http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
+                                                                        <img className='md:size-5 size-3 object-cover rounded' src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?  `https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
 
                                                                         <div className='flexflex-col'>
                                                                             <h1 className=' md:text-sm text-[12px] '>{item.user_id.username}</h1>

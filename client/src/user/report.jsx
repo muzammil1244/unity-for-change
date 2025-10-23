@@ -17,7 +17,7 @@ export const Report = ({ active_roport, active }) => {
     try {
       setLoading(true);
 
-      const res = await fetch(`http://localhost:8000/api/client/report/${active_roport.post_id}`, {
+      const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/report/${active_roport.post_id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export const Report = ({ active_roport, active }) => {
         <h1 className="w-full text-center">Report to Admin </h1>
       </div>
       <div className="flex gap-5 mt-5 items-center ">
-        <img className="size-15  rounded-full " src={`http://localhost:8000/uploads/${active_roport.image}`} alt="" />
+        <img className="size-15  rounded-full " src={`https://unity-for-change-ggbn.onrender.com/uploads/${active_roport.image}`} alt="" />
         <div className="flex-col gap-3">
           <h1 className="text-sm ">{active_roport.name}</h1>
           <p className="text-sm text-gray-500">{active_roport.email}</p>
@@ -83,7 +83,7 @@ export const Report = ({ active_roport, active }) => {
         <div className="flex gap-2 items-center">
           <img
             className="size-8 rounded-full "
-            src={`http://localhost:8000/uploads/${active_roport.user_profile}`}
+            src={`https://unity-for-change-ggbn.onrender.com/uploads/${active_roport.user_profile}`}
             alt=""
           />
           <p className="text-gray-600 text-sm">{active_roport.user_email}</p>

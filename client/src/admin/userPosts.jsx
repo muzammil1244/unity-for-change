@@ -11,7 +11,7 @@ export const PostList = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/client/all/news");
+        const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/news");
         const data = await res.json();
         setPosts(data); // API se aaya hua post data
       } catch (err) {
@@ -37,7 +37,7 @@ export const PostList = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/api/admin/${post._id}/delete`,
+        `https://unity-for-change-ggbn.onrender.com/api/admin/${post._id}/delete`,
         {
           method: "DELETE",
         }
@@ -81,7 +81,7 @@ export const PostList = () => {
                   src={
                     post.profileImage?.startsWith("http")
                       ? post.profileImage
-                      : `http://localhost:8000/uploads/${post.create_by_id.profileimage}`
+                      : `https://unity-for-change-ggbn.onrender.com/uploads/${post.create_by_id.profileimage}`
                   }
                   alt={post.username}
                   className="w-10 h-10 rounded-full border"
@@ -126,7 +126,7 @@ export const PostList = () => {
             <div className="w-full">
                                                                 {post.Images.length === 1 && (
                                                                     post.Images.map((file, i) => {
-                                                                        const fileUrl = `http://localhost:8000${file}`;
+                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                         const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                         return isVideo ? (
@@ -152,7 +152,7 @@ export const PostList = () => {
                                                                 {post.Images.length === 2 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {post.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return isVideo ? (
@@ -178,7 +178,7 @@ export const PostList = () => {
                                                                 {post.Images.length === 3 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {post.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return (

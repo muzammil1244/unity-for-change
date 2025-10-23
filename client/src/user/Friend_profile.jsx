@@ -27,7 +27,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
 
     try {
 
-      const data = await fetch(`http://localhost:8000/api/client/specific_user/${profile._id}`, {
+      const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/specific_user/${profile._id}`, {
         method: "GET",
 
       })
@@ -54,13 +54,13 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
       let url = "";
 
       if (isFollowing) {
-        url = `http://localhost:8000/api/user/remove_following/${profile._id}`;
+        url = `https://unity-for-change-ggbn.onrender.com/api/user/remove_following/${profile._id}`;
         setProfile((prev) => ({
           ...prev,
           followers: prev.followers.filter((f) => f.user_id._id !== self_id),
         }));
       } else {
-        url = `http://localhost:8000/api/user/follow_to/${profile._id}`;
+        url = `https://unity-for-change-ggbn.onrender.com/api/user/follow_to/${profile._id}`;
         setProfile((prev) => ({
           ...prev,
           followers: [
@@ -93,7 +93,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:8000/api/user/remove_follower/${userId}`,
+        `https://unity-for-change-ggbn.onrender.com/api/user/remove_follower/${userId}`,
         {
           method: "POST",
           headers: {
@@ -120,7 +120,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:8000/api/user/remove_following/${userId}`,
+        `https://unity-for-change-ggbn.onrender.com/api/user/remove_following/${userId}`,
         {
           method: "POST",
           headers: {
@@ -154,13 +154,13 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
         </div>
         <img
           className="w-full h-full bg-cover"
-          src={profile.cover_image && profile.cover_image.trim() !== ""?`http://localhost:8000/uploads/${profile.cover_image}`:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"}
+          src={profile.cover_image && profile.cover_image.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${profile.cover_image}`:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"}
           alt=""
         />
         <div className="absolute md:size-30 size-20 transform -translate-x-1/4 translate-y-1/2 overflow-hidden bottom-0 left-1/6 rounded-full border-white border-2 bg-green-400">
           <img
             className="bg-cover"
-            src={profile.profileimage && profile.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${profile.profileimage}`:randomImage}
+            src={profile.profileimage && profile.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${profile.profileimage}`:randomImage}
             alt=""
           />
         </div>
@@ -259,7 +259,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
               <div className="flex gap-2">
                 <img
                   className="md:size-8 size-4  rounded-full"
-                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage}
+                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage}
                   alt=""
                 />
                 <h1 className="text-[12px] md:text-sm">{item.user_id.username}</h1>
@@ -290,7 +290,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
               <div className="flex gap-2">
                 <img
                   className="md:size-8 size-4 rounded-full"
-                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage}
+                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage}
                   alt=""
                 />
                 <h1 className="text-[12px] md:text-sm" >{item.user_id.username}</h1>
@@ -318,7 +318,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
                     <div className="flex gap-3 items-center">
                       <img
                         className="w-10 h-10 rounded-full hover:object-contain object-cover"
-                        src={items?.create_by_id && items?.create_by_id?.profileimage.trim() !== "" ? `http://localhost:8000/uploads/${items.create_by_id?.profileimage}` : randomImage}
+                        src={items?.create_by_id && items?.create_by_id?.profileimage.trim() !== "" ? `https://unity-for-change-ggbn.onrender.com/uploads/${items.create_by_id?.profileimage}` : randomImage}
                         alt="profile"
                       />
                       <div className="flex flex-col">
@@ -344,7 +344,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
                   <div className="w-full">
                     {items.Images.length === 1 && (
                       <img
-                        src={`http://localhost:8000${items.Images[0]}`}
+                        src={`https://unity-for-change-ggbn.onrender.com${items.Images[0]}`}
                         alt="post-img"
                         className="w-full hover:object-contain  h-72 object-cover"
                       />
@@ -355,7 +355,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
                         {items.Images.map((img, i) => (
                           <img
                             key={i}
-                            src={`http://localhost:8000${img}`} alt={`post-img-${i}`}
+                            src={`https://unity-for-change-ggbn.onrender.com${img}`} alt={`post-img-${i}`}
                             className="w-full h-60 hover:object-contain  object-cover"
                           />
                         ))}
@@ -365,17 +365,17 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
                     {items.Images.length === 3 && (
                       <div className="grid grid-cols-2 gap-1">
                         <img
-                          src={`http://localhost:8000${items.Images[0]}`}
+                          src={`https://unity-for-change-ggbn.onrender.com${items.Images[0]}`}
                           alt="post-img-0"
                           className="w-full h-40 hover:object-contain  object-cover"
                         />
                         <img
-                          src={`http://localhost:8000${items.Images[1]}`}
+                          src={`https://unity-for-change-ggbn.onrender.com${items.Images[1]}`}
                           alt="post-img-1"
                           className="w-full h-40 hover:object-contain  object-cover"
                         />
                         <img
-                          src={`http://localhost:8000${items.Images[2]}`}
+                          src={`https://unity-for-change-ggbn.onrender.com${items.Images[2]}`}
                           alt="post-img-2"
                           className="col-span-2 hover:object-contain  w-full h-60 object-cover"
                         />

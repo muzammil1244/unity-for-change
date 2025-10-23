@@ -8,7 +8,7 @@ export const CommentedPosts = () => {
   // ✅ Fetch all commented posts
   const fetchCommentedPosts = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/client/all/comment", {
+      const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/comment", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -27,7 +27,7 @@ export const CommentedPosts = () => {
   const handleDeleteComment = async (commentId, postId) => {
     try {
       const res = await fetch(
-        `http://localhost:8000/api/client/${commentId}/delete/comment`,
+        `https://unity-for-change-ggbn.onrender.com/api/client/${commentId}/delete/comment`,
         {
           method: "PATCH",
           headers: {
@@ -70,7 +70,7 @@ export const CommentedPosts = () => {
     <div className="w-full">
                                                                 {post.Images.length === 1 && (
                                                                     post.Images.map((file, i) => {
-                                                                        const fileUrl = `http://localhost:8000${file}`;
+                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                         const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                         return isVideo ? (
@@ -96,7 +96,7 @@ export const CommentedPosts = () => {
                                                                 {post.Images.length === 2 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {post.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return isVideo ? (
@@ -122,7 +122,7 @@ export const CommentedPosts = () => {
                                                                 {post.Images.length === 3 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {post.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return (

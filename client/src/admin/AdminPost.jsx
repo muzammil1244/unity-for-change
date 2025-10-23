@@ -13,7 +13,7 @@ export const Admin_Post = ({ active_update, post_id }) => {
   const [menuIndex, setMenuIndex] = useState(null);
 const [ comment_index,set_comment_index] = useState(null)
   useEffect(() => {
-    fetch("http://localhost:8000/api/admin/get_post")
+    fetch("https://unity-for-change-ggbn.onrender.com/api/admin/get_post")
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
@@ -29,7 +29,7 @@ const [ comment_index,set_comment_index] = useState(null)
   const handleDelete = async (post) => {
     try {
       const res = await fetch(
-        `http://localhost:8000/api/admin/delete_post/${post._id}`,
+        `https://unity-for-change-ggbn.onrender.com/api/admin/delete_post/${post._id}`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -104,7 +104,7 @@ const [ comment_index,set_comment_index] = useState(null)
 
             <div className="w-full grid grid-cols-1 gap-2">
   {items.images?.map((img, i) => {
-    const fileUrl = `http://localhost:8000/${img}`;
+    const fileUrl = `https://unity-for-change-ggbn.onrender.com/${img}`;
     const lower = img.toLowerCase();
     const isVideo =
       lower.endsWith(".mp4") ||
@@ -187,7 +187,7 @@ const [ comment_index,set_comment_index] = useState(null)
 return <div className='flex rounded-xl p-3 shadow flex-col gap-3'>
 
     <div className='flex gap-5 items-center'>
-        <img className='size-5 object-cover rounded' src={`http://localhost:8000/uploads/${item.user_id.profileimage}`} alt="" />
+        <img className='size-5 object-cover rounded' src={`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`} alt="" />
 
         <div className='flexflex-col'>
             <h1 className=' text-sm '>{item.user_id.username}</h1>

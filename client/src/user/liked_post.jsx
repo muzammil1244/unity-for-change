@@ -8,7 +8,7 @@ console.log(likes,"liekd post ")
 const token = localStorage.getItem("token")
     const handle_likes_post = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/client/all/likes", {
+      const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/likes", {
         method: "GET",
         headers: {
          "Authorization":`Bearer ${token}`
@@ -35,7 +35,7 @@ console.log("data not founded")
 
  const handle_unlike_post = async (postId) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/client/${postId}/unlike`, {
+      const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/${postId}/unlike`, {
         method: "PATCH",   // <-- PATCH request
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -81,7 +81,7 @@ handle_likes_post()
                                             <div className="flex gap-3 items-center">
                                                 <img
                                                     className="w-10 h-10 rounded-full object-cover"
-                                                    src={items.create_by_id.profileimage && items.create_by_id.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${items.create_by_id.profileimage}`:randomImage}
+                                                    src={items.create_by_id.profileimage && items.create_by_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${items.create_by_id.profileimage}`:randomImage}
                                                     alt="profile"
                                                 />
                                                 <div className="flex flex-col">
@@ -107,7 +107,7 @@ handle_likes_post()
                                           <div className="w-full">
                                                                 {items.Images.length === 1 && (
                                                                     items.Images.map((file, i) => {
-                                                                        const fileUrl = `http://localhost:8000${file}`;
+                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                         const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                         return isVideo ? (
@@ -133,7 +133,7 @@ handle_likes_post()
                                                                 {items.Images.length === 2 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {items.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return isVideo ? (
@@ -159,7 +159,7 @@ handle_likes_post()
                                                                 {items.Images.length === 3 && (
                                                                     <div className="grid grid-cols-2 gap-1">
                                                                         {items.Images.map((file, i) => {
-                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
                                                                             const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
 
                                                                             return (

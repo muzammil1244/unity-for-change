@@ -50,7 +50,7 @@ const handle_post_data_to_backend = async (e) => {
   set_active_spinner(true);
 
   try {
-    const api_data = await fetch("http://localhost:8000/auth/register", {
+    const api_data = await fetch("https://unity-for-change-ggbn.onrender.com/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

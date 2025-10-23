@@ -25,7 +25,7 @@ export const Global_chat = () => {
   useEffect(() => {
     if (!user_id) return;
 
-    const s = io("http://localhost:8000");
+    const s = io("https://unity-for-change-ggbn.onrender.com");
     setSocket(s);
 
     s.on("connect", () => {
@@ -49,7 +49,7 @@ export const Global_chat = () => {
   const fetchMessages = async () => {
     try {
       const res = await fetch(
-        `http://localhost:8000/api/chat/messages`,
+        `https://unity-for-change-ggbn.onrender.com/api/chat/messages`,
         { method: "GET" }
       );
 
@@ -69,7 +69,7 @@ export const Global_chat = () => {
       formData.append("media", file);
 
       try {
-        const res = await fetch("http://localhost:8000/api/chat/upload", {
+        const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/chat/upload", {
           method: "POST",
           body: formData
         });
@@ -130,7 +130,7 @@ export const Global_chat = () => {
               className="flex items-center gap-3 p-2 bg-gray-100 rounded-lg shadow-sm"
             >
               <img
-                src={user.profileImage && user.profileImage.trim() !== ""?`http://localhost:8000/uploads/${user.profileImage}`:randomImage}
+                src={user.profileImage && user.profileImage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${user.profileImage}`:randomImage}
                 alt="profile"
                 className="w-10 h-10 rounded-full border border-gray-400"
               />
@@ -160,24 +160,24 @@ export const Global_chat = () => {
                     ? "bg-gray-900  text-white ml-auto"
                     : "bg-gray-100 border-0 shadow text-black "
                   }`}>
-                  <img className="size-5 rounded-full" src={msg.sender.profileimage && msg.sender.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${msg.sender.profileimage}`:randomImage} alt="" />
+                  <img className="size-5 rounded-full" src={msg.sender.profileimage && msg.sender.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${msg.sender.profileimage}`:randomImage} alt="" />
                   <h1>{msg.sender.username}</h1>
                 </div>
 
                 {msg.media && (
                   <div className="mt-2">
                     {msg.media.endsWith(".mp4") ? (
-                      <video src={`http://localhost:8000${msg.media}`} width="200" controls />
+                      <video src={`https://unity-for-change-ggbn.onrender.com${msg.media}`} width="200" controls />
                     ) : msg.media.endsWith(".pdf") ? (
-                      <a href={`http://localhost:8000${msg.media}`} target="_blank" rel="noreferrer">
+                      <a href={`https://unity-for-change-ggbn.onrender.com${msg.media}`} target="_blank" rel="noreferrer">
                         View PDF
                       </a>
                     ) : msg.media.endsWith(".docx") ? (
-                      <a href={`http://localhost:8000${msg.media}`} target="_blank" rel="noreferrer">
+                      <a href={`https://unity-for-change-ggbn.onrender.com${msg.media}`} target="_blank" rel="noreferrer">
                         View DOCX
                       </a>
                     ) : (
-                      <img src={`http://localhost:8000${msg.media}`} width="200" alt="media" />
+                      <img src={`https://unity-for-change-ggbn.onrender.com${msg.media}`} width="200" alt="media" />
                     )}
                   </div>
                 )}

@@ -26,7 +26,7 @@ export const Chat_Bot_Screen = ({ Inactive_chat_screen }) => {
     setResponse("")
     try {
     
-    const data = await fetch("http://localhost:8000/api/Ai",{
+    const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/Ai",{
       method:"POST",
       headers:{
         "Content-Type": "application/json",
