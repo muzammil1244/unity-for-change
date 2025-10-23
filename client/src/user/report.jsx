@@ -33,6 +33,7 @@ export const Report = ({ active_roport, active }) => {
         alert("Report submitted successfully ✅");
         set_message_data(""); // clear field
         active()
+        window.location.reload()
       } else {
         alert(data.message || "Something went wrong ❌");
       }
@@ -47,7 +48,7 @@ export const Report = ({ active_roport, active }) => {
   console.log(active_roport)
 
   return (
-    <div className="w-1/2 h-full overflow-y-scroll px-5 py-5 bg-white rounded-2xl">
+    <div className="md:w-1/2 w-[80%] md:h-full overflow-y-scroll px-5 py-5 bg-white rounded-2xl">
       <div className="relative">
         <IoMdArrowRoundBack onClick={active} size={15} className="absolute cursor-pointer " />
         <h1 className="w-full text-center">Report to Admin </h1>
@@ -60,7 +61,7 @@ export const Report = ({ active_roport, active }) => {
         </div>
       </div>
       <div className="mt-5">
-        <p>
+        <p className="md:text-sm text-[12px]">
           Reported posts will be reviewed by the admin team. Misuse of the
           report option is strictly prohibited. Appropriate disciplinary action
           may be taken, including warning, suspension, or ba
@@ -91,7 +92,7 @@ export const Report = ({ active_roport, active }) => {
         <button
           onClick={handle_report_message}
           disabled={loading}
-          className="px-3 py-1 hover:bg-gray-600 duration-200 cursor-pointer  bg-black text-white rounded"
+          className="md:px-3 px-2 py-1 hover:bg-gray-600 md:text-sm text-[12px] duration-200 cursor-pointer  bg-black text-white rounded"
         >
           {loading ? <div className="flex justify-center items-center">
       <div className="w-8 h-8 border-4 border-gray-200 border-dashed rounded-full animate-spin"></div>

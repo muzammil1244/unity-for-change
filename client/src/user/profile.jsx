@@ -5,7 +5,6 @@ import { useEffect, useState, useTransition } from "react";
 import { FaRegHeart } from "react-icons/fa6";
 import { LiaCommentsSolid } from "react-icons/lia";
 import { CgLayoutGridSmall } from "react-icons/cg";
-import { dataauther } from "./mainpostdata";
 import { MdOutlineModeComment, MdOutlineToken } from "react-icons/md";
 import { MdEditNote } from "react-icons/md";
 import { HiOutlineUsers } from "react-icons/hi2";
@@ -23,6 +22,7 @@ import { Liked_post } from "./liked_post";
 import { CommentedPosts } from "./comment_post";
 import { PostForm } from "./post_up_cr";
 import { MdOutlineCancel } from "react-icons/md";
+import { randomImage } from "../profileimage";
 
 export const Profile = ({off_profile}) => {
 
@@ -114,7 +114,8 @@ const [active_aboute,set_active_aboute]= useState(false)
             );
 
             const result = await response.json();
-        } catch (error) {
+window.location.reload()    
+    } catch (error) {
             console.log("Error:", error.message);
         }
     };
@@ -151,7 +152,7 @@ const [active_aboute,set_active_aboute]= useState(false)
                     },
                 }
             );
-
+window.location.reload()
         } catch (error) {
             console.log("Error:", error.message);
         }
@@ -329,14 +330,14 @@ const is_liked=(post)=>{
     return (
 
         <div onMouseEnter={() => setcommentindex(null)} className="w-full h-full  overflow-x-hidden px-4 overflow-y-scroll ">
-            <div className=" relative w-full h-1/3  bg-gray-500">
+            <div className=" relative w-full md:h-1/3 h-25  bg-gray-500">
                 <IoMdArrowRoundBack onClick={off_profile} className=" absolute hover:scale-110 cursor-pointer  z-2 top-2 left-2 z-2" />
-                <img className=" w-full h-full bg-cover " src={ profile_data.cover_image? `http://localhost:8000/uploads/${profile_data.cover_image}`:null} alt="" />
-                <div className=" absolute size-30 transform -translate-x-1/4 translate-y-1/2 overflow-hidden   bottom-0 left-1/6 rounded-full border-white border-2 bg-cover  bg-green-400">
-                    <img className=" bg-cover  " src={ profile_data.profileimage?`http://localhost:8000/uploads/${profile_data.profileimage}`:null} alt="" />
+                <img className=" w-full h-full  bg-cover " src={ profile_data.cover_image &&  profile_data.cover_image.trim() !== "" ? `http://localhost:8000/uploads/${profile_data.cover_image}`:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"} alt="" />
+                <div className=" absolute md:size-30 size-20 transform bg-cover -translate-x-1/4 translate-y-1/2 overflow-hidden   bottom-0 left-1/6 rounded-full border-white border-2   bg-green-400">
+                    <img className="  w-full h-full  " src={ profile_data.profileimage&&  profile_data.profileimage.trim() !== ""?`http://localhost:8000/uploads/${profile_data.profileimage}`:randomImage} alt="" />
                 </div>
-                <div className="absolute backdrop-blur-[4px] bg-white/20 bottom-5 right-5 w-fit h-fit px-3 py-1  border border-white/20 scale-80 hover:bg-gray-50/20 duration-200  cursor-pointer  rounded-2xl ">
-                    <h1 onClick={() => setactiveprofileupdate(!activeupdateprofile)} className=" font-bold tex-tsm text-gray-300">Edite Image</h1>
+                <div className="absolute backdrop-blur-[4px] bg-white/20 md:bottom-5 bottom-2 md:right-5 right-2  w-fit h-fit md:px-3 px-2 py-1  border border-white/20 scale-80 hover:bg-gray-50/20 duration-200  cursor-pointer  rounded-2xl ">
+                    <h1 onClick={() => setactiveprofileupdate(!activeupdateprofile)} className=" font-bold md:text-sm  text-[12px] text-gray-300">Edite Image</h1>
 
                 </div>
             </div>
@@ -344,14 +345,14 @@ const is_liked=(post)=>{
             <div className="px-5 w-full border-b pb-5  mb-5 rounded-xl overflow-hidden border-gray-500 h-fit mt-20 py3">
                 {/* email id and username  */}
                  <div className="flex-col  w-full h-full gap-10">
-                        <h1 className=" font-semibold text-gray-700 ">{profile_data.username}</h1>
-                        <p className=" text-gray-600">{profile_data.email}</p>
+                        <h1 className=" font-semibold md:text-sm text-[12px] text-gray-700 ">{profile_data.username}</h1>
+                        <p className=" text-gray-600 md:text-sm text-[10px]">{profile_data.email}</p>
 
                     </div>
-                <div className="flex  pb-10  justify-between items-center ">
+                <div className="flex md:flex-row flex-col-reverse  pb-10  justify-between items-center ">
                    
 
-<div className="w-full flex  gap-3 h-fit p">
+<div className="w-full flex  md:gap-3 gap-1 h-fit ">
                     <div onClick={() => {
                         set_active_your_post(false)
                         set_follower_list(false)
@@ -359,7 +360,7 @@ const is_liked=(post)=>{
                                                         set_active_liked_post(false)
 
                     }} className="">
-                        <h1 className=" text-sm flex cursor-pointer text-gray-500 items-center  hover:text-black  duration-200  gap-2"> <HiOutlineUserGroup /> following <span className="text-sm">{profile_data.following?.length || 0}</span></h1>
+                        <h1 className=" md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center  hover:text-black  duration-200 gap-[2px]  md:gap-2"> <HiOutlineUserGroup /> following <span className="md:text-sm text-[12px]">{profile_data.following?.length || 0}</span></h1>
 
                     </div>
                     <div onClick={() => {
@@ -370,7 +371,7 @@ const is_liked=(post)=>{
 
                     }} className="">
 
-                        <h1 className=" text-sm flex cursor-pointer text-gray-500 items-center hover:text-black  duration-200  gap-2"> <HiOutlineUserGroup /> follower <span className="text-sm">{profile_data.followers?.length || 0}</span></h1>
+                        <h1 className=" md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center hover:text-black  duration-200 gap-[2px] md:gap-2"> <HiOutlineUserGroup /> follower <span className="md:text-sm text-[12px]">{profile_data.followers?.length || 0}</span></h1>
                     </div>
 
                     <div onClick={() => {
@@ -382,7 +383,7 @@ const is_liked=(post)=>{
 
                     }} className="">
 
-                        <h1 className=" text-sm flex cursor-pointer text-gray-500 items-center hover:text-black  duration-200  gap-2"> <CgLayoutGridSmall /> Post <span className="text-sm">{posts_all.length}</span></h1>
+                        <h1 className=" md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center hover:text-black  duration-200 gap-[2px] md:gap-2"> <CgLayoutGridSmall /> post <span className="md:text-sm text-[12px]">{posts_all.length}</span></h1>
                     </div>
                 </div>
                     
@@ -408,7 +409,7 @@ const is_liked=(post)=>{
                         </div>
 
 
-                        <CiMenuKebab size={20} onClick={() => setmenu(!menu)} className=" cursor-pointer hover:scale-110 duration-150 " />
+                        <CiMenuKebab  onClick={() => setmenu(!menu)} className=" cursor-pointer md:size-5  size-3 hover:scale-110 duration-150 " />
 
                     </div>
 
@@ -437,7 +438,7 @@ const is_liked=(post)=>{
             {/* active Profile */}
 
             {
-                active_your_post && posts_all.length && <div className="w-full grid grid-cols-2 h-full gap-5 px-5 py-5 ">
+                active_your_post && posts_all.length && <div className="w-full lg:grid grid-cols-2 h-full gap-5 md:px-5 py-5 ">
                     {
                         posts_all.map((items, index) => {
 
@@ -451,7 +452,7 @@ const is_liked=(post)=>{
                                         <div className="flex gap-3 items-center">
                                             <img
                                                 className="w-10 h-10 rounded-full object-cover"
-                                                src={`http://localhost:8000/uploads/${profile_data.profileimage}`}
+                                                src={profile_data.profileimage && profile_data.profileimage.trim() !== ""? `http://localhost:8000/uploads/${profile_data.profileimage}`:randomImage}
                                                 alt="profile"
                                             />
                                             <div className="flex flex-col">
@@ -623,7 +624,7 @@ const is_liked=(post)=>{
                                                             <div className='flex-col  gap-2 items-center '>
 
                                                                 <div className='flex gap-2'>
-                                                                    <img className='size-8 bg-cover rounded-full' src={`http://localhost:8000/uploads/${item.comment_by_id.profileimage}`} alt="" />
+                                                                    <img className='size-8 bg-cover rounded-full' src={item.comment_by_id.profileimage && item.comment_by_id.profileimage.trim() !== ""?`http://localhost:8000/uploads/${item.comment_by_id.profileimage}`:randomImage} alt="" />
 
                                                                     <h1 className='text-sm font-bold '>{item.comment_by_id.username}</h1>
                                                                 </div>    <p className='text-sm mt-3'>{item.comment_content}</p>
@@ -636,7 +637,7 @@ const is_liked=(post)=>{
                                             </div>
 
                                             <div className='px-2 py-3 w-full  flex justify-around items-center  bg-green h-fit'>
-                                                <img className='size-8 rounded-full' src={`http://localhost:8000/uploads/${profile_data.profileimage}`} alt="" />
+                                                <img className='size-8 rounded-full' src={profile_data.profileimage && profile_data.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${profile_data.profileimage}` : randomImage} alt="" />
 
                                                 <input type="text" value={comment_data} onChange={(e) => set_cooment_data(e.target.value)} className='px-4  py-1 border border-gray-500 textc rounded-2xl' placeholder='you comment' />
                                                 <HiArrowCircleUp onClick={() => {
@@ -665,16 +666,16 @@ const is_liked=(post)=>{
 
                     {
                         follower_list.followers.map((item, index) => {
-                            return <div key={index} className=" relative bg-white shadow flex justify-between px-3 py-2">
+                            return <div key={index} className=" relative bg-white shadow flex justify-between px-3  py-2 ">
                                 <div className="flex gap-2">
-                                    <img className="size-8 rounded-full" src={`http://localhost:8000${item.user_id.profileimage}`} alt="" />
-                                    <h1>{item.user_id.username}</h1>
+                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?`http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
+                                    <h1 className="text-[12px] md:text-sm">{item.user_id.username}</h1>
 
                                 </div>
 
-                                <div onClick={() => handle_remove_follower_function(item)} className="flex absolute hover:bg-gray-900 cursor-pointer bg-black rounded-bl-xl px-2 py-1  top-0 right-0 gap-2 items-center">
-                                    <TbUserMinus className="text-white" size={15} />
-                                    <h1 className="text-sm text-white">remove</h1>
+                                <div onClick={() => handle_remove_follower_function(item)} className="flex absolute hover:bg-gray-900 cursor-pointer bg-black rounded-bl-xl md:px-2 px-1 md:py-1 py-[2px]  top-0 right-0 gap-2 items-center">
+                                    <TbUserMinus className="text-white md:size-3 size-2"  />
+                                    <h1 className="md:text-sm text-[10px] text-white">remove</h1>
                                 </div>
 
 
@@ -690,21 +691,21 @@ const is_liked=(post)=>{
             {/* following list */}
 
             {
-                active_following_list && <div className="w-full flex flex-col  h-full gap-5 px-5 py-5 ">
+                active_following_list && <div className="w-full flex flex-col  h-full  gap-5 px-5 py-5 ">
                     <h1 className="text-gray-900 text-lg font-bold"> Following List</h1>
 
                     {
                         following_list.following.map((item, index) => {
                             return <div key={index} className=" relative bg-white shadow flex justify-between px-3 py-2">
                                 <div className="flex gap-2">
-                                    <img className="size-8 rounded-full" src={`http://localhost:8000/uploads/${item.user_id.profileimage}`} alt="" />
-                                    <h1>{item.user_id.username}</h1>
+                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?`http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
+                                    <h1 className=" md:text-sm  text-[12px]">{item.user_id.username}</h1>
 
                                 </div>
 
-                                <div onClick={() => handle_remove_following(item)} className="flex absolute hover:bg-gray-900 cursor-pointer bg-black rounded-bl-xl px-2 py-1  top-0 right-0 gap-2 items-center">
-                                    <TbUserMinus className="text-white" size={15} />
-                                    <h1 className="text-sm text-white">Unfollow</h1>
+                                <div onClick={() => handle_remove_following(item)} className="flex absolute hover:bg-gray-900 cursor-pointer bg-black rounded-bl-xl md:px-2 px-1 md:py-1 py-[2px]  top-0 right-0 gap-2 items-center">
+                                    <TbUserMinus className="text-white md:size-4 size-3"  />
+                                    <h1 className="md:text-sm text-[10px] text-white">Unfollow</h1>
                                 </div>
 
 
@@ -721,7 +722,7 @@ const is_liked=(post)=>{
 
 {
     active_liked_post&&
-     <div className="w-full grid grid-cols-2 h-full gap-5 px-5 py-5 ">
+     <div className="w-full grid lg:grid-cols-2  h-full gap-5 md:px-5 py-5 ">
     <Liked_post />
     </div>
 }
@@ -731,7 +732,7 @@ const is_liked=(post)=>{
 
 {
     active_commented_post&&
-     <div className="w-full grid grid-cols-2 h-full gap-5 px-5 py-5 ">
+     <div className="w-full grid lg:grid-cols-2 h-full gap-5 px-5 py-5 ">
     <CommentedPosts />
     </div>
 }

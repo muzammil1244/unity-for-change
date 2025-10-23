@@ -1,4 +1,3 @@
-import { dataauther } from "../../client/src/user/mainpostdata.js";
 import { Message } from "../module/chat.js";
 
 // Upload media

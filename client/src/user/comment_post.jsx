@@ -67,49 +67,89 @@ export const CommentedPosts = () => {
           <p className="text-gray-700 text-sm">{post.description}</p>
 
           {/* Images */}
-  <div className="w-full">
-                                            {post.Images.length === 1 && (
-                                                <img
-                                                    src={`http://localhost:8000${post.Images[0]}`}
-                                                    alt="post-img"
-                                                    className="w-full h-72 object-cover"
-                                                />
-                                            )}
-    
-                                            {post.Images.length === 2 && (
-                                                <div className="grid grid-cols-2 gap-1">
-                                                    {post.Images.map((img, i) => (
-                                                        <img
-                                                            key={i}
-                                                            src={`http://localhost:8000${img}`} alt={`post-img-${i}`}
-                                                            className="w-full h-60 object-cover"
-                                                        />
-                                                    ))}
-                                                </div>
-                                            )}
-    
-                                            {post.Images.length === 3 && (
-                                                <div className="grid grid-cols-2 gap-1">
-                                                    <img
-                                                        src={`http://localhost:8000${post.Images[0]}`}
-                                                        alt="post-img-0"
-                                                        className="w-full h-40 object-cover"
-                                                    />
-                                                    <img
-                                                        src={`http://localhost:8000${post.Images[1]}`}
-                                                        alt="post-img-1"
-                                                        className="w-full h-40 object-cover"
-                                                    />
-                                                    <img
-                                                        src={`http://localhost:8000${post.Images[2]}`}
-                                                        alt="post-img-2"
-                                                        className="col-span-2 w-full h-60 object-cover"
-                                                    />
-                                                </div>
-                                            )}
-    
-                                            
-                                        </div>
+    <div className="w-full">
+                                                                {post.Images.length === 1 && (
+                                                                    post.Images.map((file, i) => {
+                                                                        const fileUrl = `http://localhost:8000${file}`;
+                                                                        const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+
+                                                                        return isVideo ? (
+                                                                            <video
+                                                                                key={i}
+                                                                                controls
+                                                                                className="w-full h-72 object-cover rounded-md bg-black"
+                                                                            >
+                                                                                <source src={fileUrl} type="video/mp4" />
+                                                                                Your browser does not support the video tag.
+                                                                            </video>
+                                                                        ) : (
+                                                                            <img
+                                                                                key={i}
+                                                                                src={fileUrl}
+                                                                                alt="post-img"
+                                                                                className="w-full h-72 object-cover hover:object-contain"
+                                                                            />
+                                                                        );
+                                                                    })
+                                                                )}
+
+                                                                {post.Images.length === 2 && (
+                                                                    <div className="grid grid-cols-2 gap-1">
+                                                                        {post.Images.map((file, i) => {
+                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+
+                                                                            return isVideo ? (
+                                                                                <video
+                                                                                    key={i}
+                                                                                    controls
+                                                                                    className="w-full h-60 object-cover rounded-md bg-black"
+                                                                                >
+                                                                                    <source src={fileUrl} type="video/mp4" />
+                                                                                </video>
+                                                                            ) : (
+                                                                                <img
+                                                                                    key={i}
+                                                                                    src={fileUrl}
+                                                                                    alt={`post-img-${i}`}
+                                                                                    className="w-full h-60 hover:object-contain object-cover rounded-md"
+                                                                                />
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                )}
+
+                                                                {post.Images.length === 3 && (
+                                                                    <div className="grid grid-cols-2 gap-1">
+                                                                        {post.Images.map((file, i) => {
+                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+
+                                                                            return (
+                                                                                <div
+                                                                                    key={i}
+                                                                                    className={`${i === 2 ? "col-span-2" : ""}`}
+                                                                                >
+                                                                                    {isVideo ? (
+                                                                                        <video
+                                                                                            controls
+                                                                                            className="w-full transition-all duration-500 ease-in-out hover:object-contain h-40 object-cover rounded-md bg-black"
+                                                                                        >
+                                                                                            <source src={fileUrl} type="video/mp4" />
+                                                                                        </video>
+                                                                                    ) : (
+                                                                                        <img
+                                                                                            src={fileUrl}
+                                                                                            alt={`post-img-${i}`}
+                                                                                            className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
+                                                                                        />
+                                                                                    )}
+                                                                                </div>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                )}
+                                                            </div>
 
           {/* Comments */}
           <div className="mt-3 border-t pt-2">

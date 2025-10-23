@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CommentToNews, Delete_comment, GetAllPost, Getnews, LikedMainPOst, LikedUsersNews, Report, Suggestion, Comment_main_post, unlike_main_post, Delete_main_comment, user_profile, update_profile, likePost_admin, addComment, add_main_Comment, get_all_post_by_id } from "../controller/UserController.js";
+import { CommentToNews, Delete_comment, GetAllPost, Getnews, LikedMainPOst, LikedUsersNews, Report, Suggestion, Comment_main_post, unlike_main_post, Delete_main_comment, user_profile, update_profile, likePost_admin, addComment, add_main_Comment, get_all_post_by_id, get_following_posts } from "../controller/UserController.js";
 import { Authmiddleware } from "../midlleware/authmidlleware.js";
 import { NewsPos, UpdatePost, DeletePost, Get_your_liked_video, Get_your_comment, Unlike_Post_news, GetallUserList } from "../controller/AdminController.js";
 import { upload } from "../midlleware/Multer.js";
@@ -28,7 +28,7 @@ router.post("/client/comment/mainpost/:post", Authmiddleware, add_main_Comment)
 router.patch("/client/unlike/main/:post", Authmiddleware, unlike_main_post)
 router.delete("/client/post/:postId/comment/:commentId", Authmiddleware, Delete_main_comment);
 router.get("/client/specific_user/:userId", get_all_post_by_id)
-
+router.get("/client/following/post",Authmiddleware,get_following_posts)
 // handle profile
 
 router.get("/client/profile", Authmiddleware, user_profile)

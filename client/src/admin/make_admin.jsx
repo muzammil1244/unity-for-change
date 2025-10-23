@@ -58,7 +58,9 @@ const handle_post_data_to_backend = async (e) => {
       body: JSON.stringify({
         email: register_data.user_email,
         password: register_data.user_password,
-        role: "admin"
+        role: "admin",
+        profileimage:"",
+        cover_image:""
       })
     });
 

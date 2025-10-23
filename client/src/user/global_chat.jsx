@@ -3,6 +3,10 @@ import io from "socket.io-client";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { IoSendOutline } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
+import { BsLayoutSidebarInsetReverse } from "react-icons/bs";
+import { BsLayoutSidebarInset } from "react-icons/bs";
+import { RiAttachmentFill } from "react-icons/ri";
+import { randomImage } from "../profileimage";
 
 export const Global_chat = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -10,7 +14,7 @@ export const Global_chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [file, setFile] = useState(null);
   const [socket, setSocket] = useState(null);
-
+  const [get_sidebar, set_sidebar] = useState(false)
   const navigation = useNavigate();
   const location = useLocation();
   const { user_id } = location.state || {}; // group name passed
@@ -19,7 +23,7 @@ export const Global_chat = () => {
   console.log("Messages:", messages);
 
   useEffect(() => {
-    if (!user_id ) return;
+    if (!user_id) return;
 
     const s = io("http://localhost:8000");
     setSocket(s);
@@ -29,12 +33,12 @@ export const Global_chat = () => {
       s.emit("userOnline", user_id);
     });
 
-    s.on("userlist",(data=>{
+    s.on("userlist", (data => {
       setOnlineUsers(data)
     }))
 
     s.on("receive-message", (msg) => {
-  setMessages((prev) => [...prev, msg]);
+      setMessages((prev) => [...prev, msg]);
     });
 
     fetchMessages();
@@ -46,7 +50,7 @@ export const Global_chat = () => {
     try {
       const res = await fetch(
         `http://localhost:8000/api/chat/messages`,
-        {method:"GET"}
+        { method: "GET" }
       );
 
       setMessages(await res.json());
@@ -65,19 +69,19 @@ export const Global_chat = () => {
       formData.append("media", file);
 
       try {
-       const res = await fetch("http://localhost:8000/api/chat/upload", {
-  method: "POST",
-  body: formData
-});
-       const data = await res.json();
-mediaPath = data.filePath;
+        const res = await fetch("http://localhost:8000/api/chat/upload", {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        mediaPath = data.filePath;
       } catch (err) {
         console.error("File upload error:", err);
       }
     }
 
     const msgData = {
-    
+
       sender: user_id,
       message: newMessage,
       media: mediaPath,
@@ -90,15 +94,34 @@ mediaPath = data.filePath;
   };
 
   return (
-    <div className="w-full h-screen grid grid-cols-4 gap-3 p-4 bg-white text-black">
+    <div className="w-full h-screen relative md:static md:grid grid-cols-4 gap-3 p-4 bg-white text-black">
+
+      <BsLayoutSidebarInsetReverse onClick={() => set_sidebar(true)} className={`absolute ${get_sidebar ? "hidden" : "block"} md:hidden top-3 left-3 `} />
+
       {/* Left Sidebar */}
-      <div className="col-span-1 border-r bg-white shadow rounded-2xl border-gray-300 p-3">
-        <div className="flex items-center mb-4">
-          <IoMdArrowRoundBack
-            className="text-xl cursor-pointer"
-            onClick={() => navigation(-1)}
-          />
-          <h2 className="ml-2 font-bold">Online Users</h2>
+      <div
+        className={`col-span-1 
+    ${get_sidebar ? 'translate-x-0' : '-translate-x-100'} 
+    md:block 
+    transition-transform duration-500 ease-in-out 
+    z-50 
+    md:static absolute top-5 
+    border-r transform 
+    bg-white shadow md:-translate-x-0 md:translate-x-0 rounded-2xl border-gray-300 p-3 md:transform-none md:transition-none`}
+      >
+        <div className="flex justify-between items-center mb-4">
+
+          <div className="flex gap-2">
+            <IoMdArrowRoundBack
+              className="text-xl cursor-pointer"
+              onClick={() => navigation(-1)}
+            />
+            <h2 className="ml-2 font-bold">Online Users</h2>
+          </div>
+
+
+          <BsLayoutSidebarInset className="md:hidden " onClick={() => set_sidebar(false)} />
+
         </div>
         <div className="space-y-3">
           {onlineUsers.map((user, i) => (
@@ -107,7 +130,7 @@ mediaPath = data.filePath;
               className="flex items-center gap-3 p-2 bg-gray-100 rounded-lg shadow-sm"
             >
               <img
-                src={`http://localhost:8000/uploads/${user.profileImage}`}
+                src={user.profileImage && user.profileImage.trim() !== ""?`http://localhost:8000/uploads/${user.profileImage}`:randomImage}
                 alt="profile"
                 className="w-10 h-10 rounded-full border border-gray-400"
               />
@@ -127,52 +150,50 @@ mediaPath = data.filePath;
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`p-3 max-w-xs rounded-2xl shadow-md ${
-                msg.sender._id === user_id
+              className={`p-3 max-w-xs rounded-2xl shadow-md ${msg.sender._id === user_id
                   ? "bg-black text-white ml-auto"
                   : "bg-white text-black "
-              }`}
+                }`}
             >
               <div className="w-fit h-fit">
-                <div className={`bg-cover flex gap-2 items-center px-3 py-2 rounded-2xl  ${
-                msg.sender._id === user_id
-                  ? "bg-gray-900  text-white ml-auto"
-                  : "bg-gray-100 border-0 shadow text-black "
-              }`}>
-                  <img className="size-5 rounded-full" src={`http://localhost:8000/uploads/${msg.sender.profileimage}`} alt="" />
-                <h1>{msg.sender.username}</h1>
+                <div className={`bg-cover flex gap-2 items-center px-3 py-2 rounded-2xl  ${msg.sender._id === user_id
+                    ? "bg-gray-900  text-white ml-auto"
+                    : "bg-gray-100 border-0 shadow text-black "
+                  }`}>
+                  <img className="size-5 rounded-full" src={msg.sender.profileimage && msg.sender.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${msg.sender.profileimage}`:randomImage} alt="" />
+                  <h1>{msg.sender.username}</h1>
                 </div>
 
-{msg.media && (
-  <div className="mt-2">
-    {msg.media.endsWith(".mp4") ? (
-      <video src={`http://localhost:8000${msg.media}`} width="200" controls />
-    ) : msg.media.endsWith(".pdf") ? (
-      <a href={`http://localhost:8000${msg.media}`} target="_blank" rel="noreferrer">
-        View PDF
-      </a>
-    ) : msg.media.endsWith(".docx") ? (
-      <a href={`http://localhost:8000${msg.media}`} target="_blank" rel="noreferrer">
-        View DOCX
-      </a>
-    ) : (
-      <img src={`http://localhost:8000${msg.media}`} width="200" alt="media" />
-    )}
-  </div>
-)}
+                {msg.media && (
+                  <div className="mt-2">
+                    {msg.media.endsWith(".mp4") ? (
+                      <video src={`http://localhost:8000${msg.media}`} width="200" controls />
+                    ) : msg.media.endsWith(".pdf") ? (
+                      <a href={`http://localhost:8000${msg.media}`} target="_blank" rel="noreferrer">
+                        View PDF
+                      </a>
+                    ) : msg.media.endsWith(".docx") ? (
+                      <a href={`http://localhost:8000${msg.media}`} target="_blank" rel="noreferrer">
+                        View DOCX
+                      </a>
+                    ) : (
+                      <img src={`http://localhost:8000${msg.media}`} width="200" alt="media" />
+                    )}
+                  </div>
+                )}
 
 
-               {msg.message && <p>{msg.message}</p>}
+                {msg.message && <p>{msg.message}</p>}
               </div>
-             
-             
+
+
 
             </div>
           ))}
         </div>
 
         {/* Input Section */}
-        <div className="p-3 border-t border-gray-300 flex items-center bg-white">
+        <div className="md:p-3 p-1 border-t border-gray-300 flex justify-around items-center bg-white">
           <input
             type="text"
             className="flex-1 p-2 rounded-xl border border-gray-400 focus:outline-none"
@@ -180,16 +201,18 @@ mediaPath = data.filePath;
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
+          <label className=" rounded-full overflow-hidden " htmlFor="file"><RiAttachmentFill className="size-8"/></label>
           <input
+          id="file"
             type="file"
-            className="ml-2"
+            className="ml-2 hidden"
             onChange={(e) => setFile(e.target.files[0])}
           />
           <button
             onClick={handleSend}
-            className="ml-3 bg-black text-white px-4 py-2 rounded-xl hover:opacity-80 flex items-center"
+            className=" bg-black text-white px-4 py-2 rounded-xl hover:opacity-80 flex items-center"
           >
-            <IoSendOutline className="mr-1" /> Send
+            <IoSendOutline className="mr-1" /> 
           </button>
         </div>
       </div>

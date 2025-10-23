@@ -10,7 +10,7 @@ import { Main } from './admin/main'
 function App() {
 
   return (
-   <div className='w-screen h-screen bg-white px-3 py-3 overflow-hidden'>
+   <div className='md:w-screen md:h-screen    md:px-3 py-3 overflow-hidden'>
   
   <BrowserRouter>
   <Routes>

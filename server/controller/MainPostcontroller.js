@@ -96,3 +96,6 @@ return res.status(200).json(err)
     
 
 }
+
+// follwoing posts
+

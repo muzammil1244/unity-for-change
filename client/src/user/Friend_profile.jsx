@@ -5,6 +5,7 @@ import { TbUserMinus } from "react-icons/tb";
 import { useEffect, useState } from "react";
 
 import { FcLike } from "react-icons/fc";
+import { randomImage } from "../profileimage";
 
 export const Friend_Profile = ({ Profile_data, self_id }) => {
   const token = localStorage.getItem("token");
@@ -19,7 +20,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
   const [active_following_list, set_active_following_list] = useState(false);
   const [get_all_post, set_posts_all] = useState([])
   const [active_all_post, set_active_allpost] = useState(true)
-  const [active_aboute,set_active_aboute]= useState(false)
+  const [active_aboute, set_active_aboute] = useState(false)
 
   console.log("user posts", profile)
   const handle_All_user_posts = async () => {
@@ -142,24 +143,24 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
   };
 
   return (
-    <div className="w-full h-full bg-white overflow-x-hidden overflow-y-scroll">
+    <div className="w-full  h-full bg-white overflow-x-hidden overflow-y-scroll">
       {/* Cover Image + Profile */}
-      <div className="relative  w-full h-1/3 bg-gray-500">
-      <div onClick={()=>{
-        window.location.reload()
-      }} className="size-fit top-2 left-2 absolute p-1 rounded-full bg-white">
-        <IoMdArrowRoundBack className="  z-20 cursor-pointer" />
+      <div className="relative  w-full md:h-1/3 h-25 bg-gray-500">
+        <div onClick={() => {
+          window.location.reload()
+        }} className="size-fit top-2 left-2 absolute p-1 rounded-full bg-white">
+          <IoMdArrowRoundBack className="  z-20 cursor-pointer" />
 
-      </div>
+        </div>
         <img
           className="w-full h-full bg-cover"
-          src={`http://localhost:8000/uploads/${profile.cover_image}`}
+          src={profile.cover_image && profile.cover_image.trim() !== ""?`http://localhost:8000/uploads/${profile.cover_image}`:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"}
           alt=""
         />
-        <div className="absolute size-30 transform -translate-x-1/4 translate-y-1/2 overflow-hidden bottom-0 left-1/6 rounded-full border-white border-2 bg-green-400">
+        <div className="absolute md:size-30 size-20 transform -translate-x-1/4 translate-y-1/2 overflow-hidden bottom-0 left-1/6 rounded-full border-white border-2 bg-green-400">
           <img
             className="bg-cover"
-            src={`http://localhost:8000/uploads/${profile.profileimage}`}
+            src={profile.profileimage && profile.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${profile.profileimage}`:randomImage}
             alt=""
           />
         </div>
@@ -169,8 +170,8 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
       <div className="px-5 w-full border-b pb-5 border-gray-500 h-fit mt-20">
         <div className="flex pb-10 justify-between items-center">
           <div className="flex-col w-full h-full gap-10">
-            <h1 className="font-semibold text-gray-700">{profile.username}</h1>
-            <p className="text-gray-600">{profile.email}</p>
+            <h1 className="font-semibold md:text-sm text-[12px] text-gray-700">{profile.username}</h1>
+            <p className="text-gray-600 md:text-sm text-[12px]">{profile.email}</p>
           </div>
 
           {/* Follow / Unfollow */}
@@ -178,7 +179,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
             <button
               onClick={handleFollowToggle}
               disabled={loading}
-              className={`px-4 py-1 rounded-lg text-sm font-medium ${isFollowing
+              className={`md:px-4 px-2 text-[12px] py-1 rounded-lg md:text-sm font-medium ${isFollowing
                 ? "bg-white text-black hover:bg-gray-100 border"
                 : "bg-black text-white hover:bg-gray-900"
                 }`}
@@ -189,15 +190,16 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
         </div>
 
         {/* Followers & Following Counts */}
-        <div className="w-full flex gap-3 h-fit">
+        <div className="w-full flex md:gap-3 gap-1 h-fit">
           <div
             onClick={() => {
               set_active_follower_list(false)
               set_active_following_list(true)
-              set_active_allpost(false)}}
+              set_active_allpost(false)
+            }}
             className="cursor-pointer"
           >
-            <h1 className="text-sm flex text-gray-500 items-center gap-2">
+            <h1 className="md:text-sm text-[12px] flex text-gray-500 items-center gap-1 md:gap-2">
               <HiOutlineUserGroup /> Following{" "}
               <span className="text-sm">{profile.following?.length || 0}</span>
             </h1>
@@ -206,12 +208,12 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
           <div
             onClick={() => {
               set_active_follower_list(true)
-            set_active_following_list(false)
-            set_active_allpost(false)
+              set_active_following_list(false)
+              set_active_allpost(false)
             }}
             className="cursor-pointer"
           >
-            <h1 className="text-sm flex text-gray-500 items-center gap-2">
+            <h1 className="md:text-sm text-[12px] flex text-gray-500 items-center gap-1 md:gap-2">
               <HiOutlineUserGroup /> Followers{" "}
               <span className="text-sm">{profile.followers?.length || 0}</span>
             </h1>
@@ -221,28 +223,29 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
             onClick={() => {
               set_active_following_list(false)
               set_active_follower_list(false)
-              set_active_allpost(true)}}
+              set_active_allpost(true)
+            }}
             className="cursor-pointer"
           >
-            <h1 className="text-sm flex text-gray-500 items-center gap-2">
+            <h1 className="md:text-sm text-[12px] flex text-gray-500 items-center gap-1 md:gap-2">
               <HiOutlineUserGroup /> posts{" "}
               <span className="text-sm">{get_all_post?.length || 0}</span>
             </h1>
           </div>
         </div>
       </div>
-      
- <div className={`${active_aboute?"h-fit ":"h-20 overflow-hidden pb-2"} rounded-2xl bg-gray-100 p-4 m-4 `}>
-{/* heading and icon */}
 
-<div onClick={()=>set_active_aboute(!active_aboute)} className="flex bg-white/50 mb-3 px-2 py-1 rounded border w-fit cursor-pointer  border-gray-500 backdrop-blur-[4px] items-center gap-2" >
-    <h1 className=" font-bold text-sm text-gray-500  ">about user</h1>
-</div>
-{/* user about section */}
-<p className=" text-sm ">
-{profile.aboute_user}
-</p>
-              </div>
+      <div className={`${active_aboute ? "h-fit " : "h-20 overflow-hidden pb-2"} rounded-2xl bg-gray-100 p-4 m-4 `}>
+        {/* heading and icon */}
+
+        <div onClick={() => set_active_aboute(!active_aboute)} className="flex bg-white/50 mb-3 px-2 py-1 rounded border w-fit cursor-pointer  border-gray-500 backdrop-blur-[4px] items-center gap-2" >
+          <h1 className=" font-bold text-sm text-gray-500  ">about user</h1>
+        </div>
+        {/* user about section */}
+        <p className=" text-sm ">
+          {profile.aboute_user}
+        </p>
+      </div>
 
       {/* Followers List */}
       {active_follower_list && (
@@ -255,17 +258,17 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
             >
               <div className="flex gap-2">
                 <img
-                  className="size-8 rounded-full"
-                  src={`http://localhost:8000${item.user_id.profileimage}`}
+                  className="md:size-8 size-4  rounded-full"
+                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage}
                   alt=""
                 />
-                <h1>{item.user_id.username}</h1>
+                <h1 className="text-[12px] md:text-sm">{item.user_id.username}</h1>
               </div>
 
               {item.user_id._id === self_id && (
                 <button
                   onClick={() => handleRemoveFollower(item.user_id._id)}
-                  className="px-2 py-1 bg-red-500 text-white rounded"
+                  className="md:px-2 px-1 text-[12px] text-sm py-1 bg-black text-white rounded"
                 >
                   Remove
                 </button>
@@ -277,20 +280,20 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
 
       {/* Following List */}
       {active_following_list && (
-        <div className="w-full flex flex-col h-full gap-5 px-5 py-5">
+        <div className="w-full flex  flex-col h-full gap-5 md:px-5 py-5">
           <h1 className="text-gray-900 text-lg font-bold">Following List</h1>
           {profile.following?.map((item, index) => (
             <div
               key={index}
-              className="relative bg-white shadow flex justify-between px-3 py-2"
+              className="relative bg-white shadow flex justify-between md:px-3 py-2"
             >
               <div className="flex gap-2">
                 <img
-                  className="size-8 rounded-full"
-                  src={`http://localhost:8000${item.user_id.profileimage}`}
+                  className="md:size-8 size-4 rounded-full"
+                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage}
                   alt=""
                 />
-                <h1>{item.user_id.username}</h1>
+                <h1 className="text-[12px] md:text-sm" >{item.user_id.username}</h1>
               </div>
 
 
@@ -300,7 +303,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
       )}
 
       {/* Following List */}
-      {active_all_post && (
+      {active_all_post && get_all_post.length > 0 && (
         <div>
           {
             get_all_post.map((items, index) => {
@@ -315,7 +318,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
                     <div className="flex gap-3 items-center">
                       <img
                         className="w-10 h-10 rounded-full hover:object-contain object-cover"
-                       src={ items?.create_by_id? `http://localhost:8000/uploads/${items.create_by_id?.profileimage}`:null} 
+                        src={items?.create_by_id && items?.create_by_id?.profileimage.trim() !== "" ? `http://localhost:8000/uploads/${items.create_by_id?.profileimage}` : randomImage}
                         alt="profile"
                       />
                       <div className="flex flex-col">
@@ -383,7 +386,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
                   </div>
 
                   {/* Footer (Like & Comment) */}
-                 
+
 
 
                 </div>

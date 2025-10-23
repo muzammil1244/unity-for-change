@@ -27,7 +27,7 @@ export const createPost = async (req, res) => {
 // ✅ Get All Posts
 export const getPosts = async (req, res) => {
   try {
-    const posts = await mainPostDb.find().populate("comments.user_id", "username email profileimage");
+    const posts = await mainPostDb.find().populate("comments.user_id", "username email profileimage").sort({ createdAt: -1 });
     res.json(posts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -104,7 +104,7 @@ export const NewsPos = async (req, res) => {
       ],
       Images: Images,
       description: description,
-    });
+    })
 
     await postdata.save();
 
@@ -225,7 +225,7 @@ export const ReportMessage = async (req, res) => {
     path: "create_by_id",            // the field inside Post schema
     select: "username email profileimage" // what you want from user
   }
-})
+}).sort({ createdAt: -1 })
 
     if (!messages) {
       return res.status(500).send("Internal server problem");
@@ -267,7 +267,7 @@ export const deleteReport = async (req, res) => {
 export const Suggestion = async (req, res) => {
 
   try {
-    const messages = await AdminDB.find().select("suggestion").populate("suggestion.create_by_id", "email username profileimage")
+    const messages = await AdminDB.find().select("suggestion").populate("suggestion.create_by_id", "email username profileimage").sort({ createdAt: -1 })
 
 
     if (!messages) {
@@ -357,7 +357,7 @@ export const Get_your_liked_video = async (req, res) => {
   try {
 
 
-    const data = await PostDB.find({ likes: user_id }).populate("create_by_id","username profileimage email")
+    const data = await PostDB.find({ likes: user_id }).populate("create_by_id","username profileimage email").sort({ createdAt: -1 })
 
     if (!data) {
       return res.status(200).json({ message: "data not found bro" })
@@ -378,7 +378,7 @@ export const Get_your_comment = async (req, res) => {
   const user_id = req.user?._id
   try {
 
-    const data = await PostDB.find({ "comments.comment_by_id": user_id })
+    const data = await PostDB.find({ "comments.comment_by_id": user_id }).sort({ createdAt: -1 })
 
     if (!data) {
       return res.status(200).json({

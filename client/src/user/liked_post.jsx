@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FcLike } from "react-icons/fc";
+import { randomImage } from "../profileimage";
 
 export const Liked_post = () => {
 const [ likes,setLikes] = useState([])
@@ -80,12 +81,12 @@ handle_likes_post()
                                             <div className="flex gap-3 items-center">
                                                 <img
                                                     className="w-10 h-10 rounded-full object-cover"
-                                                    src="https://media.istockphoto.com/id/1192261427/photo/vidhan-soudha-bangalore.webp?a=1&b=1&s=612x612&w=0&k=20&c=xj14uGIncPii6HEQUSKkpqsZ7NwfWLknDsicw1ZDEFU="
+                                                    src={items.create_by_id.profileimage && items.create_by_id.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${items.create_by_id.profileimage}`:randomImage}
                                                     alt="profile"
                                                 />
                                                 <div className="flex flex-col">
-                                                    <h1 className="text-sm font-bold text-gray-900">Author</h1>
-                                                    <p className="text-xs text-gray-500">muzammil@gmail.com</p>
+                                                    <h1 className="text-sm font-bold text-gray-900">{items.create_by_id?.username}</h1>
+                                                    <p className="text-xs text-gray-500">{items.create_by_id?.email}</p>
                                                 </div>
                                             </div>
                                             {/* Menu Button */}
@@ -103,49 +104,89 @@ handle_likes_post()
                                         </div>
     
                                         {/* Images Section */}
-                                        <div className="w-full">
-                                            {items.Images.length === 1 && (
-                                                <img
-                                                    src={`http://localhost:8000${items.Images[0]}`}
-                                                    alt="post-img"
-                                                    className="w-full h-72 object-cover"
-                                                />
-                                            )}
-    
-                                            {items.Images.length === 2 && (
-                                                <div className="grid grid-cols-2 gap-1">
-                                                    {items.Images.map((img, i) => (
-                                                        <img
-                                                            key={i}
-                                                            src={`http://localhost:8000${img}`} alt={`post-img-${i}`}
-                                                            className="w-full h-60 object-cover"
-                                                        />
-                                                    ))}
-                                                </div>
-                                            )}
-    
-                                            {items.Images.length === 3 && (
-                                                <div className="grid grid-cols-2 gap-1">
-                                                    <img
-                                                        src={`http://localhost:8000${items.Images[0]}`}
-                                                        alt="post-img-0"
-                                                        className="w-full h-40 object-cover"
-                                                    />
-                                                    <img
-                                                        src={`http://localhost:8000${items.Images[1]}`}
-                                                        alt="post-img-1"
-                                                        className="w-full h-40 object-cover"
-                                                    />
-                                                    <img
-                                                        src={`http://localhost:8000${items.Images[2]}`}
-                                                        alt="post-img-2"
-                                                        className="col-span-2 w-full h-60 object-cover"
-                                                    />
-                                                </div>
-                                            )}
-    
-                                            
-                                        </div>
+                                          <div className="w-full">
+                                                                {items.Images.length === 1 && (
+                                                                    items.Images.map((file, i) => {
+                                                                        const fileUrl = `http://localhost:8000${file}`;
+                                                                        const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+
+                                                                        return isVideo ? (
+                                                                            <video
+                                                                                key={i}
+                                                                                controls
+                                                                                className="w-full h-72 object-cover rounded-md bg-black"
+                                                                            >
+                                                                                <source src={fileUrl} type="video/mp4" />
+                                                                                Your browser does not support the video tag.
+                                                                            </video>
+                                                                        ) : (
+                                                                            <img
+                                                                                key={i}
+                                                                                src={fileUrl}
+                                                                                alt="post-img"
+                                                                                className="w-full h-72 object-cover hover:object-contain"
+                                                                            />
+                                                                        );
+                                                                    })
+                                                                )}
+
+                                                                {items.Images.length === 2 && (
+                                                                    <div className="grid grid-cols-2 gap-1">
+                                                                        {items.Images.map((file, i) => {
+                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+
+                                                                            return isVideo ? (
+                                                                                <video
+                                                                                    key={i}
+                                                                                    controls
+                                                                                    className="w-full h-60 object-cover rounded-md bg-black"
+                                                                                >
+                                                                                    <source src={fileUrl} type="video/mp4" />
+                                                                                </video>
+                                                                            ) : (
+                                                                                <img
+                                                                                    key={i}
+                                                                                    src={fileUrl}
+                                                                                    alt={`post-img-${i}`}
+                                                                                    className="w-full h-60 hover:object-contain object-cover rounded-md"
+                                                                                />
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                )}
+
+                                                                {items.Images.length === 3 && (
+                                                                    <div className="grid grid-cols-2 gap-1">
+                                                                        {items.Images.map((file, i) => {
+                                                                            const fileUrl = `http://localhost:8000${file}`;
+                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+
+                                                                            return (
+                                                                                <div
+                                                                                    key={i}
+                                                                                    className={`${i === 2 ? "col-span-2" : ""}`}
+                                                                                >
+                                                                                    {isVideo ? (
+                                                                                        <video
+                                                                                            controls
+                                                                                            className="w-full transition-all duration-500 ease-in-out hover:object-contain h-40 object-cover rounded-md bg-black"
+                                                                                        >
+                                                                                            <source src={fileUrl} type="video/mp4" />
+                                                                                        </video>
+                                                                                    ) : (
+                                                                                        <img
+                                                                                            src={fileUrl}
+                                                                                            alt={`post-img-${i}`}
+                                                                                            className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
+                                                                                        />
+                                                                                    )}
+                                                                                </div>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                )}
+                                                            </div>
     
                                         {/* Footer (Like & Comment) */}
                                         <div className="flex-col justify-between  items-center px-3 py-2 border-t border-gray-200">

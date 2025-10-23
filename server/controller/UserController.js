@@ -7,7 +7,7 @@ import mongoose from "mongoose"
 export const Getnews = async (req, res) => {
   try {
 
-    const allnews = await PostDB.find().populate("comments.comment_by_id", "username profileimage").populate("create_by_id","username profileimage email")
+    const allnews = await PostDB.find().populate("comments.comment_by_id", "username profileimage").populate("create_by_id","username profileimage email").sort({ createdAt: -1 })
 
     return res.status(200).json(allnews)
 
@@ -157,7 +157,7 @@ export const GetAllPost = async (req, res) => {
   const user_id = req.user?._id
   console.log(user_id)
   try {
-    const data = await PostDB.find({ create_by_id: user_id }).populate("comments.comment_by_id","username profileimage")
+    const data = await PostDB.find({ create_by_id: user_id }).populate("comments.comment_by_id","username profileimage").sort({ createdAt: -1 })
 
 console.log("owen data ",data)
 
@@ -295,7 +295,7 @@ export const followers_List = async (req, res) => {
   const self_user_id = req.user?._id;
 
   try {
-    const user_data = await ProfileData.findById(self_user_id).select("followers").populate("followers.user_id","username email profileimage")
+    const user_data = await ProfileData.findById(self_user_id).select("followers").populate("followers.user_id","username email profileimage").sort({ createdAt: -1 })
   
 
 return res.json(user_data)
@@ -334,7 +334,7 @@ export const following_list = async(req,res)=>{
 
   try {
     
-    const user_following = await ProfileData.findById(self_id).select("following").populate("following.user_id","username email profileimage")
+    const user_following = await ProfileData.findById(self_id).select("following").populate("following.user_id","username email profileimage").sort({ createdAt: -1 })
 
 
     if(!user_following){
@@ -574,6 +574,43 @@ export const get_all_post_by_id = async (req, res) => {
 };
 
 
+export const get_following_posts = async (req, res) => {
+  const userId = req.user?._id;
+  console.log("✅ Logged-in User ID:", userId);
+
+  try {
+    // Step 1: Get current user's following list
+    const userProfile = await ProfileData.findById(userId).select("following");
+    if (!userProfile) {
+      console.log("❌ User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const followingIds = userProfile.following.map(f => f.user_id.toString());
+    console.log("📌 Following IDs:", followingIds);
+
+    // Step 2: Get all posts and filter those created by followed users
+    const posts = await PostDB.find()
+      .populate("comments.comment_by_id", "username profileimage").populate("create_by_id"," _id username profileimage email")
+      .sort({ createdAt: -1 });
+
+    // Step 3: Filter posts where create_by_id._id is in followingIds
+    const filteredPosts = posts.filter(post =>
+      followingIds.includes(post.create_by_id?._id.toString())
+    );
+
+    console.log("post",filteredPosts)
+
+    if (filteredPosts.length === 0) {
+      return res.json({ message: "Nothing to show" });
+    }
+
+    return res.json(filteredPosts);
+  } catch (err) {
+    console.error("🔥 Error in get_following_posts:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 
 
 

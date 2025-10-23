@@ -15,6 +15,9 @@ import { useEffect } from 'react';
 import { View_Post } from './view_post';
 import { IoAddOutline } from "react-icons/io5";
 import { Make_admin } from './make_admin';
+import { IoInformationCircleOutline } from "react-icons/io5";
+import { useNavigate } from 'react-router';
+import {jwtDecode} from "jwt-decode";
 
 export const Main=()=>{
 const [menuOpen, setMenuOpen] = useState(null);
@@ -32,12 +35,29 @@ const [active_view_post,set_active_view_post] = useState(false)
   const [post_data,set_post_data] = useState({})
 const [mak_active,set_make_active] = useState(false)
 const token = localStorage.getItem("token")
-
+const navigate = useNavigate()
  const filteredUsers = usersData.filter((user) =>
     user.username.toLowerCase().includes(search.toLowerCase()) ||
     user.email.toLowerCase().includes(search.toLowerCase())
   );
+useEffect(()=>{
 
+ const token = localStorage.getItem("token")
+
+
+if(!token ){
+navigate("/")
+}
+
+ if(token){
+    const decoded = jwtDecode(token);
+
+    if(decoded.role !== "admin"){
+navigate("/")
+    }
+  }
+
+})
 
  useEffect(() => {
     const fetchUsers = async () => {
@@ -155,7 +175,16 @@ setReposts(repordata[0].report)
   
 console.log("users ",filteredUsers)
 return(
-    <div className="w-full  bg-cover overflow-x-scroll h-full  " 
+  <div  className="w-full   h-full  " >
+<div className='  lg:hidden  w-screen flex flex-col p-1 justify-center items-center  h-screen'>
+
+<h1 className='flex gap-3 items-center'> <IoInformationCircleOutline/> only admin can access at desktop log in with  </h1>
+
+<p>admin@gmail.com</p>
+<p>pass:123</p>
+
+</div>
+    <div className="w-full hidden lg:block  bg-cover overflow-x-scroll h-full  " 
        >
 
 {/* headers */}
@@ -469,7 +498,8 @@ console.log("delted post id ",item.report_by_id._id)
       )}
 
 
-    </div>
+    </div></div>
+    
 )
 
 }

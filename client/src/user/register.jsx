@@ -93,18 +93,18 @@ set_login_active()
 
     return(
 
-   <div className="w-1/2 relative shadow-2xl h-full overflow-hidden bg-white rounded-2xl ">
+   <div className="md:w-1/2 w-[80%] relative shadow-2xl md:h-full h-[70%] overflow-hidden bg-white rounded-2xl ">
    
    {/* header */}
    
    <div className="w-full  flex relative justify-center py-4">
        <IoMdArrowRoundBack onClick={off_register} className=" absolute cursor-pointer top-5 left-3 hover:scale-110"/>
-       <h1 className="font-bold text-xl border-b pb-2 flex gap-2 items-center  "> Register </h1>
+       <h1 className="font-bold md:text-xl text-sm border-b pb-2 flex gap-2 items-center  "> Register </h1>
    </div>
    
-   <div className=" h-full  px-10 justify-center flex flex-col  items-center gap-4 ">
+   <div className=" h-full gap-5  px-10 justify-center flex flex-col  items-center md:gap-4 ">
        
-       <div className="flex gap-3">
+       <div className=" flex-col flex md:flex-row gap-3">
          <div className="flex items-center w-full  gap-5">
         <MdOutlineMail/>
         <input required type="text" onChange={register_data_handle} name="user_email" placeholder="Enter Email" className=" px-2 border w-full rounded-xl py-2 "/>
@@ -117,7 +117,7 @@ set_login_active()
        </div>
       
        
-       <div className="flex w-full   gap-3">
+       <div className=" flex-col flex md:flex-row gap-3">
 
          <div className="flex items-center w-full  gap-5">
         <FaRegUser/>

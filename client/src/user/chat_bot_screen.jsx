@@ -48,14 +48,14 @@ showTypingEffect(final_data.reply || "No response")
   };
 
   return (
-    <div className="flex flex-col h-full bg-white p-4">
+    <div className="flex flex-col shadow h-full bg-white p-4">
       {/* Header */}
       <div className="flex items-center justify-center relative py-3">
         <IoMdArrowRoundBack
           onClick={Inactive_chat_screen}
           className="absolute left-2 cursor-pointer hover:scale-110"
         />
-        <h1 className="flex items-center gap-2 font-bold text-lg">
+        <h1 className="flex items-center text-sm  gap-2 font-bold md:text-lg">
           <BsStars /> Ask Anything to AI
         </h1>
       </div>

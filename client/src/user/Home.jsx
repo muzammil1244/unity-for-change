@@ -9,18 +9,14 @@ import { CgProfile } from "react-icons/cg";
 import { FaRegHeart } from "react-icons/fa6";
 import { LiaCommentsSolid } from "react-icons/lia";
 import { SiRobotframework } from "react-icons/si";
-import { MdOutlineTipsAndUpdates } from "react-icons/md";
-import { FaRegShareSquare } from "react-icons/fa";
+
 import { FcLike } from "react-icons/fc";
 import { AiOutlinePlusSquare } from "react-icons/ai";
 import { FaGlobe } from "react-icons/fa";
 
 import { useEffect, useState } from 'react';
-import { dataauther } from './mainpostdata';
 import { data, useNavigate } from 'react-router';
-import { FaRegImage } from "react-icons/fa6";
-import { MdOutlineEmojiEmotions } from "react-icons/md";
-import EmojiPicker from 'emoji-picker-react';
+
 import { ImCancelCircle } from "react-icons/im";
 import { Profile } from './profile';
 import { GoHome } from "react-icons/go";
@@ -40,6 +36,8 @@ import { PostForm } from './post_up_cr';
 import { Friend_Profile } from './Friend_profile';
 import { Feedback } from './Feedback';
 import { Comment_main_post } from '../../../server/controller/UserController';
+import { randomImage } from '../profileimage';
+import { RiUserFollowLine } from "react-icons/ri";
 
 export const Home = () => {
     const [search_data, set_search_data] = useState("")
@@ -102,7 +100,6 @@ export const Home = () => {
     const [loading, setLoading] = useState(false)
     const token = get_token
 
-    console.log("main ost data", posts)
 
 
     const container1fun = () => {
@@ -328,7 +325,38 @@ export const Home = () => {
 
     }
 
+   
+    // ✅ Async function banayi fetch ke liye
+    const fetchFollowingPosts = async () => {
+      try {
+        // 🔐 JWT token localStorage ya context se lo
+        const token = localStorage.getItem("token"); // ya context se
 
+        const response = await fetch("http://localhost:8000/api/client/following/post", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // 👈 Token bhejna zaroori hai
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Server se sahi response nahi aaya");
+        }
+
+        const data = await response.json();
+
+        // ✅ Agar posts mil gaye toh state mein daal do
+        if (data.length) {
+            console.log(data)
+          set_all_post(data);
+        }
+      } catch (err) {
+        console.error("Error fetching posts:", err);
+      }
+    };
+
+ 
 
 
 
@@ -393,7 +421,6 @@ export const Home = () => {
 
     // handle ai with title 
 
-console.log("console all new",get_all_post)
 
 
     // typing effect
@@ -441,7 +468,6 @@ console.log("console all new",get_all_post)
         window.location.reload()
     }
 
-    console.log("all news", get_all_post)
     // /////////////////////////////// ///
 
     useEffect(() => {
@@ -453,8 +479,8 @@ console.log("console all new",get_all_post)
 
 
     return (
-        <div className="w-full h-full flex pl-10 overflow-scroll bg-white">
-            <div className='h-full w-fit flex flex-col px-5 justify-center items-center gap-10   bg-white'>
+        <div className="md:w-full md:h-full w-screen h-screen flex  sm:flex-col-revers  md:pl-10 overflow-hidden md:overflow-scroll bg-white">
+            <div className='md:h-full md:w-fit bg-white py-2 z-10 md:border-0 border-t-2 border border-gray-200  w-full  h-fit fixed  md:static bottom-0 flex sm-px-5    md:flex-col px-5 justify-center items-center gap-10  '>
 
                 <AiOutlinePlusSquare title='add post' onClick={() => {
 
@@ -464,7 +490,9 @@ console.log("console all new",get_all_post)
                 <GoHome size={25} title='profile' onClick={() => {
 window.location.reload()
                 }} className=' cursor-pointer text-sm' />
-                <SiRobotframework onClick={() => set_active_chat_bot(!active_chat_bot)} title='chat with ai bot' size={23} className=' cursor-pointer text-sm' />
+                <SiRobotframework onClick={() =>{
+                                                    container1fun()
+ set_active_chat_bot(!active_chat_bot)}} title='chat with ai bot' size={23} className=' cursor-pointer text-sm' />
             </div>
             <div className='w-full'>
 
@@ -472,7 +500,7 @@ window.location.reload()
 
 
                 <div>
-                    <div className='flex justify-around  items-center gap-3'>
+                    <div className='flex md:flex-row flex-col justify-around  items-center gap-3'>
                         {/* web icon */}
 
                         <div className=' flex  w-fit items-center gap-2'>
@@ -483,13 +511,15 @@ window.location.reload()
                         </div>
 
                         {/* search bar */}
-                        <div className="px-3 w-full flex gap-3 items-center py-1 border rounded-xl border-black">
+                        <div className="px-3 md:w-full w-fit flex gap-3 items-center py-1 border rounded-xl border-black">
                             <CiSearch />
                             <input type="text" onFocus={() => handle_all_user()} onChange={(e) => set_search_data(e.target.value)} className=' outline-0 w-full' />
                         </div>
                         {/* setting */}
                         <div className='w-fit items-center flex gap-2 '>
-                            <IoMdNotificationsOutline onClick={() => set_active_message(!active_admin_message)} className='hover:scale-105 duration-200 cursor-pointer ' size={22} />
+                            <IoMdNotificationsOutline onClick={() => {
+                                container2fun()
+                                set_active_message(!active_admin_message)}} className='hover:scale-105 duration-200 cursor-pointer ' size={22} />
                             <HiOutlineChatBubbleBottomCenterText onClick={() => navigate("/chat_screen",
                                 { state: { user_id: profile_data._id } }
                             )} className='hover:scale-105 duration-200 cursor-pointer ' size={20} />
@@ -507,7 +537,7 @@ window.location.reload()
                     </div>
 
                     {
-                        search_filter.length > 0 && <div className='flex  flex-row gap-5 py-5 overflow-x-scroll'>
+                        search_filter.length > 0 && <div className='flex  flex-row gap-5 py-5 px-10 md:px-0 overflow-x-scroll'>
 
                             {search_filter.map((items, index) => {
                                 return <div onClick={() => {
@@ -516,16 +546,16 @@ window.location.reload()
                                     set_friend_profile(true)
                                     set_friend_profile_data(items)
                                     console.log(items, "profiledata")
-                                }} className='flex gap-3 p-4 cursor-pointer hover:scale-105 duration-200 hover:shadow-2xl hover:shadow-green-200 duration-200 bg-white shadow rounded'>
+                                }} className='flex md:gap-3 gap-1 md:p-4 p-2  cursor-pointer hover:scale-105 duration-200 hover:shadow-2xl hover:shadow-green-200 duration-200 bg-white shadow rounded'>
 
-                                    <div className='size-10  rounded bg-cover overflow-hidden'>
-                                        <img src={`http://localhost:8000/uploads/${items.profileimage}`}
+                                    <div className='md:size-10 size-7 rounded bg-cover overflow-hidden'>
+                                        <img className='h-full w-full' src={ items?.profileimage && items.profileimage.trim() !== ''? `http://localhost:8000/uploads/${items.profileimage}`:randomImage}
                                             alt="" />
                                     </div>
 
                                     <div>
-                                        <h1 className='text-sm font-bold'>{items.username}</h1>
-                                        <p className='text-gray-400'>{items.email}</p>
+                                        <h1 className='md:text-sm  text-[9px] font-bold'>{items.username}</h1>
+                                        <p className='md:text-sm  text-[9px]  text-gray-400'>{items.email}</p>
                                     </div>
 
                                 </div>
@@ -538,7 +568,7 @@ window.location.reload()
 
 
                 {/* container  */}
-                <div className='mt-5  flex gap-3  bg-white h-full  w-full '>
+                <div className='md:mt-5 mt-2 md:overflow-hidden bg-white  flex justify-center items-center md:gap-3 gap-2   h-full  w-full '>
 
 
 
@@ -549,8 +579,8 @@ window.location.reload()
 
                     <div
                         style={{ width: container1.w }}
-                        className={`h-full    rounded-2xl overflow-hidden transition-all duration-500 ease-in-out 
-    ${container1.active ? "shadow-2xl" : "opacity-10"}`}
+                        className={`h-full     rounded-2xl md:overflow-hidden overflow-y-scroll transition-all duration-500 ease-in-out 
+    ${container1.active ? "shadow-sm" : "md:opacity-10 hidden md:block "}`}
                     >
                         {
                             active_chat_bot && <div className=' w-full h-full bg-white '>
@@ -561,7 +591,7 @@ window.location.reload()
                         }
 
                         {
-                            active_friend_profile && <div className=' w-full h-full bg-white '>
+                            active_friend_profile && <div className=' w-full h-full   overflow-hidden bg-white '>
 
                                 <Friend_Profile key={active_friend_profile_data?._id} // 👈 Ye line add karo
                                     self_id={profile_data._id} Profile_data={active_friend_profile_data} />
@@ -574,7 +604,7 @@ window.location.reload()
                             profile ?
                                 <Profile off_profile={() => set_profile(false)} />
                                 : (
-                                    <div className=' w-full h-full  overflow-hidden'>
+                                    <div className=' w-full h-full overflow-hidden'>
                                         <div className="sticky top-0 z-2 bg-gray-200 backdrop-blur-md py-6">
                                             <div className="absolute top-5 right-5">
                                                 {container1.active ? (
@@ -591,13 +621,17 @@ window.location.reload()
                                                     />
                                                 )}
                                             </div>
-                                            <h1 className="text-center z-2 text-xl font-extrabold text-gray-600">
-                                                Community Voices
+                                            <h1 className="text-center flex items-center justify-center md:gap-20 gap-10  z-2 md:text-xl text-sm font-extrabold text-gray-600">
+                                            <span onClick={fetchFollowingPosts} className='flex hover:opacity-50 duration-150 cursor-pointer items-center gap-3 md:gap-5'><RiUserFollowLine className='md:size-5'/>following </span> 
+                                            
+                                            <span className='flex hover:opacity-50 duration-150 cursor-pointer items-center gap-5' onClick={()=>
+                                                window.location.reload()
+                                            }>Community Voices</span>   
                                             </h1>
                                         </div>
 
 
-                                        <div className=' bg-white h-full flex overflow-y-scroll pb-20 items-center w-full flex-col '>
+                                        <div className=' bg-white h-full flex overflow-y-scroll md:pb-20 pb-60 relative  items-center w-full flex-col '>
 
                                             {get_all_post.length &&
                                                 get_all_post.map((items, index) => {
@@ -605,18 +639,18 @@ window.location.reload()
                                                     return (
                                                         <div
                                                             key={index}
-                                                            className="w-1/2 h-fit flex flex-col  shadow-md rounded-2xl border border-gray-200 mb-5"
+                                                            className="md:w-[90%] lg:w-1/2 w-[100%] bg-white h-fit flex flex-col  shadow-md rounded-2xl border border-gray-200 mb-3 md:mb-5"
                                                         >
                                                             {/* Header */}
-                                                            <div className="flex justify-between items-center p-3">
-                                                                <div className="flex gap-3 items-center">
+                                                            <div className="flex  justify-between items-center md:p-3 p-2">
+                                                                <div className="flex md:gap-3 gap-2 items-center">
                                                                     <img
-                                                                        className="w-10 h-10 rounded-full object-cover"
-                                                                        src={`http://localhost:8000/uploads/${items.create_by_id.profileimage}`}
+                                                                        className="md:w-10 md:h-10 h-7 w-7 rounded-full object-cover"
+                                                                        src={items.create_by_id.profileimage &&  items.create_by_id.profileimage.trim() !== ''? `http://localhost:8000/uploads/${items.create_by_id.profileimage}`:randomImage}
 
                                                                     />
                                                                     <div className="flex flex-col">
-                                                                        <h1 className="text-sm font-bold text-gray-900">{items.create_by_id.username}</h1>
+                                                                        <h1 className="md:text-sm text-[12px]  font-bold text-gray-900">{items.create_by_id.username}</h1>
                                                                         <p className="text-xs text-gray-500">{items.create_by_id.email}</p>
                                                                     </div>
                                                                 </div>
@@ -624,7 +658,7 @@ window.location.reload()
                                                                 <div
                                                                     onMouseEnter={() => setOpenIndex(index)}
                                                                     onMouseLeave={() => setOpenIndex(null)}
-                                                                    className="flex items-center relative"
+                                                                    className="flex  items-center md:sticky absolute right-5"
                                                                 >
                                                                     <div
                                                                         className={` top-6 right-0 relative flex-col ${openIndex === index ? "scale-100" : "scale-0"
@@ -703,7 +737,7 @@ window.location.reload()
                                                                                     key={i}
                                                                                     src={fileUrl}
                                                                                     alt={`post-img-${i}`}
-                                                                                    className="w-full h-60 hover:object-contain object-cover rounded-md"
+                                                                                    className="w-full h-60 focus:object-contain hover:object-contain object-cover rounded-md"
                                                                                 />
                                                                             );
                                                                         })}
@@ -732,7 +766,7 @@ window.location.reload()
                                                                                         <img
                                                                                             src={fileUrl}
                                                                                             alt={`post-img-${i}`}
-                                                                                            className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
+                                                                                            className={`w-full transition-all focus:object-contain duration-500 ease-in-out object-cover hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
                                                                                         />
                                                                                     )}
                                                                                 </div>
@@ -784,7 +818,7 @@ window.location.reload()
                                                                                     <div className='flex-col  gap-2 items-center '>
 
                                                                                         <div className='flex gap-2'>
-                                                                                            <img className='size-8 rounded-full' src={`http://localhost:8000/uploads/${items.comment_by_id.profileimage}`} />
+                                                                                            <img className='size-8 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?`http://localhost:8000/uploads/${items.comment_by_id.profileimage}`:randomImage} />
 
                                                                                             <h1 className='text-sm font-bold '>{items.comment_by_id.username}</h1>
                                                                                         </div>    <p className='text-sm mt-3'>{items.comment_content}</p>
@@ -797,7 +831,6 @@ window.location.reload()
                                                                     </div>
 
                                                                     <div className='px-2 py-3 w-full  flex justify-around items-center  bg-green h-fit'>
-                                                                        <img className='size-8 rounded-full' src={`http://localhost:8000/uploads/${items.create_by_id.profileimage}`} alt="" />
 
                                                                         <input type="text" className='px-4  py-1 border border-gray-500 textc rounded-2xl' placeholder='you comment' onChange={(e) => set_comment_data(e.target.value)} />
                                                                         <HiArrowCircleUp onClick={() => { handle_comment_to_post(items._id) }} size={35} />
@@ -834,9 +867,9 @@ window.location.reload()
                     <div
                         style={{ width: container2.w }}
                         className={` relative h-full bg-gray-50 rounded-2xl overflow-hidden  transition-all duration-500 ease-in-out
-    ${container2.active ? "shadow-sm " : "opacity-10"}`} >
+    ${container2.active ? "shadow-sm " : "md:opacity-10 hidden md:block"}`} >
 
-                        {active_admin_message ? <div className='w-full bg-white px-3 py-3 h-full'>
+                        {active_admin_message ? <div className='w-full bg-white md:px-3 py-3 h-full'>
 
                             <Admin_message data={profile_data} active_message_container={() => set_active_message(false)} />
 
@@ -857,15 +890,15 @@ window.location.reload()
 
 
                                     </div>
-                                    <h1 className='text-center text-xl font-extrabold text-gray-600  text-shadow-2xs'>News </h1>
+                                    <h1 className='text-center md:text-xl text-sm  font-extrabold text-gray-600  text-shadow-2xs'>News </h1>
 
-                                    <button onClick={() => set_active_feedback(true)} className='bg-black/30 absolute right-4 top-4  text-white text-[12px]  py-2 rounded-xl hover:bg-gray-700 duration-150 cursor-pointer  px-3' >add suggestion</button>
+                                    <button onClick={() => set_active_feedback(true)} className='bg-black/30 absolute md:right-4 right-2 top-4  text-white text-[12px]  md:py-2 py-1 rounded-xl hover:bg-gray-700 duration-150 cursor-pointer px-2 md:px-3' >add suggestion</button>
 
                                 </div>
 
 
 
-                                <div className='w-full overflow-y-scroll h-full pb-20 '>
+                                <div className='w-full overflow-y-scroll h-full pb-60 md:pb-20 '>
 
                                     {
                                         posts.map((items, index) => {
@@ -997,11 +1030,11 @@ window.location.reload()
                                                                 return <div className='flex rounded-xl p-3 shadow flex-col gap-3'>
 
                                                                     <div className='flex gap-5 items-center'>
-                                                                        <img className='size-5 object-cover rounded' src={`http://localhost:8000/uploads/${item.user_id.profileimage}`} alt="" />
+                                                                        <img className='md:size-5 size-3 object-cover rounded' src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?  `http://localhost:8000/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
 
                                                                         <div className='flexflex-col'>
-                                                                            <h1 className=' text-sm '>{item.user_id.username}</h1>
-                                                                            <h1 className=' text-gray-500 text-sm'>{item.user_id.email}</h1>
+                                                                            <h1 className=' md:text-sm text-[12px] '>{item.user_id.username}</h1>
+                                                                            <h1 className=' text-gray-500 md:text-sm text-[12px] '>{item.user_id.email}</h1>
 
                                                                         </div>
                                                                     </div>
@@ -1016,8 +1049,8 @@ window.location.reload()
                                                             </div>}
                                                         </div>
                                                         <div className='flex gap-4 items-center '>
-                                                            <input value={main_post_comment} onChange={(e) => set_main_post_comment(e.target.value)} placeholder={"Comments...."} className='w-full py-2 px-4 rounded-2xl border border-gray-300 ' type="text" />
-                                                            <button onClick={() => handleCommentSubmit(items)} className='px-3 py-2 bg-black rounded text-white cursor-pointer hover:scale-110 duration-150' >send</button>
+                                                            <input value={main_post_comment} onChange={(e) => set_main_post_comment(e.target.value)} placeholder={"Comments...."} className='w-full md:py-2 py-1 px-2  md:px-4 rounded-2xl border border-gray-300 ' type="text" />
+                                                            <button onClick={() => handleCommentSubmit(items)} className=' px-2 md:px-3 md:py-2 py-1 bg-black rounded text-white cursor-pointer hover:scale-110 duration-150' >send</button>
                                                         </div>
                                                     </div>
                                                 )
@@ -1030,22 +1063,22 @@ window.location.reload()
                                                 {/* Platforms */}
                                                 {items.platforms && items.platforms.length > 0 && (
                                                     <div className="mt-4 p-3 bg-gray-800  rounded-lg">
-                                                        <h3 className="font-semibold text-white mb-2 flex gap-3 items-center"><FaGlobe /> Platforms</h3>
+                                                        <h3 className="font-semibold text-white mb-2 flex gap-3 md:text-sm text-[12px] items-center"><FaGlobe /> Platforms</h3>
                                                         {items.platforms.map((platform, i) => (
                                                             <div
                                                                 key={i}
                                                                 className="mb-2 p-2 bg-white/10 rounded-md"
                                                             >
-                                                                <p className="font-bold text-white">{platform.title}</p>
+                                                                <p className="font-bold md:text-sm text-[12px] text-white">{platform.title}</p>
                                                                 <a
                                                                     href={platform.url}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="text-blue-400 hover:underline break-all"
+                                                                    className="text-blue-400 text-[12px] md:text-ms hover:underline break-all"
                                                                 >
                                                                     {platform.url}
                                                                 </a>
-                                                                <p className="text-sm text-white/70">
+                                                                <p className="md:text-sm text-[12px] text-white/70">
                                                                     {platform.description}
                                                                 </p>
                                                             </div>
@@ -1082,9 +1115,9 @@ window.location.reload()
             {/* tabs  */}
             {
                 active_post && (
-                    <div className='w-full h-full backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/80'>
+                    <div className='w-full fixed h-full backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
 
-                        <ImCancelCircle size={30} className=' absolute top-9 left-10 text-white/30 cursor-pointer ' onClick={() => set_active_post(false)} />
+                        <ImCancelCircle className=' absolute md:size-5 size-5 top-9 left-10 text-white cursor-pointer ' onClick={() => set_active_post(false)} />
 
                         <PostForm mode='create' onSuccess={() => set_active_post(false)} />
                     </div>
@@ -1094,7 +1127,7 @@ window.location.reload()
 
 
             {
-                active_report.active == true && <div className='w-full h-full z-3 flex backdrop-blur-[4px] justify-center absolute top-0 right-0 bg-black/30'>
+                active_report.active == true && <div className='w-full fixed h-full backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
                     <Report active_roport={active_report} active={() => set_active_report(active_report.active = false)} />
                 </div>
 
@@ -1107,7 +1140,7 @@ window.location.reload()
 
             {
 
-                login && <div className=' py-5  flex justify-center backdrop-blur-[4px] items-center z-5 absolute top-0 left-0 w-full h-full'>
+                login && <div className=' w-full fixed h-full backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
 
                     <Login off_login={() => set_login(false)} set_register_active={() => {
                         set_login(false),
@@ -1123,7 +1156,7 @@ window.location.reload()
 
             {
 
-                register_active && <div className=' py-5 backdrop-blur-[4px]  flex justify-center items-center z-5 absolute top-0 left-0 w-full h-full'>
+                register_active && <div className=' w-full fixed h-full backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
 
                     <Register off_register={() => set_register_active(false)} set_login_active={() => {
 
@@ -1140,7 +1173,7 @@ window.location.reload()
 
             {
 
-                active_feedback && <div className=' py-5 backdrop-blur-[4px]  flex justify-center items-center z-5 absolute top-0 left-0 w-full h-full'>
+                active_feedback && <div className='w-full fixed h-full backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
 
                     <Feedback is_active={() => set_active_feedback(false)} />
 

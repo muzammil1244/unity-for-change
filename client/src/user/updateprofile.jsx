@@ -4,8 +4,8 @@ import { PiUploadSimple } from "react-icons/pi";
 
 export const UpdateProfile = ({ activeprofileupdat }) => {
   const [updatedata, setupdatedata] = useState({
-    coverimage: null,
-    profileimage: null,
+    coverimage: "",
+    profileimage: "",
     name: "",
     description: "",
     gender: "",
@@ -48,9 +48,8 @@ export const UpdateProfile = ({ activeprofileupdat }) => {
       });
 
       const data = await res.json();
-      console.log("Response:", data);
       activeprofileupdat()
-      alert("Profile updated successfully!");
+      window.location.reload()
     } catch (error) {
       console.error("Error:", error);
       alert("Failed to update profile.");
@@ -58,7 +57,7 @@ export const UpdateProfile = ({ activeprofileupdat }) => {
   };
 
   return (
-    <div className="w-2/3 h-5/6 rounded-2xl overflow-y-scroll bg-white">
+    <div className="md:w-2/3 w-[80%] h-5/6 rounded-2xl overflow-y-scroll bg-white">
       {/* icon cancel */}
       <div onClick={activeprofileupdat} className="w-fit h-fit absolute top-3 left-5 cursor-pointer">
         <ImCancelCircle size={18} className="text-gray-300" />
@@ -96,7 +95,7 @@ export const UpdateProfile = ({ activeprofileupdat }) => {
 
         {/* Profile Image Section */}
         <div className="w-full h-fit flex flex-col items-center -mt-15">
-          <div className="size-30 overflow-hidden rounded-full bg-white shadow border-4 border-white">
+          <div className="md:size-30 size-20 overflow-hidden rounded-full bg-white shadow border-4 border-white">
             {updatedata.profileimage ? (
               <img
                 className="w-full h-full object-cover"

@@ -102,6 +102,7 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
       if (res.ok) {
         console.log("Success:", data);
         if (onSuccess) onSuccess(); // callback to refresh UI
+        window.location.reload()
       } else {
         console.error("Error:", data);
       }
@@ -111,14 +112,10 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
   };
 
   return (
-    <div className="w-1/2 bg-white rounded-2xl shadow-md px-5 py-4 flex flex-col gap-4">
+    <div className="md:w-1/2 w-[70%] bg-white rounded-2xl md:h-fit overflow-y-scroll max-h-full h-fit scrollbar-hide   shadow-md px-5 py-4 flex flex-col gap-4">
       {/* Header */}
       <div className="flex gap-3 items-center">
-        <img
-          className="size-10 rounded-full object-cover"
-          src="https://images.unsplash.com/photo-1619197449441-4a5e108cb565?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGlhbWdlc3xlbnwwfHwwfHx8MA%3D%3D"
-          alt="profile"
-        />
+        
         <h1 className="font-semibold text-gray-700">
           {mode === "create" ? "Create Post" : "Update Post"}
         </h1>
@@ -161,38 +158,41 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
 
         {/* Images Preview */}
         {postdata.image.length > 0 && (
-          <div
-            className={`grid gap-2 ${postdata.image.length === 1
-                ? "grid-cols-1"
-                : postdata.image.length === 2
-                  ? "grid-cols-2"
-                  : "grid-cols-3"
-              }`}
-          >
-            {postdata.image.map((img, i) => (
-              <div key={i} className="relative">
-                <img
-                  src={img.preview}
-                  alt={`preview-${i}`}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
-                {/* Remove Image Button */}
-                <button
-                  type="button"
-                  onClick={() =>
-                    setPostdata((prev) => ({
-                      ...prev,
-                      image: prev.image.filter((_, index) => index !== i),
-                    }))
-                  }
-                  className="absolute cursor-pointer top-2 right-2 bg-gray-500/30 hover:scale-110 text-white rounded-full p-1"
-                >
-                  <IoRemoveCircleOutline />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+  <div
+    className={`grid gap-2 
+      ${
+        postdata.image.length === 1
+          ? "grid-cols-1"
+          : postdata.image.length === 2
+          ? "grid-cols-1 md:grid-cols-2"
+          : "grid-cols-1 md:grid-cols-3"
+      }`}
+  >
+    {postdata.image.map((img, i) => (
+      <div key={i} className="relative">
+        <img
+          src={img.preview}
+          alt={`preview-${i}`}
+          className="w-full h-40 object-cover rounded-lg"
+        />
+        {/* Remove Image Button */}
+        <button
+          type="button"
+          onClick={() =>
+            setPostdata((prev) => ({
+              ...prev,
+              image: prev.image.filter((_, index) => index !== i),
+            }))
+          }
+          className="absolute cursor-pointer top-2 right-2 bg-gray-500/30 hover:scale-110 text-white rounded-full p-1"
+        >
+          <IoRemoveCircleOutline />
+        </button>
+      </div>
+    ))}
+  </div>
+)}
+
       </div>
 
       {/* Actions */}
@@ -215,19 +215,7 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
             onChange={handleChange}
           />
 
-          {/* Emoji Picker */}
-          <div className="relative">
-            <MdOutlineEmojiEmotions
-              className="text-gray-600 cursor-pointer hover:text-yellow-700"
-              size={22}
-              onClick={() => setShowEmoji(!showEmoji)}
-            />
-            {showEmoji && (
-              <div className="absolute h-30 rounded-2xl overflow-y-scroll top-8 left-0 z-50">
-                <EmojiPicker onEmojiClick={handleEmojiClick} />
-              </div>
-            )}
-          </div>
+        
         </div>
 
         {/* Post Button */}

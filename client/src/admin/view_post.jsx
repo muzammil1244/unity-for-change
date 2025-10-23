@@ -9,7 +9,7 @@ export const View_Post = ({ post_data, close }) => {
   if (!post_data) return <p className="text-center text-gray-500">No post data found.</p>;
 
   return (
-    <div className="w-1/2 flex flex-col h-full overflow-y-scroll rounded-2xl bg-white shadow-md p-4">
+    <div className="md:w-1/2 w-[80%] flex flex-col h-full overflow-y-scroll rounded-2xl bg-white shadow-md p-4">
       <h2 className="text-xl font-semibold mb-4 text-gray-700 flex items-center gap-2">
         <FaFileAlt className="text-gray-600" /> Report Details
       </h2>
@@ -41,20 +41,26 @@ export const View_Post = ({ post_data, close }) => {
         </div>
 
         {/* Reported Post */}
-        {post_data?.Images?.length > 0 && (
-            
-          <div className="mt-3 gap-4 grid-cols- w-full overflow-hidden h-fit  grid">
-            <p className="text-sm text-gray-600 mb-1 font-semibold">Reported Post Image:</p>
-            {post_data.Images.map((items,index)=>{
-                return <img
-              src={`http://localhost:8000${post_data.Images[index]}`}
-              alt="Reported Post"
-              className="w-full bg-gray-200  h-70 col-span-1 row-span-1 rounded-xl object-contain "
-            />
-            })}
-           
-          </div>
-        )}
+      {post_data.Images.map((media, index) => {
+  const isVideo = media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.ogg');
+
+  return isVideo ? (
+    <video
+      key={index}
+      src={`http://localhost:8000${media}`}
+      controls
+      className="w-full bg-gray-200 h-70 col-span-1 row-span-1 rounded-xl object-contain"
+    />
+  ) : (
+    <img
+      key={index}
+      src={`http://localhost:8000${media}`}
+      alt="Reported Post"
+      className="w-full bg-gray-200 h-70 col-span-1 row-span-1 rounded-xl object-contain"
+    />
+  );
+})}
+
 
         {/* Date and Delete */}
         <div className="flex justify-between items-center mt-3 text-sm text-gray-500">
