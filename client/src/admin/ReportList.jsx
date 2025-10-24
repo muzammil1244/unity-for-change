@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
+import { randomImage } from "../profileimage";
 
 // sample repost data
 const repostData = [
@@ -56,7 +57,7 @@ export const ReportList = ({activeMessage}) => {
     };
 
 
-  
+  console.log("reports ",reposts)
 
   useEffect(async()=>{
 
@@ -80,7 +81,7 @@ setReposts(repordata)
             {/* Left section (user + repost msg) */}
             <div className="flex gap-4">
               <img
-                src={`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`}
+                src={item.user_id?.profileimage && item.user_id?.profileimage.trim()!== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage}
                 alt={item.user_id.username}
                 className="size-12 rounded-full border"
               />

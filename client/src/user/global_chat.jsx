@@ -111,12 +111,12 @@ export const Global_chat = () => {
       >
         <div className="flex justify-between items-center mb-4">
 
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             <IoMdArrowRoundBack
-              className="text-xl cursor-pointer"
+              className="md:text-xl text-sm cursor-pointer"
               onClick={() => navigation(-1)}
             />
-            <h2 className="ml-2 font-bold">Online Users</h2>
+            <h2 className="ml-2 md:text-sm text-[12px] font-bold">Online Users</h2>
           </div>
 
 
@@ -150,13 +150,13 @@ export const Global_chat = () => {
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`p-3 max-w-xs rounded-2xl shadow-md ${msg.sender._id === user_id
-                  ? "bg-black text-white ml-auto"
-                  : "bg-white text-black "
+              className={`md:p-3 p-2 max-w-xs  shadow-md ${msg.sender._id === user_id
+                  ? "bg-black text-white ml-auto rounded-b-2xl rounded-tl-2xl" 
+                  : "bg-white text-black rounded-b-2xl rounded-tr-2xl "
                 }`}
             >
               <div className="w-fit h-fit">
-                <div className={`bg-cover flex gap-2 items-center px-3 py-2 rounded-2xl  ${msg.sender._id === user_id
+                <div className={`bg-cover flex gap-2 items-center md:px-3 px-2 md:py-2 py-1 rounded-2xl  ${msg.sender._id === user_id
                     ? "bg-gray-900  text-white ml-auto"
                     : "bg-gray-100 border-0 shadow text-black "
                   }`}>
@@ -183,7 +183,7 @@ export const Global_chat = () => {
                 )}
 
 
-                {msg.message && <p>{msg.message}</p>}
+                {msg.message && <p className="text-[12px] md:text-sm">{msg.message}</p>}
               </div>
 
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { CiMenuKebab } from "react-icons/ci";
+import { randomImage } from "../profileimage";
 
 export const Suggestion = ({ user_data,activeMessage }) => {
   const [suggestions, setSuggestions] = useState([]);
@@ -73,7 +74,7 @@ console.log(suggestionId)
             <div key={item._id} className="...">
     <div className="flex items-center gap-4">
       <img
-        src={`https://unity-for-change-ggbn.onrender.com/uploads/${item.create_by_id.profileimage}`}
+        src={item.create_by_id.profileimage && item.create_by_id.profileimage.trim()!== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${item.create_by_id.profileimage}`:randomImage}
         alt={item.create_by_id.username}
         className="w-12 h-12 rounded-full border"
       />

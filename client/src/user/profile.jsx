@@ -54,6 +54,7 @@ export const Profile = ({off_profile}) => {
 const[active_update_post,set_active_update_post] = useState(false)
 const [update_post_data,set_update_post_data] = useState({})
 const [active_aboute,set_active_aboute]= useState(false)
+const [getloading,set_loading] = useState(false)
     const token = localStorage.getItem("token")
 
     const handle_get_profile = async () => {
@@ -162,7 +163,7 @@ window.location.reload()
     }
 
     const handle_All_user_posts = async () => {
-
+set_loading(true)
         try {
 
             const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/post", {
@@ -175,6 +176,8 @@ window.location.reload()
             const post_data2 = await data.json()
             console.log("owen posts ",post_data2)
             set_posts_all(post_data2)
+            set_loading(false)
+
 
         } catch (err) {
 
@@ -337,7 +340,7 @@ const is_liked=(post)=>{
                     <img className="  w-full h-full  " src={ profile_data.profileimage&&  profile_data.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.profileimage}`:randomImage} alt="" />
                 </div>
                 <div className="absolute backdrop-blur-[4px] bg-white/20 md:bottom-5 bottom-2 md:right-5 right-2  w-fit h-fit md:px-3 px-2 py-1  border border-white/20 scale-80 hover:bg-gray-50/20 duration-200  cursor-pointer  rounded-2xl ">
-                    <h1 onClick={() => setactiveprofileupdate(!activeupdateprofile)} className=" font-bold md:text-sm  text-[12px] text-gray-300">Edite Image</h1>
+                    <h1 onClick={() => setactiveprofileupdate(!activeupdateprofile)} className=" font-bold md:text-sm  text-[12px] text-gray-500">Edit profile</h1>
 
                 </div>
             </div>
@@ -391,20 +394,20 @@ const is_liked=(post)=>{
 {/* menu icon */}
                     <div className="flex gap-4 justify-end w-full  items-center   ">
 
-                        <div className={`flex-col ${menu ? "scale-100" : "scale-0"} transition-all ease-in-out duration-200 gap-10 rounded-xl px-3 py-3 bg-gray-100    `}>
+                        <div className={`flex-col ${menu ? "scale-100" : "scale-0"} transition-all ease-in-out duration-200 gap-10 rounded-xl md:px-3 px-[5px] md:py-3 py-[5px] bg-gray-100    `}>
                             <h1 onClick={()=>{
                                 set_active_liked_post(true)
                                   set_active_your_post(false)
                         set_follower_list(false)
                         set_active_following_list(false)
-                            }} className="text-sm flex gap-2 items-center hover:text-gray-800 font-semibold lack text-gray-700 cursor-pointer  "><FaRegHeart />  like posts</h1>
+                            }} className="md:text-sm text-[12px] flex gap-2 items-center hover:text-gray-800 font-semibold lack text-gray-700 cursor-pointer  "><FaRegHeart />  like posts</h1>
                             <h1  onClick={()=>{
                                 set_active_liked_post(false)
                                   set_active_your_post(false)
                         set_follower_list(false)
                         set_active_following_list(false)
                         set_active_commented_post(true)
-                            }} className="text-sm flex gap-2 my-2 items-center hover:text-gray-800 lack font-semibold text-gray-700 cursor-pointer "><LiaCommentsSolid /> comment posts</h1>
+                            }} className="md:text-sm text-[12px] flex gap-2 my-2 items-center hover:text-gray-800 lack font-semibold text-gray-700 cursor-pointer "><LiaCommentsSolid /> comment posts</h1>
 
                         </div>
 
@@ -428,17 +431,17 @@ const is_liked=(post)=>{
 {/* heading and icon */}
 
 <div onClick={()=>set_active_aboute(!active_aboute)} className="flex bg-white/50 mb-3 px-2 py-1 rounded border w-fit cursor-pointer  border-gray-500 backdrop-blur-[4px] items-center gap-2" >
-    <h1 className=" font-bold text-sm text-gray-500  ">about user</h1>
+    <h1 className=" font-bold md:text-sm text-[12px] text-gray-500  ">about user</h1>
 </div>
 {/* user about section */}
-<p className=" text-sm ">
+<p className=" md:text-sm  text-[11px] ">
 {profile_data.aboute_user}
 </p>
               </div>
             {/* active Profile */}
 
             {
-                active_your_post && posts_all.length && <div className="w-full lg:grid grid-cols-2 h-full gap-5 md:px-5 py-5 ">
+                active_your_post && posts_all.length ? <div className="w-full lg:grid grid-cols-2 h-full gap-5 md:px-5 py-5 ">
                     {
                         posts_all.map((items, index) => {
 
@@ -616,36 +619,32 @@ const is_liked=(post)=>{
 
                                         </div>
 
-                                        <div className={`w-full ${commitypost && openIndexforcomment == index ? " h-90" : " h-0  "} overflow-hidden transition-all duration-500 delay-200 ease-in-out   bg-white`}>
-                                            <div className=' w-full h-78 overflow-y-scroll'>
-                                                {
-                                                    items.comments.map((item, index) => {
-                                                        return <div key={index} className='w-full px-5 py-1 border-b my-2  border-gray-300'>
-                                                            <div className='flex-col  gap-2 items-center '>
+                                        <div className={`w-full ${commitypost && openIndexforcomment == index ? " md:max-h-90 md:h-fit max-h-60 h-fit" : " h-0  "} overflow-hidden transition-all duration-500 delay-200 ease-in-out   bg-white`}>
+                                                                    <div className=' w-full h-full overflow-y-scroll'>
+                                                                        {
+                                                                            items.comments.map((items, index) => {
+                                                                                return <div className='w-full px-5 py-1 border-b my-2  border-gray-300'>
+                                                                                    <div className='flex-col  gap-2 items-center '>
 
-                                                                <div className='flex gap-2'>
-                                                                    <img className='size-8 bg-cover rounded-full' src={item.comment_by_id.profileimage && item.comment_by_id.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${item.comment_by_id.profileimage}`:randomImage} alt="" />
+                                                                                        <div className='flex gap-2'>
+                                                                                            <img className='md:size-8 size-4 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${items.comment_by_id.profileimage}`:randomImage} />
 
-                                                                    <h1 className='text-sm font-bold '>{item.comment_by_id.username}</h1>
-                                                                </div>    <p className='text-sm mt-3'>{item.comment_content}</p>
+                                                                                            <h1 className='text-[12px] md:text-sm font-bold '>{items.comment_by_id.username}</h1>
+                                                                                        </div>    <p className='text-[12px] md:text-sm mt-3'>{items.comment_content}</p>
 
-                                                            </div>
-                                                        </div>
+                                                                                    </div>
+                                                                                </div>
 
-                                                    })
-                                                }
-                                            </div>
+                                                                            })
+                                                                        }
+                                                                    </div>
 
-                                            <div className='px-2 py-3 w-full  flex justify-around items-center  bg-green h-fit'>
-                                                <img className='size-8 rounded-full' src={profile_data.profileimage && profile_data.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.profileimage}` : randomImage} alt="" />
+                                                                    <div className='px-2 pb-10 md:py-3 w-full   flex justify-around items-center  bg-green h-fit'>
 
-                                                <input type="text" value={comment_data} onChange={(e) => set_cooment_data(e.target.value)} className='px-4  py-1 border border-gray-500 textc rounded-2xl' placeholder='you comment' />
-                                                <HiArrowCircleUp onClick={() => {
-                                                    handle_comment_to_post(items._id)
-
-                                                }} size={35} />
-                                            </div>
-                                        </div>
+                                                                        <input type="text" className='md:px-4 px-2 py-[4px] text-[12px] md:text-sm  md:py-1 border border-gray-500  rounded-2xl' placeholder='text' onChange={(e) => set_comment_data(e.target.value)} />
+                                                                        <HiArrowCircleUp className='md:size-7 size-5' onClick={() => { handle_comment_to_post(items._id) }} size={35} />
+                                                                    </div>
+                                                                </div>
 
 
 
@@ -656,7 +655,9 @@ const is_liked=(post)=>{
                             );
                         })
                     }
-                </div>
+                </div>:(getloading?<div className="flex justify-center items-center">
+      <div className="w-8 h-8 border-4 border-gray-700 border-dashed rounded-full animate-spin"></div>
+    </div>:<h2 className="text-center mt-5">start making post</h2>)
             }
 
             {/* acitve follower list */}

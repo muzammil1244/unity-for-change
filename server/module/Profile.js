@@ -25,7 +25,9 @@ required:true,
 
 ,
  profileimage:{
-type:String
+type:String,
+default: ""
+
  },
 
  gender:{

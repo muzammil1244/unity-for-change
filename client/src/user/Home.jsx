@@ -98,6 +98,8 @@ export const Home = () => {
     const [message, setMessage] = useState("");
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false)
+const [getloading,set_loading] = useState(false)
+
     const token = get_token
 
 
@@ -165,7 +167,7 @@ export const Home = () => {
     const handle_all_post_data = async () => {
 
         try {
-
+set_loading(true)
             const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/news", {
                 method: "GET",
                 headers: {
@@ -184,7 +186,8 @@ export const Home = () => {
 
             set_all_post(result);
 
-            return console.log("all pos ", data)
+            return set_loading(false)
+
 
 
 
@@ -295,6 +298,7 @@ export const Home = () => {
             }
             set_comment_data("")
 
+            window.location.reload()
             return console.log("data submitted")
         } catch (err) {
             return console.log(err)
@@ -606,7 +610,7 @@ window.location.reload()
                                 : (
                                     <div className=' w-full h-full overflow-hidden'>
                                         <div className="sticky top-0 z-2 bg-gray-200 backdrop-blur-md py-6">
-                                            <div className="absolute top-5 right-5">
+                                            <div className="absolute md:top-5 top-2 right-5">
                                                 {container1.active ? (
                                                     <SlSizeActual
                                                         onClick={container2fun}
@@ -621,7 +625,7 @@ window.location.reload()
                                                     />
                                                 )}
                                             </div>
-                                            <h1 className="text-center flex items-center justify-center md:gap-20 gap-10  z-2 md:text-xl text-sm font-extrabold text-gray-600">
+                                            <h1 className="text-center flex items-center justify-center md:gap-20 gap-10  z-2 md:text-xl text-[10px] font-extrabold text-gray-600">
                                             <span onClick={fetchFollowingPosts} className='flex hover:opacity-50 duration-150 cursor-pointer items-center gap-3 md:gap-5'><RiUserFollowLine className='md:size-5'/>following </span> 
                                             
                                             <span className='flex hover:opacity-50 duration-150 cursor-pointer items-center gap-5' onClick={()=>
@@ -631,9 +635,9 @@ window.location.reload()
                                         </div>
 
 
-                                        <div className=' bg-white h-full flex overflow-y-scroll md:pb-20 pb-60 relative  items-center w-full flex-col '>
+                                        <div className=' mt-3 bg-white h-full flex overflow-y-scroll md:pb-20 pb-60 relative  items-center w-full flex-col '>
 
-                                            {get_all_post.length &&
+                                            {get_all_post.length ?
                                                 get_all_post.map((items, index) => {
 
                                                     return (
@@ -810,18 +814,18 @@ window.location.reload()
 
                                                                 </div>
 
-                                                                <div className={`w-full ${commitypost && openIndexforcomment == index ? " h-90" : " h-0  "} overflow-hidden transition-all duration-500 delay-200 ease-in-out   bg-white`}>
-                                                                    <div className=' w-full h-78 overflow-y-scroll'>
+                                                                <div className={`w-full ${commitypost && openIndexforcomment == index ? " md:max-h-90 md:h-fit max-h-60 h-fit" : " h-0  "} overflow-hidden transition-all duration-500 delay-200 ease-in-out   bg-white`}>
+                                                                    <div className=' w-full h-full overflow-y-scroll'>
                                                                         {
                                                                             items.comments.map((items, index) => {
                                                                                 return <div className='w-full px-5 py-1 border-b my-2  border-gray-300'>
                                                                                     <div className='flex-col  gap-2 items-center '>
 
                                                                                         <div className='flex gap-2'>
-                                                                                            <img className='size-8 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${items.comment_by_id.profileimage}`:randomImage} />
+                                                                                            <img className='md:size-8 size-4 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${items.comment_by_id.profileimage}`:randomImage} />
 
-                                                                                            <h1 className='text-sm font-bold '>{items.comment_by_id.username}</h1>
-                                                                                        </div>    <p className='text-sm mt-3'>{items.comment_content}</p>
+                                                                                            <h1 className='text-[12px] md:text-sm font-bold '>{items.comment_by_id.username}</h1>
+                                                                                        </div>    <p className='text-[12px] md:text-sm mt-3'>{items.comment_content}</p>
 
                                                                                     </div>
                                                                                 </div>
@@ -830,10 +834,10 @@ window.location.reload()
                                                                         }
                                                                     </div>
 
-                                                                    <div className='px-2 py-3 w-full  flex justify-around items-center  bg-green h-fit'>
+                                                                    <div className='px-2 pb-10 md:py-3 w-full   flex justify-around items-center  bg-green h-fit'>
 
-                                                                        <input type="text" className='px-4  py-1 border border-gray-500 textc rounded-2xl' placeholder='you comment' onChange={(e) => set_comment_data(e.target.value)} />
-                                                                        <HiArrowCircleUp onClick={() => { handle_comment_to_post(items._id) }} size={35} />
+                                                                        <input type="text" className='md:px-4 px-2 py-[4px] text-[12px] md:text-sm  md:py-1 border border-gray-500  rounded-2xl' placeholder='text' onChange={(e) => set_comment_data(e.target.value)} />
+                                                                        <HiArrowCircleUp className='md:size-7 size-5' onClick={() => { handle_comment_to_post(items._id) }} size={35} />
                                                                     </div>
                                                                 </div>
 
@@ -842,7 +846,9 @@ window.location.reload()
                                                             </div>
                                                         </div>
                                                     );
-                                                })
+                                                }):(getloading?<div className="flex justify-center items-center">
+      <div className="w-8 h-8 border-4 border-gray-700 border-dashed rounded-full animate-spin"></div>
+    </div>:"null")
                                             }
 
 
@@ -878,7 +884,7 @@ window.location.reload()
                         </div> :
                             <div className='w-full h-full '>
                                 <div className=' relative  bg-gray-200  w-full h-fit py-6'>
-                                    <div className=' absolute  top-5 left-5 '>
+                                    <div className=' absolute  md:top-5 top-2 left-5 '>
                                         {
                                             container2.active ? <SlSizeActual onClick={container1fun} size={12} className="cursor-pointer hover:scale-110 transition-transform duration-300" />
                                                 :
@@ -892,7 +898,7 @@ window.location.reload()
                                     </div>
                                     <h1 className='text-center md:text-xl text-sm  font-extrabold text-gray-600  text-shadow-2xs'>News </h1>
 
-                                    <button onClick={() => set_active_feedback(true)} className='bg-black/30 absolute md:right-4 right-2 top-4  text-white text-[12px]  md:py-2 py-1 rounded-xl hover:bg-gray-700 duration-150 cursor-pointer px-2 md:px-3' >add suggestion</button>
+                                    <button onClick={() => set_active_feedback(true)} className='bg-black absolute md:right-4 right-2 top-4  text-white text-[10px]  md:py-2 py-1 rounded-xl hover:bg-gray-700 duration-150 cursor-pointer px-2 md:px-3' >add suggestion</button>
 
                                 </div>
 

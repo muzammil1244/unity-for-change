@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import { CiMenuKebab } from "react-icons/ci";
+import { randomImage } from "../profileimage";
 
 export const PostList = () => {
   const [posts, setPosts] = useState([]); // API data
@@ -79,9 +80,8 @@ export const PostList = () => {
               <div className="flex items-center gap-3">
                 <img
                   src={
-                    post.profileImage?.startsWith("http")
-                      ? post.profileImage
-                      : `https://unity-for-change-ggbn.onrender.com/uploads/${post.create_by_id.profileimage}`
+                    post.create_by_id.profileimage && post.create_by_id.profileimage.trim() !== ""
+                      ? `https://unity-for-change-ggbn.onrender.com/uploads/${post.create_by_id.profileimage}`:randomImage
                   }
                   alt={post.username}
                   className="w-10 h-10 rounded-full border"

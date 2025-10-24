@@ -1,6 +1,7 @@
 import { FaUserCircle, FaCalendarAlt, FaFileAlt, FaTrashAlt } from "react-icons/fa";
 import { MdOutlineDescription } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
+import { randomImage } from "../profileimage";
 
 export const View_Post = ({ post_data, close }) => {
   console.log(post_data);
@@ -19,7 +20,7 @@ export const View_Post = ({ post_data, close }) => {
         <div className="flex items-center gap-3 mb-2">
           {post_data.create_by_id?.profileimage ? (
             <img
-              src={`https://unity-for-change-ggbn.onrender.com/uploads/${post_data.create_by_id.profileimage}`}
+              src={ post_data.create_by_id.profileimage && post_data.create_by_id.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${post_data.create_by_id.profileimage}`:randomImage}
               alt="User"
               className="w-10 h-10 rounded-full object-cover"
             />
