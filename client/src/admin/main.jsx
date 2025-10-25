@@ -18,6 +18,7 @@ import { Make_admin } from './make_admin';
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router';
 import {jwtDecode} from "jwt-decode";
+import { randomImage } from '../profileimage';
 
 export const Main=()=>{
 const [menuOpen, setMenuOpen] = useState(null);
@@ -52,9 +53,7 @@ navigate("/")
  if(token){
     const decoded = jwtDecode(token);
 
-    if(decoded.role !== "admin"){
-navigate("/")
-    }
+    
   }
 
 })
@@ -220,7 +219,7 @@ return(
     <div className="bg-black/20 backdrop-blur-[4px] overflow-y-scroll scrollbar-hide rounded-2xl shadow col-start-4 row-start-3 row-span-2 col-span-3 p-4">
 <div className="w-full h-fit p-5   rounded-2xl ">
       <div className="flex flex-col gap-4">
-     { reposts.map((item) => (
+     { reposts.length && reposts.map((item) => (
         <div
           key={item._id}
           className="w-full relative flex items-start justify-between p-4 bg-white/50 backdrop-blur-[5px] rounded-xl border border-white/30 shadow-sm relative"
@@ -228,7 +227,7 @@ return(
           {/* Left section (User and report info) */}
           <div className="flex overflow-hidden gap-4 w-[90%]">
             <img
-              src={`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`}
+              src={item.user_id?.profileimage && item.user_id.profileimage!== null ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id?.profileimage}`:randomImage}
               alt={item.user_id.username}
               className="size-12 rounded-full border flex-shrink-0"
             />
@@ -245,7 +244,7 @@ return(
               { item.report_by_id != null &&
                 <div className="mt-3 flex items-center gap-2 border-t pt-2">
                 <img
-                  src={`https://unity-for-change-ggbn.onrender.com/uploads/${item.report_by_id.create_by_id.profileimage}`}
+                  src={item.report_by_id.create_by_id.profileimage && item.report_by_id.create_by_id.profileimage !== null ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.report_by_id.create_by_id.profileimage}`:randomImage}
                   alt={item.report_by_id.create_by_id.username}
                   className="size-8 rounded-full border"
                 />
@@ -345,7 +344,7 @@ console.log("delted post id ",item.report_by_id._id)
             {/* left side */}
             <div className="flex items-center gap-3">
               <img
-                src={`https://unity-for-change-ggbn.onrender.com/uploads/${user.profileimage}`}
+                src={user.profileimage && user.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${user.profileimage}`:randomImage}
                 alt={user.username}
                 className="w-10 h-10 rounded-full border"
               />

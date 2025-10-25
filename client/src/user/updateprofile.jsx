@@ -4,8 +4,8 @@ import { PiUploadSimple } from "react-icons/pi";
 
 export const UpdateProfile = ({ activeprofileupdat }) => {
   const [updatedata, setupdatedata] = useState({
-    coverimage: "",
-    profileimage: "",
+    coverimage: null,
+    profileimage: null,
     name: "",
     description: "",
     gender: "",

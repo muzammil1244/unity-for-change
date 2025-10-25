@@ -145,6 +145,7 @@ const [getloading,set_loading] = useState(false)
 
             if (response.ok) {
                 console.log("commented")
+                handle_all_post_data()
             } else {
                 alert(data.message || "Failed to add comment");
             }
