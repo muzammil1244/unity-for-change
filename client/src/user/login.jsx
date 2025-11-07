@@ -13,6 +13,8 @@ import { API } from "../../domain.js";
 
 
 export const Login = ({set_register_active,off_login})=>{
+
+  console.log("main url",API)
 const [active_spinner,set_active_spinner] = useState(false)
   const [login_data, set_login_data] = useState({
   user_email: "",
