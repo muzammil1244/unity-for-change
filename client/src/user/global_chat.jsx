@@ -7,6 +7,7 @@ import { BsLayoutSidebarInsetReverse } from "react-icons/bs";
 import { BsLayoutSidebarInset } from "react-icons/bs";
 import { RiAttachmentFill } from "react-icons/ri";
 import { randomImage } from "../profileimage";
+import { API } from "../../domain.js";
 
 export const Global_chat = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
