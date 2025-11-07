@@ -8,7 +8,7 @@ console.log(likes,"liekd post ")
 const token = localStorage.getItem("token")
     const handle_likes_post = async () => {
     try {
-      const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/likes", {
+      const res = await fetch(`${API}/api/client/all/likes`, {
         method: "GET",
         headers: {
          "Authorization":`Bearer ${token}`
@@ -35,7 +35,7 @@ console.log("data not founded")
 
  const handle_unlike_post = async (postId) => {
     try {
-      const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/${postId}/unlike`, {
+      const res = await fetch(`${API}/api/client/${postId}/unlike`, {
         method: "PATCH",   // <-- PATCH request
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -81,7 +81,7 @@ handle_likes_post()
                                             <div className="flex gap-3 items-center">
                                                 <img
                                                     className="w-10 h-10 rounded-full object-cover"
-                                                    src={items.create_by_id.profileimage && items.create_by_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${items.create_by_id.profileimage}`:randomImage}
+                                                    src={items.create_by_id.profileimage && items.create_by_id.profileimage.trim() !== "" ?items.create_by_id.profileimage:randomImage}
                                                     alt="profile"
                                                 />
                                                 <div className="flex flex-col">
@@ -104,89 +104,86 @@ handle_likes_post()
                                         </div>
     
                                         {/* Images Section */}
-                                          <div className="w-full">
-                                                                {items.Images.length === 1 && (
-                                                                    items.Images.map((file, i) => {
-                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                        const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+                                                                                            <div className="w-full">
+  {items.Images.length === 1 && (
+    items.Images.map((file, i) => {
+      const fileUrl = file; // ✅ Cloudinary URL direct use
+      const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                        return isVideo ? (
-                                                                            <video
-                                                                                key={i}
-                                                                                controls
-                                                                                className="w-full h-72 object-cover rounded-md bg-black"
-                                                                            >
-                                                                                <source src={fileUrl} type="video/mp4" />
-                                                                                Your browser does not support the video tag.
-                                                                            </video>
-                                                                        ) : (
-                                                                            <img
-                                                                                key={i}
-                                                                                src={fileUrl}
-                                                                                alt="post-img"
-                                                                                className="w-full h-72 object-cover hover:object-contain"
-                                                                            />
-                                                                        );
-                                                                    })
-                                                                )}
+      return isVideo ? (
+        <video
+          key={i}
+          controls
+          className="w-full h-72 object-cover rounded-md bg-black"
+        >
+          <source src={fileUrl} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <img
+          key={i}
+          src={fileUrl}
+          alt="post-img"
+          className="w-full h-72 object-cover hover:object-contain"
+        />
+      );
+    })
+  )}
 
-                                                                {items.Images.length === 2 && (
-                                                                    <div className="grid grid-cols-2 gap-1">
-                                                                        {items.Images.map((file, i) => {
-                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+  {items.Images.length === 2 && (
+    <div className="grid grid-cols-2 gap-1">
+      {items.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                            return isVideo ? (
-                                                                                <video
-                                                                                    key={i}
-                                                                                    controls
-                                                                                    className="w-full h-60 object-cover rounded-md bg-black"
-                                                                                >
-                                                                                    <source src={fileUrl} type="video/mp4" />
-                                                                                </video>
-                                                                            ) : (
-                                                                                <img
-                                                                                    key={i}
-                                                                                    src={fileUrl}
-                                                                                    alt={`post-img-${i}`}
-                                                                                    className="w-full h-60 hover:object-contain object-cover rounded-md"
-                                                                                />
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
+        return isVideo ? (
+          <video
+            key={i}
+            controls
+            className="w-full h-60 object-cover rounded-md bg-black"
+          >
+            <source src={fileUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            key={i}
+            src={fileUrl}
+            alt={`post-img-${i}`}
+            className="w-full h-60 focus:object-contain hover:object-contain object-cover rounded-md"
+          />
+        );
+      })}
+    </div>
+  )}
 
-                                                                {items.Images.length === 3 && (
-                                                                    <div className="grid grid-cols-2 gap-1">
-                                                                        {items.Images.map((file, i) => {
-                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+  {items.Images.length === 3 && (
+    <div className="grid grid-cols-2 gap-1">
+      {items.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                            return (
-                                                                                <div
-                                                                                    key={i}
-                                                                                    className={`${i === 2 ? "col-span-2" : ""}`}
-                                                                                >
-                                                                                    {isVideo ? (
-                                                                                        <video
-                                                                                            controls
-                                                                                            className="w-full transition-all duration-500 ease-in-out hover:object-contain h-40 object-cover rounded-md bg-black"
-                                                                                        >
-                                                                                            <source src={fileUrl} type="video/mp4" />
-                                                                                        </video>
-                                                                                    ) : (
-                                                                                        <img
-                                                                                            src={fileUrl}
-                                                                                            alt={`post-img-${i}`}
-                                                                                            className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
-                                                                                        />
-                                                                                    )}
-                                                                                </div>
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
-                                                            </div>
+        return (
+          <div key={i} className={`${i === 2 ? "col-span-2" : ""}`}>
+            {isVideo ? (
+              <video
+                controls
+                className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md bg-black`}
+              >
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                src={fileUrl}
+                alt={`post-img-${i}`}
+                className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
+</div>
     
                                         {/* Footer (Like & Comment) */}
                                         <div className="flex-col justify-between  items-center px-3 py-2 border-t border-gray-200">

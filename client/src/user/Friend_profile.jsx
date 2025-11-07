@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 
 import { FcLike } from "react-icons/fc";
 import { randomImage } from "../profileimage";
+import { Zoom } from "./Zoom_image";
+import { API } from "../../domain";
 
 export const Friend_Profile = ({ Profile_data, self_id }) => {
   const token = localStorage.getItem("token");
@@ -21,13 +23,14 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
   const [get_all_post, set_posts_all] = useState([])
   const [active_all_post, set_active_allpost] = useState(true)
   const [active_aboute, set_active_aboute] = useState(false)
+const [active_zoom ,set_active_zoom] = useState({active:false,url:""})
 
   console.log("user posts", profile)
   const handle_All_user_posts = async () => {
 
     try {
 
-      const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/specific_user/${profile._id}`, {
+      const data = await fetch(`${API}/api/client/specific_user/${profile._id}`, {
         method: "GET",
 
       })
@@ -54,13 +57,13 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
       let url = "";
 
       if (isFollowing) {
-        url = `https://unity-for-change-ggbn.onrender.com/api/user/remove_following/${profile._id}`;
+        url = `${API}/api/user/remove_following/${profile._id}`;
         setProfile((prev) => ({
           ...prev,
           followers: prev.followers.filter((f) => f.user_id._id !== self_id),
         }));
       } else {
-        url = `https://unity-for-change-ggbn.onrender.com/api/user/follow_to/${profile._id}`;
+        url = `${API}/api/user/follow_to/${profile._id}`;
         setProfile((prev) => ({
           ...prev,
           followers: [
@@ -93,7 +96,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        `https://unity-for-change-ggbn.onrender.com/api/user/remove_follower/${userId}`,
+        `${API}/api/user/remove_follower/${userId}`,
         {
           method: "POST",
           headers: {
@@ -120,7 +123,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
     try {
       setLoading(true);
       const res = await fetch(
-        `https://unity-for-change-ggbn.onrender.com/api/user/remove_following/${userId}`,
+        `${API}/api/user/remove_following/${userId}`,
         {
           method: "POST",
           headers: {
@@ -143,7 +146,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
   };
 
   return (
-    <div className="w-full  h-full bg-white overflow-x-hidden overflow-y-scroll">
+    <div className="w-full  h-full  bg-white overflow-x-hidden overflow-y-scroll">
       {/* Cover Image + Profile */}
       <div className="relative  w-full md:h-1/3 h-25 bg-gray-500">
         <div onClick={() => {
@@ -154,13 +157,13 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
         </div>
         <img
           className="w-full h-full bg-cover"
-          src={profile.cover_image && profile.cover_image.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${profile.cover_image}`:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"}
+          src={profile.cover_image && profile.cover_image.trim() !== ""?profile.cover_image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"}
           alt=""
         />
         <div className="absolute md:size-30 size-20 transform -translate-x-1/4 translate-y-1/2 overflow-hidden bottom-0 left-1/6 rounded-full border-white border-2 bg-green-400">
           <img
-            className="bg-cover"
-            src={profile.profileimage && profile.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${profile.profileimage}`:randomImage}
+            className= " h-full w-full bg-cover"
+            src={profile.profileimage && profile.profileimage.trim() !== "" ?profile.profileimage:randomImage}
             alt=""
           />
         </div>
@@ -259,7 +262,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
               <div className="flex gap-2">
                 <img
                   className="md:size-8 size-4  rounded-full"
-                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage}
+                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?item.user_id.profileimage:randomImage}
                   alt=""
                 />
                 <h1 className="text-[12px] md:text-sm">{item.user_id.username}</h1>
@@ -290,7 +293,7 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
               <div className="flex gap-2">
                 <img
                   className="md:size-8 size-4 rounded-full"
-                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage}
+                  src={item.user_id.profileimage && item.user_id.profileimage.trim() !== "" ?item.user_id.profileimage:randomImage}
                   alt=""
                 />
                 <h1 className="text-[12px] md:text-sm" >{item.user_id.username}</h1>
@@ -317,8 +320,8 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
                   <div className="flex justify-between items-center p-3">
                     <div className="flex gap-3 items-center">
                       <img
-                        className="w-10 h-10 rounded-full hover:object-contain object-cover"
-                        src={items?.create_by_id && items?.create_by_id?.profileimage.trim() !== "" ? `https://unity-for-change-ggbn.onrender.com/uploads/${items.create_by_id?.profileimage}` : randomImage}
+                        className="w-10 h-10 rounded-full object-contain "
+                        src={items?.create_by_id && items?.create_by_id?.profileimage.trim() !== "" ? items.create_by_id?.profileimage : randomImage}
                         alt="profile"
                       />
                       <div className="flex flex-col">
@@ -343,44 +346,90 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
                   {/* Images Section */}
                   <div className="w-full">
                     {items.Images.length === 1 && (
-                      <img
-                        src={`https://unity-for-change-ggbn.onrender.com${items.Images[0]}`}
-                        alt="post-img"
-                        className="w-full hover:object-contain  h-72 object-cover"
-                      />
-                    )}
+    items.Images.map((file, i) => {
+      const fileUrl = file; // ✅ Cloudinary URL direct use
+      const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                    {items.Images.length === 2 && (
-                      <div className="grid grid-cols-2 gap-1">
-                        {items.Images.map((img, i) => (
-                          <img
-                            key={i}
-                            src={`https://unity-for-change-ggbn.onrender.com${img}`} alt={`post-img-${i}`}
-                            className="w-full h-60 hover:object-contain  object-cover"
-                          />
-                        ))}
-                      </div>
-                    )}
+      return isVideo ? (
+        <video
+          key={i}
+          controls
+          className="w-full h-72 object-cover rounded-md bg-black"
+        >
+          <source src={fileUrl} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <img
+          key={i}
+          src={fileUrl}
+                  onClick={()=>set_active_zoom({active:true,url:fileUrl})}
 
-                    {items.Images.length === 3 && (
-                      <div className="grid grid-cols-2 gap-1">
-                        <img
-                          src={`https://unity-for-change-ggbn.onrender.com${items.Images[0]}`}
-                          alt="post-img-0"
-                          className="w-full h-40 hover:object-contain  object-cover"
-                        />
-                        <img
-                          src={`https://unity-for-change-ggbn.onrender.com${items.Images[1]}`}
-                          alt="post-img-1"
-                          className="w-full h-40 hover:object-contain  object-cover"
-                        />
-                        <img
-                          src={`https://unity-for-change-ggbn.onrender.com${items.Images[2]}`}
-                          alt="post-img-2"
-                          className="col-span-2 hover:object-contain  w-full h-60 object-cover"
-                        />
-                      </div>
-                    )}
+          alt="post-img"
+          className="w-full [&>div]:bg-gray-200 h-72 object-contain"
+        />
+      );
+    })
+  )}
+
+
+                  {items.Images.length === 2 && (
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
+      {items.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
+
+        return isVideo ? (
+          <video
+            key={i}
+            controls
+            className="w-full h-60 object-cover rounded-md bg-black"
+          >
+            <source src={fileUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            key={i}
+            src={fileUrl}
+                    onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
+            alt={`post-img-${i}`}
+            className="w-full h-60 object-contain rounded-md"
+          />
+        );
+      })}
+    </div>
+  )}
+
+                     {items.Images.length === 3 && (
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
+      {items.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
+
+        return (
+          <div key={i} className={`${i === 2 ? "col-span-2" : ""}`}>
+            {isVideo ? (
+              <video
+                controls
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"}  rounded-md bg-black`}
+              >
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                src={fileUrl}
+                        onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
+                alt={`post-img-${i}`}
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"} rounded-md`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
 
 
                   </div>
@@ -395,6 +444,20 @@ export const Friend_Profile = ({ Profile_data, self_id }) => {
           }
         </div>
       )}
+
+        {
+      
+                      active_zoom.active && <div className='w-full  h-full fixed backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
+      <ImCancelCircle onClick={(prev)=>set_active_zoom({active:false,...prev})} className=' size-5 text-white absolute left-5 top-5  ' />
+      
+      
+                          <Zoom data={active_zoom.url} />
+      
+      
+                      </div>
+      
+      
+                  }
     </div>
   );
 };

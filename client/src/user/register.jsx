@@ -8,6 +8,7 @@ import Select from 'react-select';
 import { IoIosFemale } from "react-icons/io";
 import { GoSignIn } from "react-icons/go";
 import { useState } from "react";
+import { API } from "../../domain.js";
 
 
 export const Register = ({set_login_active,off_register})=>{
@@ -77,7 +78,7 @@ set_active_spinner(true)
     api_register_data.append("password",register_data.user_password)
     api_register_data.append("gender",register_data.user_gender)
 
-    const api_data = await fetch("https://unity-for-change-ggbn.onrender.com/auth/register",{
+    const api_data = await fetch(`${API}/auth/register`,{
       method:"POST",
       body: api_register_data
     })

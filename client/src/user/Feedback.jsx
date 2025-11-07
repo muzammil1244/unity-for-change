@@ -18,7 +18,7 @@ export const Feedback = ({is_active}) => {
     setMessage("");
 
     try {
-      const response = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/suggest", {
+      const response = await fetch(`${API}/api/client/suggest`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

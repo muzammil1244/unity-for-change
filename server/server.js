@@ -80,7 +80,6 @@ io.on("connection", (socket) => {
 
 
   socket.on("disconnect", () => {
-    console.log(socket.id, "disconnected");
     delete onlineUsers[socket.id];
 
     io.emit("userlist", Object.values(onlineUsers)); // sabko update bhejo

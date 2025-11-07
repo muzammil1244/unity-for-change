@@ -3,6 +3,7 @@ import { FaRegImage } from "react-icons/fa";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import EmojiPicker from "emoji-picker-react";
 import { IoRemoveCircleOutline } from "react-icons/io5";
+import { API } from "../../domain.js";
 
 export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) => {
   const [postdata, setPostdata] = useState({
@@ -23,9 +24,9 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
         title: postToUpdate.title || "",
         image: postToUpdate.Images
           ? postToUpdate.Images.map((img) => ({
-            preview: `https://unity-for-change-ggbn.onrender.com${img}`,
-            existing: true,   // yeh batayega ki purani image hai
-            path: img,        // db wala path
+            preview: img,
+            existing: true, 
+            path: img,        
           }))
           : [],
       });
@@ -80,11 +81,11 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
         }
       });
 
-      let url = "https://unity-for-change-ggbn.onrender.com/api/client/news";
+      let url = `${API}/api/client/news`;
       let method = "POST";
 
       if (mode === "update" && postToUpdate) {
-        url = `https://unity-for-change-ggbn.onrender.com/api/admin/${postToUpdate._id}/updatenews`;
+        url = `${API}/api/client/${postToUpdate._id}/updatenews`;
         method = "PATCH";
       }
 

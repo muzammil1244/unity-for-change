@@ -23,6 +23,9 @@ import { CommentedPosts } from "./comment_post";
 import { PostForm } from "./post_up_cr";
 import { MdOutlineCancel } from "react-icons/md";
 import { randomImage } from "../profileimage";
+import { Zoom } from "./Zoom_image";
+import { TEXT } from "./TEXT";
+import { API } from "../../domain.js";
 
 export const Profile = ({off_profile}) => {
 
@@ -55,12 +58,14 @@ const[active_update_post,set_active_update_post] = useState(false)
 const [update_post_data,set_update_post_data] = useState({})
 const [active_aboute,set_active_aboute]= useState(false)
 const [getloading,set_loading] = useState(false)
+const [active_zoom ,set_active_zoom] = useState({active:false,url:""})
+
     const token = localStorage.getItem("token")
 
     const handle_get_profile = async () => {
 
 
-        const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/profile", {
+        const data = await fetch(`${API}/api/client/profile`, {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` }
         })
@@ -75,7 +80,7 @@ const [getloading,set_loading] = useState(false)
 
 
 
-
+console.log("users posts ",posts_all)
 
 
 
@@ -85,7 +90,7 @@ const [getloading,set_loading] = useState(false)
     const get_follower_list_data = async () => {
 
         try {
-            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/user/followers", {
+            const data = await fetch(`${API}/api/user/followers`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -104,7 +109,7 @@ const [getloading,set_loading] = useState(false)
 
         try {
             const response = await fetch(
-                `https://unity-for-change-ggbn.onrender.com/api/user/remove_follower/${user_id}`,
+                `${API}/api/user/remove_follower/${user_id}`,
                 {
                     method: "POST",
                     headers: {
@@ -123,7 +128,7 @@ window.location.reload()
 
     const handle_list_following = async () => {
         try {
-            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/user/following", {
+            const data = await fetch(`${API}/api/user/following`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -144,7 +149,7 @@ window.location.reload()
 
         try {
             const response = await fetch(
-                `https://unity-for-change-ggbn.onrender.com/api/user/remove_following/${user_id}`,
+                `${API}/api/user/remove_following/${user_id}`,
                 {
                     method: "POST",
                     headers: {
@@ -166,7 +171,7 @@ window.location.reload()
 set_loading(true)
         try {
 
-            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/post", {
+            const data = await fetch(`${API}/api/client/all/post`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -194,7 +199,7 @@ set_loading(true)
 
         try {
 
-            const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/comment/${items}`, {
+            const data = await fetch(`${API}/api/client/comment/${items}`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -207,6 +212,26 @@ set_loading(true)
             if (!data.ok) {
                 return console.log("not working")
             }
+            set_posts_all((prev) =>
+  prev.map((item) =>
+    item._id === items
+      ? {
+          ...item,
+          comments: [
+            ...item.comments,
+            {
+              comment_by_id: {
+                _id: profile_data._id,
+                username: profile_data.username,
+                profileimage: profile_data.profileimage,
+              },
+              comment_content: comment_data,
+            },
+          ],
+        }
+      : item
+  )
+);
             set_cooment_data("")
 
             return console.log("data submitted")
@@ -227,7 +252,7 @@ set_loading(true)
   ); // pehle UI update kar diya
 
   try {
-    await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/like/${postId}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+    await fetch(`${API}/api/client/like/${postId}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
   } catch (err) {
     console.log(err);
     // rollback karna ho to yahan karo
@@ -240,7 +265,7 @@ set_loading(true)
 
        try {
 
-            const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/admin/${item}/delete`, {
+            const data = await fetch(`${API}/api/admin/${item}/delete`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -270,7 +295,7 @@ set_loading(true)
 
     set_posts_all((prev=> prev.map((p)=>p._id === postId?{...p,likes:p.likes.filter(id=>id !== profile_data._id)}:p )))
   try {
-    const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/${postId}/unlike`, {
+    const res = await fetch(`${API}/api/client/${postId}/unlike`, {
       method: "PATCH",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -326,7 +351,7 @@ const is_liked=(post)=>{
 
 
 
-
+console.log("profile_data",profile_data)
 
 
 
@@ -335,9 +360,11 @@ const is_liked=(post)=>{
         <div onMouseEnter={() => setcommentindex(null)} className="w-full h-full  overflow-x-hidden px-4 overflow-y-scroll ">
             <div className=" relative w-full md:h-1/3 h-25  bg-gray-500">
                 <IoMdArrowRoundBack onClick={off_profile} className=" absolute hover:scale-110 cursor-pointer  z-2 top-2 left-2 z-2" />
-                <img className=" w-full h-full  bg-cover " src={ profile_data.cover_image &&  profile_data.cover_image.trim() !== "" ? `https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.cover_image}`:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"} alt="" />
+                <img                         onClick={()=>set_active_zoom({active:true,url: profile_data.cover_image})}
+ className=" w-full h-full  bg-cover " src={ profile_data.cover_image &&  profile_data.cover_image.trim() !== "" ? profile_data.cover_image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABwCAMAAAC6s4C9AAAAYFBMVEWgs7e/0tba5efY5ufT5OXB1Nba5emfsragtLWgs7nV4+ahs7fa6OqhsrTa6OnZ6Oimt7rP3eC1xMm6ycysvL+zw8TC0NO2ycmsv7+kuLnH1tqcr7HP3uGwwcW9ztDH2Nq2R52oAAAC7klEQVR4nO3d0XKqMBRGYY7Y7kCIhoIej1r7/m95CNI7k142/8xaM/UB+k2AgG6ahl7lP4Z+t9u9v+/ytevH/u3P7/bb/6pqi0kQQuG8vw4QaucnCLUzP7cthNrFkVUonp0HCLWzE4TSOfPhAKFy3UI49gU/CGuv8z6kkyGEsnWNt4+hhVC3hdDHFkLhuuWKJtwhFC4R3t6OpQtSCOsuEbq/rELhVsLLHkLdfCL8B6FwbvkzG4vbCgir7kn4GA4QqvYkPLEKdUuEjc09hLI9CeOdA6lsT8IwQijbei5swvkIoWrrKmzCBKFs24H0s/TIEML6Mx8hFM9iX3hWAaFCfoRQO7MrhNqZnSEUzyYIxbNPCLXzfoZQPIt5QQjrz5bLmaZv20PmiROECtntfmhz3wiGUKLbeMh+pxvC+rOF8AqheHbmQCqePViF4tkEoXh2yh5HIdQIQvls7t9zMxMglMjmITv1AkKJLEKoXhyyw2cg1Cj2rELxIpcz6gUI1YNQvsC5UD1Ls/Re36CBUCMI5YNQPgjlg1A+COWDUD6ffiQKoXK+/8aCULSQXvvzUhBCjVzMj/CCUCII5XNzfqwshBK5S5sdPQOhRO7EgVQ8O+WnsEEokZvy4ywhlMggVM/OWUEINbpBqN7tCqF4txFC5dK4hMLLYCGsP1sMIRTPCne5IZTI5sJwbggFMiuNyIew6rr04VyY8oIQ1t03YWFnD2HdrYSNK+3sIay7jdDdIVRtI4yFbSGEdbcRlvYUENbdRniCULaN8AGhdhauEMq2vcu38KgJwspbCX3xghTCukuEvniTG8LKex5IJwh1W9+obWcIdVtXYRgh1G09F8YeQt3WA+nnAKF0zor3ZiCsvC49LPzK/54CwupLhK4vfH0Nwtrr1m+vQajdsrGHULofHlNAKJAv3uOGsPa6ZWP/wyKEsPb8lJ2rDqFEFr7KFzMQ1l6I+9z77CHUyC7H7LsnIZQoPI6ZMaQQimR3lVX4H8R/beJRzhocAAAAAElFTkSuQmCC"} alt="" />
                 <div className=" absolute md:size-30 size-20 transform bg-cover -translate-x-1/4 translate-y-1/2 overflow-hidden   bottom-0 left-1/6 rounded-full border-white border-2   bg-green-400">
-                    <img className="  w-full h-full  " src={ profile_data.profileimage&&  profile_data.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.profileimage}`:randomImage} alt="" />
+                    <img                         onClick={()=>set_active_zoom({active:true,url:profile_data.profileimage})}
+ className="  w-full h-full  " src={ profile_data.profileimage&&  profile_data.profileimage.trim() !== ""?profile_data.profileimage:randomImage} alt="" />
                 </div>
                 <div className="absolute backdrop-blur-[4px] bg-white/20 md:bottom-5 bottom-2 md:right-5 right-2  w-fit h-fit md:px-3 px-2 py-1  border border-white/20 scale-80 hover:bg-gray-50/20 duration-200  cursor-pointer  rounded-2xl ">
                     <h1 onClick={() => setactiveprofileupdate(!activeupdateprofile)} className=" font-bold md:text-sm  text-[12px] text-gray-500">Edit profile</h1>
@@ -400,6 +427,8 @@ const is_liked=(post)=>{
                                   set_active_your_post(false)
                         set_follower_list(false)
                         set_active_following_list(false)
+                                                set_active_commented_post(false)
+
                             }} className="md:text-sm text-[12px] flex gap-2 items-center hover:text-gray-800 font-semibold lack text-gray-700 cursor-pointer  "><FaRegHeart />  like posts</h1>
                             <h1  onClick={()=>{
                                 set_active_liked_post(false)
@@ -455,7 +484,7 @@ const is_liked=(post)=>{
                                         <div className="flex gap-3 items-center">
                                             <img
                                                 className="w-10 h-10 rounded-full object-cover"
-                                                src={profile_data.profileimage && profile_data.profileimage.trim() !== ""? `https://unity-for-change-ggbn.onrender.com/uploads/${profile_data.profileimage}`:randomImage}
+                                                src={profile_data.profileimage && profile_data.profileimage.trim() !== ""? profile_data.profileimage:randomImage}
                                                 alt="profile"
                                             />
                                             <div className="flex flex-col">
@@ -503,89 +532,92 @@ const is_liked=(post)=>{
                                     </div>
 
                                     {/* Images Section */}
-                                    <div className="w-full">
-                                                                {items.Images.length === 1 && (
-                                                                    items.Images.map((file, i) => {
-                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                        const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+                                                                                        <div className="w-full">
+  {items.Images.length === 1 && (
+    items.Images.map((file, i) => {
+      const fileUrl = file; // ✅ Cloudinary URL direct use
+      const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                        return isVideo ? (
-                                                                            <video
-                                                                                key={i}
-                                                                                controls
-                                                                                className="w-full h-72 object-cover rounded-md bg-black"
-                                                                            >
-                                                                                <source src={fileUrl} type="video/mp4" />
-                                                                                Your browser does not support the video tag.
-                                                                            </video>
-                                                                        ) : (
-                                                                            <img
-                                                                                key={i}
-                                                                                src={fileUrl}
-                                                                                alt="post-img"
-                                                                                className="w-full h-72 object-cover hover:object-contain"
-                                                                            />
-                                                                        );
-                                                                    })
-                                                                )}
+      return isVideo ? (
+        <video
+          key={i}
+          controls
+          className="w-full h-72 object-cover rounded-md bg-black"
+        >
+          <source src={fileUrl} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <img
+          key={i}
+          src={fileUrl}
+                  onClick={()=>set_active_zoom({active:true,url:fileUrl})}
 
-                                                                {items.Images.length === 2 && (
-                                                                    <div className="grid grid-cols-2 gap-1">
-                                                                        {items.Images.map((file, i) => {
-                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+          alt="post-img"
+          className="w-full [&>div]:bg-gray-200 h-72 object-contain"
+        />
+      );
+    })
+  )}
 
-                                                                            return isVideo ? (
-                                                                                <video
-                                                                                    key={i}
-                                                                                    controls
-                                                                                    className="w-full h-60 object-cover rounded-md bg-black"
-                                                                                >
-                                                                                    <source src={fileUrl} type="video/mp4" />
-                                                                                </video>
-                                                                            ) : (
-                                                                                <img
-                                                                                    key={i}
-                                                                                    src={fileUrl}
-                                                                                    alt={`post-img-${i}`}
-                                                                                    className="w-full h-60 hover:object-contain object-cover rounded-md"
-                                                                                />
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
+  {items.Images.length === 2 && (
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
+      {items.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                {items.Images.length === 3 && (
-                                                                    <div className="grid grid-cols-2 gap-1">
-                                                                        {items.Images.map((file, i) => {
-                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+        return isVideo ? (
+          <video
+            key={i}
+            controls
+            className="w-full h-60 object-cover rounded-md bg-black"
+          >
+            <source src={fileUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            key={i}
+            src={fileUrl}
+                    onClick={()=>set_active_zoom({active:true,url:fileUrl})}
 
-                                                                            return (
-                                                                                <div
-                                                                                    key={i}
-                                                                                    className={`${i === 2 ? "col-span-2" : ""}`}
-                                                                                >
-                                                                                    {isVideo ? (
-                                                                                        <video
-                                                                                            controls
-                                                                                            className="w-full transition-all duration-500 ease-in-out hover:object-contain h-40 object-cover rounded-md bg-black"
-                                                                                        >
-                                                                                            <source src={fileUrl} type="video/mp4" />
-                                                                                        </video>
-                                                                                    ) : (
-                                                                                        <img
-                                                                                            src={fileUrl}
-                                                                                            alt={`post-img-${i}`}
-                                                                                            className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
-                                                                                        />
-                                                                                    )}
-                                                                                </div>
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
-                                                            </div>
+            alt={`post-img-${i}`}
+            className="w-full h-60 object-contain rounded-md"
+          />
+        );
+      })}
+    </div>
+  )}
+
+  {items.Images.length === 3 && (
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
+      {items.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
+
+        return (
+          <div key={i} className={`${i === 2 ? "col-span-2" : ""}`}>
+            {isVideo ? (
+              <video
+                controls
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"}  rounded-md bg-black`}
+              >
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                src={fileUrl}
+                        onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
+                alt={`post-img-${i}`}
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"} rounded-md`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
+</div>
 
                                     {/* Footer (Like & Comment) */}
                                     <div className="flex-col justify-between  items-center px-3 py-2 border-t border-gray-200">
@@ -620,14 +652,14 @@ const is_liked=(post)=>{
                                         </div>
 
                                         <div className={`w-full ${commitypost && openIndexforcomment == index ? " md:max-h-90 md:h-fit max-h-60 h-fit" : " h-0  "} overflow-hidden transition-all duration-500 delay-200 ease-in-out   bg-white`}>
-                                                                    <div className=' w-full h-full overflow-y-scroll'>
+                                                                    <div className=' w-full md:h-75 h-53 overflow-y-scroll'>
                                                                         {
                                                                             items.comments.map((items, index) => {
                                                                                 return <div className='w-full px-5 py-1 border-b my-2  border-gray-300'>
                                                                                     <div className='flex-col  gap-2 items-center '>
 
                                                                                         <div className='flex gap-2'>
-                                                                                            <img className='md:size-8 size-4 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${items.comment_by_id.profileimage}`:randomImage} />
+                                                                                            <img className='md:size-8 size-4 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?items.comment_by_id.profileimage:randomImage} />
 
                                                                                             <h1 className='text-[12px] md:text-sm font-bold '>{items.comment_by_id.username}</h1>
                                                                                         </div>    <p className='text-[12px] md:text-sm mt-3'>{items.comment_content}</p>
@@ -657,7 +689,7 @@ const is_liked=(post)=>{
                     }
                 </div>:(getloading?<div className="flex justify-center items-center">
       <div className="w-8 h-8 border-4 border-gray-700 border-dashed rounded-full animate-spin"></div>
-    </div>:<h2 className="text-center mt-5">start making post</h2>)
+    </div>:<div className="w-full  flex justify-center items-center "><TEXT title={"start making post "}/></div>)
             }
 
             {/* acitve follower list */}
@@ -669,7 +701,7 @@ const is_liked=(post)=>{
                         follower_list.followers.map((item, index) => {
                             return <div key={index} className=" relative bg-white shadow flex justify-between px-3  py-2 ">
                                 <div className="flex gap-2">
-                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
+                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?item.user_id.profileimage:randomImage} alt="" />
                                     <h1 className="text-[12px] md:text-sm">{item.user_id.username}</h1>
 
                                 </div>
@@ -699,7 +731,7 @@ const is_liked=(post)=>{
                         following_list.following.map((item, index) => {
                             return <div key={index} className=" relative bg-white shadow flex justify-between px-3 py-2">
                                 <div className="flex gap-2">
-                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
+                                    <img className="md:size-8 size-4 rounded-full" src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?item.user_id.profileimage:randomImage} alt="" />
                                     <h1 className=" md:text-sm  text-[12px]">{item.user_id.username}</h1>
 
                                 </div>
@@ -765,6 +797,20 @@ const is_liked=(post)=>{
     </div>
 }
 
+
+{
+
+                active_zoom.active && <div className='w-full  h-full fixed backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
+<ImCancelCircle onClick={(prev)=>set_active_zoom({active:false,...prev})} className=' size-5 text-white absolute left-5 top-5  ' />
+
+
+                    <Zoom data={active_zoom.url} />
+
+
+                </div>
+
+
+            }
         </div>
 
 

@@ -9,7 +9,7 @@ const router = Router()
 
 router.get("/client/all/news", Getnews)
 router.post("/client/news", Authmiddleware, upload.array("file", 3), NewsPos)
-router.patch("/client/:postid/updatenews", Authmiddleware, upload.single("file"), UpdatePost)
+router.patch("/client/:postid/updatenews", Authmiddleware, upload.array("file",3), UpdatePost)
 router.delete("/client/:postid/delete", Authmiddleware, upload.single("file"), DeletePost)
 router.post("/client/suggest", Authmiddleware, Suggestion)
 router.post("/client/report/:user", Authmiddleware, Report)

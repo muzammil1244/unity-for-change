@@ -25,7 +25,7 @@ export const Global_chat = () => {
   useEffect(() => {
     if (!user_id) return;
 
-    const s = io("https://unity-for-change-ggbn.onrender.com");
+    const s = io(`${API}`);
     setSocket(s);
 
     s.on("connect", () => {
@@ -43,13 +43,13 @@ export const Global_chat = () => {
 
     fetchMessages();
 
-    return () => s.disconnect();
+    return () => s.disconnect(user_id);
   }, [user_id,]);
 
   const fetchMessages = async () => {
     try {
       const res = await fetch(
-        `https://unity-for-change-ggbn.onrender.com/api/chat/messages`,
+        `${API}/api/chat/messages`,
         { method: "GET" }
       );
 
@@ -69,7 +69,7 @@ export const Global_chat = () => {
       formData.append("media", file);
 
       try {
-        const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/chat/upload", {
+        const res = await fetch(`${API}/api/chat/upload`, {
           method: "POST",
           body: formData
         });
@@ -130,7 +130,7 @@ export const Global_chat = () => {
               className="flex items-center gap-3 p-2 bg-gray-100 rounded-lg shadow-sm"
             >
               <img
-                src={user.profileImage && user.profileImage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${user.profileImage}`:randomImage}
+                src={user.profileImage && user.profileImage.trim() !== ""?user.profileImage:randomImage}
                 alt="profile"
                 className="w-10 h-10 rounded-full border border-gray-400"
               />
@@ -150,7 +150,7 @@ export const Global_chat = () => {
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`md:p-3 p-2 max-w-xs  shadow-md ${msg.sender._id === user_id
+              className={`md:p-3 p-2 max-w-xs w-fit  shadow-md ${msg.sender._id === user_id
                   ? "bg-black text-white ml-auto rounded-b-2xl rounded-tl-2xl" 
                   : "bg-white text-black rounded-b-2xl rounded-tr-2xl "
                 }`}
@@ -160,24 +160,24 @@ export const Global_chat = () => {
                     ? "bg-gray-900  text-white ml-auto"
                     : "bg-gray-100 border-0 shadow text-black "
                   }`}>
-                  <img className="size-5 rounded-full" src={msg.sender.profileimage && msg.sender.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${msg.sender.profileimage}`:randomImage} alt="" />
+                  <img className="size-5 rounded-full" src={msg.sender.profileimage && msg.sender.profileimage.trim() !== "" ?msg.sender.profileimage:randomImage} alt="" />
                   <h1>{msg.sender.username}</h1>
                 </div>
 
                 {msg.media && (
                   <div className="mt-2">
                     {msg.media.endsWith(".mp4") ? (
-                      <video src={`https://unity-for-change-ggbn.onrender.com${msg.media}`} width="200" controls />
+                      <video src={msg.media} width="200" controls />
                     ) : msg.media.endsWith(".pdf") ? (
-                      <a href={`https://unity-for-change-ggbn.onrender.com${msg.media}`} target="_blank" rel="noreferrer">
+                      <a href={msg.media} target="_blank" rel="noreferrer">
                         View PDF
                       </a>
                     ) : msg.media.endsWith(".docx") ? (
-                      <a href={`https://unity-for-change-ggbn.onrender.com${msg.media}`} target="_blank" rel="noreferrer">
+                      <a href={msg.media} target="_blank" rel="noreferrer">
                         View DOCX
                       </a>
                     ) : (
-                      <img src={`https://unity-for-change-ggbn.onrender.com${msg.media}`} width="200" alt="media" />
+                      <img src={msg.media} width="200" alt="media" />
                     )}
                   </div>
                 )}

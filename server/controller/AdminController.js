@@ -3,26 +3,55 @@ import { AdminDB } from "../module/AdminPost.js"
 import { PostDB } from "../module/clientPos.js"
 import { ProfileData } from "../module/Profile.js"
 import { mainPostDb } from "../module/MaiPost.js";
-
+import cloudinary from "../midlleware/cloudinary .js";
+import streamifier from "streamifier"
 export const createPost = async (req, res) => {
   try {
     const { title, description, platforms } = req.body;
 
-    const images = req.files ? req.files.map((file) => "uploads/" + file.filename) : [];
+    
 
+    // ✅ Helper function for Cloudinary upload
+    const uploadToCloudinary = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: "auto" }, // image/video dono handle hoga
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url); // sirf URL store kar rahe
+          }
+        );
+        // ✅ Ye line important hai: buffer ko stream me convert karke upload karna
+        streamifier.createReadStream(fileBuffer).pipe(stream);
+      });
+    };
+
+    // ✅ Har file ke liye upload ka promise
+    const uploadPromises = req.files.map((file) => uploadToCloudinary(file.buffer));
+
+    // ✅ Wait for all uploads
+    const uploadedUrls = await Promise.all(uploadPromises);
+
+    // ✅ MongoDB me post save karo
     const newPost = new mainPostDb({
       title,
       description,
-      images,
-      platforms: JSON.parse(platforms || "[]"), // agar array string aaye toh parse karna
+      images: uploadedUrls, // yahan image/video dono URLs aayenge
+      platforms: JSON.parse(platforms || "[]"),
     });
 
     await newPost.save();
-    res.status(201).json({ message: "Post created successfully", post: newPost });
+
+    res.status(201).json({
+      message: "Post created successfully",
+      post: newPost,
+    });
   } catch (error) {
+    console.error("Upload error:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // ✅ Get All Posts
 export const getPosts = async (req, res) => {
@@ -42,14 +71,38 @@ export const updatePost = async (req, res) => {
 
     let updateData = { title, description };
 
+
+        const uploadMediatocloudinary = (fileBuffer)=>{
+return new Promise((resolve,reject)=>{
+
+ const stream = cloudinary.uploader.upload_stream({resource_type:"auto"},(err,result)=>{
+if(err){
+  return reject(err)
+}
+
+console.log("from first",result.secure_url)
+return resolve(result.secure_url)
+  })
+          streamifier.createReadStream(fileBuffer).pipe(stream);
+
+})
+ 
+
+   
+
+    }
     if (req.files && req.files.length > 0) {
-      updateData.images = req.files.map((file) =>  "uploads/" + file.filename);
+      
+      const data =  req.files.map((file) => uploadMediatocloudinary(file.buffer));
+
+      updateData.images = await Promise.all(data)
     }
 
     if (platforms) {
       updateData.platforms = JSON.parse(platforms);
     }
 
+    console.log("updated images",updateData.images)
     const updated = await mainPostDb.findByIdAndUpdate(id, updateData, { new: true });
 
     res.json({ message: "Post updated", post: updated });
@@ -88,10 +141,32 @@ export const NewsPos = async (req, res) => {
       return res.status(400).send("All fields are essential");
     }
 
-    let Images = [];
+   
+
+      const uploadToCloudinary = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: "auto" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url); 
+          }
+        );
+        streamifier.createReadStream(fileBuffer).pipe(stream);
+      });
+    };
+
+    let Images = []
     if (req.files && req.files.length > 0) {
-      Images = req.files.map(file => `/uploads/${file.filename}`);
-    }
+
+      const  data = req.files.map((file)=>{
+      return  uploadToCloudinary(file.buffer)
+      })
+
+      Images = await Promise.all(data)
+
+
+}
 
     const postdata = new PostDB({
       title: title,
@@ -107,7 +182,6 @@ export const NewsPos = async (req, res) => {
     })
 
     await postdata.save();
-
     console.log("Post created successfully");
     return res.status(200).json(postdata);
   } catch (err) {
@@ -118,7 +192,8 @@ export const NewsPos = async (req, res) => {
 
 export const UpdatePost = async (req, res) => {
   const { title, description, existingImages = [] } = req.body;
-  const postid = req.params.postid;
+  const postid = req.params?.postid;
+            console.log("new images",req.files)
 
   try {
     // post fetch karo
@@ -126,6 +201,29 @@ export const UpdatePost = async (req, res) => {
     if (!existingPost) {
       return res.status(404).json({ message: "Post not found" });
     }
+
+    console.log("existingPos",existingPost)
+
+    const uploadMediatocloudinary = (fileBuffer)=>{
+return new Promise((resolve,reject)=>{
+
+ const stream = cloudinary.uploader.upload_stream({resource_type:"auto"},(err,result)=>{
+if(err){
+  return reject(err)
+}
+
+console.log("from first",result.secure_url)
+return resolve(result.secure_url)
+  })
+          streamifier.createReadStream(fileBuffer).pipe(stream);
+
+})
+ 
+
+   
+
+    }
+
 
     // UpdateData prepare karo
     let updateData = {
@@ -135,9 +233,14 @@ export const UpdatePost = async (req, res) => {
     };
 
     // nayi images agar hai to add karo
-    if (req.files && req.files.length > 0) {
-      const newImages = req.files.map(file => `/uploads/${file.filename}`);
-      updateData.Images = [...updateData.Images, ...newImages];
+    if (req.files) {
+
+      const newImages = req.files.map(file =>uploadMediatocloudinary(file.buffer));
+      
+      const data = await Promise.all(newImages)
+
+      
+      updateData.Images = [...updateData.Images, ...data];
     }
 
     const updatedPost = await PostDB.findByIdAndUpdate(
@@ -197,7 +300,7 @@ export const ReportAction = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    return res.status(200).json({message:"data have been deleted"})
+    return res.status(200).json({ message: "data have been deleted" })
 
 
 
@@ -218,14 +321,14 @@ export const ReportMessage = async (req, res) => {
     const messages = await AdminDB.find()
       .select("report")
       .populate("report.user_id", "username email profileimage")
-.populate({
-  path: "report.report_by_id",            // 1️⃣ first level populate
-  select: "title Images description create_by_id", // 2️⃣ select fields from post
-  populate: {                        // 3️⃣ second level populate (inside Post)
-    path: "create_by_id",            // the field inside Post schema
-    select: "username email profileimage" // what you want from user
-  }
-}).sort({ createdAt: -1 })
+      .populate({
+        path: "report.report_by_id",            // 1️⃣ first level populate
+        select: "title Images description create_by_id", // 2️⃣ select fields from post
+        populate: {                        // 3️⃣ second level populate (inside Post)
+          path: "create_by_id",            // the field inside Post schema
+          select: "username email profileimage" // what you want from user
+        }
+      }).sort({ createdAt: -1 })
 
     if (!messages) {
       return res.status(500).send("Internal server problem");
@@ -242,13 +345,13 @@ export const ReportMessage = async (req, res) => {
 
 export const deleteReport = async (req, res) => {
   try {
-    const { userpostid } = req.params; 
+    const { userpostid } = req.params;
     console.log("Deleting report with id:", userpostid);
 
     const updatedAdmin = await AdminDB.findOneAndUpdate(
-      { "report._id": userpostid }, 
+      { "report._id": userpostid },
       { $pull: { report: { _id: userpostid } } },
-      { new: true } 
+      { new: true }
     );
 
     if (!updatedAdmin) {
@@ -307,7 +410,7 @@ export const GetallUserList = async (req, res) => {
 
   try {
 
-    const allusers = await ProfileData.find().populate("followers.user_id","username email profileimage").populate("following.user_id","username email profileimage")
+    const allusers = await ProfileData.find().populate("followers.user_id", "username email profileimage").populate("following.user_id", "username email profileimage")
     if (allusers.length === 0) {
 
       return res.send("there is nothing to show  ")
@@ -357,7 +460,7 @@ export const Get_your_liked_video = async (req, res) => {
   try {
 
 
-    const data = await PostDB.find({ likes: user_id }).populate("create_by_id","username profileimage email").sort({ createdAt: -1 })
+    const data = await PostDB.find({ likes: user_id }).populate("create_by_id", "username profileimage email").sort({ createdAt: -1 })
 
     if (!data) {
       return res.status(200).json({ message: "data not found bro" })

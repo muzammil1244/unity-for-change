@@ -1,12 +1,48 @@
 import { Message } from "../module/chat.js";
+import cloudinary from "../midlleware/cloudinary .js";
+import streamifier from "streamifier"// Upload media
 
-// Upload media
-export const uploadMedia = (req, res) => {
+
+export const uploadMedia =async (req, res) => {
+
+
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
-  res.json({ filePath: `/uploads/${req.file.filename}` });
+
+  console.log("mid")
+
+  const uplaodiamges = (fillpath)=>{
+
+    return new Promise((resolve,reject)=>{
+
+     const stream = cloudinary.uploader.upload_stream(
+      {resource_type:"auto"},
+      (err,result)=>{
+if(err){
+  return reject(err.message)
+}
+return resolve(result.secure_url)
+
+      }
+    )
+      streamifier.createReadStream(fillpath).pipe(stream)
+    })
+    
+
+  }
+
+  console.log("end")
+
+  const data = await uplaodiamges(req.file?.buffer)
+ 
+  
+
+  console.log('cat image',data)
+  res.json({ filePath: data });
 };
+
+
 
 // Get messages of a group
 export const getMessages = async (req, res) => {

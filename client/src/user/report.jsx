@@ -2,6 +2,7 @@ import { useState } from "react";
 import { HiArrowCircleUp } from "react-icons/hi";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { randomImage } from "../profileimage";
+import { API } from "../../domain.js";
 
 export const Report = ({ active_roport, active }) => {
   const [message_data, set_message_data] = useState("");
@@ -18,7 +19,7 @@ export const Report = ({ active_roport, active }) => {
     try {
       setLoading(true);
 
-      const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/report/${active_roport.post_id}`, {
+      const res = await fetch(`${API}/api/client/report/${active_roport.post_id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +56,7 @@ export const Report = ({ active_roport, active }) => {
         <h1 className="w-full text-center">Report to Admin </h1>
       </div>
       <div className="flex gap-5 mt-5 items-center ">
-        <img className="size-15  rounded-full " src={active_roport.image && active_roport.image.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${active_roport.image}`:randomImage} alt="" />
+        <img className="size-15  rounded-full " src={active_roport.image && active_roport.image.trim() !== ""?active_roport.image:randomImage} alt="" />
         <div className="flex-col gap-3">
           <h1 className="text-sm ">{active_roport.name}</h1>
           <p className="text-sm text-gray-500">{active_roport.email}</p>
@@ -84,7 +85,7 @@ export const Report = ({ active_roport, active }) => {
         <div className="flex gap-2 items-center">
           <img
             className="size-8 rounded-full "
-            src={active_roport.user_profile && active_roport.user_profile.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${active_roport.user_profile}`:randomImage}
+            src={active_roport.user_profile && active_roport.user_profile.trim() !== ""?active_roport.user_profile:randomImage}
             alt=""
           />
           <p className="text-gray-600 text-sm">{active_roport.user_email}</p>

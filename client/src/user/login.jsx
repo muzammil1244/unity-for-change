@@ -7,6 +7,7 @@ import { IoIosLogIn } from "react-icons/io";
 import { useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import { useNavigate } from "react-router";
+import { API } from "../../domain.js";
 
 
 
@@ -34,7 +35,7 @@ set_login_data((prev) => ({
   set_active_spinner(true)
 
       try{
-const api_data = await fetch("https://unity-for-change-ggbn.onrender.com/auth/login",{
+const api_data = await fetch(`${API}/auth/login`,{
             method:"POST",
             headers: { "Content-Type": "application/json" },
             body:JSON.stringify({email:login_data.user_email,password:login_data.user_password})

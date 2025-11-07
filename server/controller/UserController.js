@@ -3,6 +3,8 @@ import { PostDB } from "../module/clientPos.js"
 import { mainPostDb } from "../module/MaiPost.js"
 import { ProfileData } from "../module/Profile.js"
 import mongoose from "mongoose"
+import cloudinary from "../midlleware/cloudinary .js";
+import streamifier from "streamifier"
 //for get news all
 export const Getnews = async (req, res) => {
   try {
@@ -155,11 +157,9 @@ if(!post){
 export const GetAllPost = async (req, res) => {
 
   const user_id = req.user?._id
-  console.log(user_id)
   try {
     const data = await PostDB.find({ create_by_id: user_id }).populate("comments.comment_by_id","username profileimage").sort({ createdAt: -1 })
 
-console.log("owen data ",data)
 
     return res.status(200).json(data)
 
@@ -451,38 +451,61 @@ export const remove_following = async (req, res) => {
 
 export const update_profile = async (req, res) => {
   try {
-    const self_id = req.user?._id; // logged-in user id
+    const self_id = req.user?._id;
     if (!self_id) return res.status(401).json({ error: "Unauthorized" });
 
-    // Body fields
     const { email, username, gender, role, aboute_user } = req.body;
 
-    // Multer se images (single ya multiple)
-    const profileImage = req.files?.profileimage ? req.files.profileimage[0].filename: undefined;
-    const coverImage = req.files?.cover_image ? req.files.cover_image[0].filename : undefined;
+    // ✅ Utility function: upload to Cloudinary using buffer
+    const uploadToCloudinary = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: "auto"},
+          (err, result) => {
+            if (err) return reject(err);
+            resolve(result.secure_url);
+          }
+        );
+        streamifier.createReadStream(fileBuffer).pipe(stream);
+      });
+    };
 
-    // Build update object dynamically
+    let profileImageUrl, coverImageUrl;
+
+    // ✅ Upload profile image if exists
+    if (req.files?.profileimage && req.files.profileimage[0]) {
+      profileImageUrl = await uploadToCloudinary(req.files.profileimage[0].buffer);
+    }
+
+    // ✅ Upload cover image if exists
+    if (req.files?.cover_image && req.files.cover_image[0]) {
+      coverImageUrl = await uploadToCloudinary(req.files.cover_image[0].buffer);
+    }
+
+    // ✅ Dynamically build update fields
     const updateFields = {};
     if (email) updateFields.email = email;
     if (username) updateFields.username = username;
     if (gender) updateFields.gender = gender;
     if (role) updateFields.role = role;
     if (aboute_user) updateFields.aboute_user = aboute_user;
-    if (profileImage) updateFields.profileimage = profileImage;
-    if (coverImage) updateFields.cover_image = coverImage;
+    if (profileImageUrl) updateFields.profileimage = profileImageUrl;
+    if (coverImageUrl) updateFields.cover_image = coverImageUrl;
 
-    // MongoDB update
+    // ✅ Update user document
     const updatedProfile = await ProfileData.findByIdAndUpdate(
       self_id,
       { $set: updateFields },
-      { new: true } // ye updated document return karega
+      { new: true }
     );
 
-    if (!updatedProfile) return res.status(404).json({ error: "User not found" });
+    if (!updatedProfile) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
     return res.status(200).json(updatedProfile);
   } catch (error) {
-    console.error(error);
+    console.error("Update Profile Error:", error);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -538,7 +561,7 @@ export const add_main_Comment = async (req, res) => {
     const { text } = req.body;
     const userId = req.user._id;
 
-    const post = await mainPostDb.findById(postId);
+    const post = await mainPostDb.findById(postId).sort();
     if (!post) return res.status(404).json({ error: "Post not found" });
 
     post.comments.push({ user_id:userId , user_comment:text });
@@ -553,7 +576,6 @@ export const add_main_Comment = async (req, res) => {
 
 export const get_all_post_by_id = async (req, res) => {
   const userId = req.params?.userId;
-  console.log("Requested user ID:", userId);
 
   try {
     if (!userId) {
@@ -576,7 +598,6 @@ export const get_all_post_by_id = async (req, res) => {
 
 export const get_following_posts = async (req, res) => {
   const userId = req.user?._id;
-  console.log("✅ Logged-in User ID:", userId);
 
   try {
     // Step 1: Get current user's following list

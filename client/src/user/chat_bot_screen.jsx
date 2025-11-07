@@ -2,6 +2,8 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { HiArrowCircleUp } from "react-icons/hi";
 import { BsStars } from "react-icons/bs";
 import { useState } from "react";
+import { API } from "../../domain.js";
+
 
 export const Chat_Bot_Screen = ({ Inactive_chat_screen }) => {
   const [message, setMessage] = useState("");
@@ -26,7 +28,7 @@ export const Chat_Bot_Screen = ({ Inactive_chat_screen }) => {
     setResponse("")
     try {
     
-    const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/Ai",{
+    const data = await fetch(`${API}/api/Ai`,{
       method:"POST",
       headers:{
         "Content-Type": "application/json",
@@ -82,7 +84,7 @@ showTypingEffect(final_data.reply || "No response")
           <span>Thinking...</span>
         ) : (
           <span className="relative">
-            <strong>AI:</strong> {response}
+            <strong><BsStars/></strong> {response}
             {/* Blinking cursor */}
             <span className="ml-1 animate-pulse">|</span>
           </span>

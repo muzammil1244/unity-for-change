@@ -19,6 +19,7 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router';
 import {jwtDecode} from "jwt-decode";
 import { randomImage } from '../profileimage';
+import { API } from '../../domain.js';
 
 export const Main=()=>{
 const [menuOpen, setMenuOpen] = useState(null);
@@ -61,7 +62,7 @@ navigate("/")
  useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/admin/all/users"); // 👈mhara API route
+        const res = await fetch(`${API}/api/admin/all/users`); // 👈mhara API route
         const data = await res.json();
         console.log("Users fetched:", data);
         setUsersData(data);
@@ -75,7 +76,7 @@ navigate("/")
 
 
   const handleDelete = async(item) => {
-    const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/admin/${item}/news`,{
+    const data = await fetch(`${API}/api/admin/${item}/news`,{
       method:"DELETE"  
     
     })
@@ -88,7 +89,7 @@ navigate("/")
 
  const handleRemoveReport = async (id) => {
   try {
-    const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/admin/${id}/message`, {
+    const res = await fetch(`${API}/api/admin/${id}/message`, {
       method: "DELETE",
     });
 
@@ -123,7 +124,7 @@ navigate("/")
 
   try {
     const res = await fetch(
-      `https://unity-for-change-ggbn.onrender.com/api/admin/${messageUser._id}/message`,
+      `${API}/api/admin/${messageUser._id}/message`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -153,7 +154,7 @@ set_post_data(items)
 
     const messageport=async()=>{
 
-const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/admin/reports",{
+const data = await fetch(`${API}/api/admin/reports`,{
 method:"GET",
 headers:{
 "Authorization": `Bearer ${token}`
@@ -227,7 +228,7 @@ return(
           {/* Left section (User and report info) */}
           <div className="flex overflow-hidden gap-4 w-[90%]">
             <img
-              src={item.user_id?.profileimage && item.user_id.profileimage!== null ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id?.profileimage}`:randomImage}
+              src={item.user_id?.profileimage && item.user_id.profileimage!== null ?item.user_id?.profileimage:randomImage}
               alt={item.user_id.username}
               className="size-12 rounded-full border flex-shrink-0"
             />
@@ -244,7 +245,7 @@ return(
               { item.report_by_id != null &&
                 <div className="mt-3 flex items-center gap-2 border-t pt-2">
                 <img
-                  src={item.report_by_id.create_by_id.profileimage && item.report_by_id.create_by_id.profileimage !== null ?`https://unity-for-change-ggbn.onrender.com/uploads/${item.report_by_id.create_by_id.profileimage}`:randomImage}
+                  src={item.report_by_id.create_by_id.profileimage && item.report_by_id.create_by_id.profileimage !== null ?item.report_by_id.create_by_id.profileimage:randomImage}
                   alt={item.report_by_id.create_by_id.username}
                   className="size-8 rounded-full border"
                 />
@@ -344,7 +345,7 @@ console.log("delted post id ",item.report_by_id._id)
             {/* left side */}
             <div className="flex items-center gap-3">
               <img
-                src={user.profileimage && user.profileimage.trim() !== ""?`https://unity-for-change-ggbn.onrender.com/uploads/${user.profileimage}`:randomImage}
+                src={user.profileimage && user.profileimage.trim() !== ""?user.profileimage:randomImage}
                 alt={user.username}
                 className="w-10 h-10 rounded-full border"
               />
@@ -427,9 +428,9 @@ console.log("delted post id ",item.report_by_id._id)
       <div className="flex items-center gap-4 p-3 bg-white/30 backdrop-blur-md rounded-xl shadow-sm">
        <img
   src={
-    messageUser?.profileimage?.startsWith("/uploads")
-      ? `https://unity-for-change-ggbn.onrender.com${messageUser.profileimage}`
-      : `https://unity-for-change-ggbn.onrender.com/uploads/${messageUser.profileimage}`
+    messageUser?.profileimage.trim() !== ""
+      ?messageUser.profileimage
+      :randomImage
   }
   alt={messageUser?.username || "User"}
   className="w-12 h-12 rounded-full border"

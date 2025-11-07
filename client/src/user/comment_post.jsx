@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MdDeleteOutline } from "react-icons/md";
+import { API } from "../../domain.js";
 
 export const CommentedPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -8,7 +9,7 @@ export const CommentedPosts = () => {
   // ✅ Fetch all commented posts
   const fetchCommentedPosts = async () => {
     try {
-      const res = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/comment", {
+      const res = await fetch(`${API}/api/client/all/comment`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -27,7 +28,7 @@ export const CommentedPosts = () => {
   const handleDeleteComment = async (commentId, postId) => {
     try {
       const res = await fetch(
-        `https://unity-for-change-ggbn.onrender.com/api/client/${commentId}/delete/comment`,
+        `${API}/api/client/${commentId}/delete/comment`,
         {
           method: "PATCH",
           headers: {
@@ -67,89 +68,86 @@ export const CommentedPosts = () => {
           <p className="text-gray-700 text-sm">{post.description}</p>
 
           {/* Images */}
-    <div className="w-full">
-                                                                {post.Images.length === 1 && (
-                                                                    post.Images.map((file, i) => {
-                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                        const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+                                                     <div className="w-full">
+  {post.Images.length === 1 && (
+    post.Images.map((file, i) => {
+      const fileUrl = file; // ✅ Cloudinary URL direct use
+      const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                        return isVideo ? (
-                                                                            <video
-                                                                                key={i}
-                                                                                controls
-                                                                                className="w-full h-72 object-cover rounded-md bg-black"
-                                                                            >
-                                                                                <source src={fileUrl} type="video/mp4" />
-                                                                                Your browser does not support the video tag.
-                                                                            </video>
-                                                                        ) : (
-                                                                            <img
-                                                                                key={i}
-                                                                                src={fileUrl}
-                                                                                alt="post-img"
-                                                                                className="w-full h-72 object-cover hover:object-contain"
-                                                                            />
-                                                                        );
-                                                                    })
-                                                                )}
+      return isVideo ? (
+        <video
+          key={i}
+          controls
+          className="w-full h-72 object-cover rounded-md bg-black"
+        >
+          <source src={fileUrl} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <img
+          key={i}
+          src={fileUrl}
+          alt="post-img"
+          className="w-full h-72 object-cover hover:object-contain"
+        />
+      );
+    })
+  )}
 
-                                                                {post.Images.length === 2 && (
-                                                                    <div className="grid grid-cols-2 gap-1">
-                                                                        {post.Images.map((file, i) => {
-                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+  {post.Images.length === 2 && (
+    <div className="grid grid-cols-2 gap-1">
+      {post.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                            return isVideo ? (
-                                                                                <video
-                                                                                    key={i}
-                                                                                    controls
-                                                                                    className="w-full h-60 object-cover rounded-md bg-black"
-                                                                                >
-                                                                                    <source src={fileUrl} type="video/mp4" />
-                                                                                </video>
-                                                                            ) : (
-                                                                                <img
-                                                                                    key={i}
-                                                                                    src={fileUrl}
-                                                                                    alt={`post-img-${i}`}
-                                                                                    className="w-full h-60 hover:object-contain object-cover rounded-md"
-                                                                                />
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
+        return isVideo ? (
+          <video
+            key={i}
+            controls
+            className="w-full h-60 object-cover rounded-md bg-black"
+          >
+            <source src={fileUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            key={i}
+            src={fileUrl}
+            alt={`post-img-${i}`}
+            className="w-full h-60 focus:object-contain hover:object-contain object-cover rounded-md"
+          />
+        );
+      })}
+    </div>
+  )}
 
-                                                                {post.Images.length === 3 && (
-                                                                    <div className="grid grid-cols-2 gap-1">
-                                                                        {post.Images.map((file, i) => {
-                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+  {post.Images.length === 3 && (
+    <div className="grid grid-cols-2 gap-1">
+      {post.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                            return (
-                                                                                <div
-                                                                                    key={i}
-                                                                                    className={`${i === 2 ? "col-span-2" : ""}`}
-                                                                                >
-                                                                                    {isVideo ? (
-                                                                                        <video
-                                                                                            controls
-                                                                                            className="w-full transition-all duration-500 ease-in-out hover:object-contain h-40 object-cover rounded-md bg-black"
-                                                                                        >
-                                                                                            <source src={fileUrl} type="video/mp4" />
-                                                                                        </video>
-                                                                                    ) : (
-                                                                                        <img
-                                                                                            src={fileUrl}
-                                                                                            alt={`post-img-${i}`}
-                                                                                            className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
-                                                                                        />
-                                                                                    )}
-                                                                                </div>
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
-                                                            </div>
+        return (
+          <div key={i} className={`${i === 2 ? "col-span-2" : ""}`}>
+            {isVideo ? (
+              <video
+                controls
+                className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md bg-black`}
+              >
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                src={fileUrl}
+                alt={`post-img-${i}`}
+                className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
+</div>
 
           {/* Comments */}
           <div className="mt-3 border-t pt-2">

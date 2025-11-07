@@ -35,11 +35,14 @@ import { BsStars } from "react-icons/bs";
 import { PostForm } from './post_up_cr';
 import { Friend_Profile } from './Friend_profile';
 import { Feedback } from './Feedback';
-import { Comment_main_post } from '../../../server/controller/UserController';
 import { randomImage } from '../profileimage';
 import { RiUserFollowLine } from "react-icons/ri";
+import { Zoom } from './Zoom_image';
+import { TEXT } from './TEXT';
+import { API } from '../../domain.js';
 
 export const Home = () => {
+    console.log("main api for fetching",API)
     const [search_data, set_search_data] = useState("")
 
     const [container1, setconatiner1] = useState({
@@ -99,8 +102,15 @@ export const Home = () => {
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false)
 const [getloading,set_loading] = useState(false)
-
-    const token = get_token
+const [active_zoom ,set_active_zoom] = useState({active:false,url:""})
+const  [new_commetn,set_new_comment] = useState({comment_by_id:{
+    _id:"",
+    profileimage:"",
+    username:""
+},
+comment_content:""
+})
+const token = get_token
 
 
 
@@ -132,7 +142,7 @@ const [getloading,set_loading] = useState(false)
 
 
         try {
-            const response = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/comment/mainpost/${items._id}`, {
+            const response = await fetch(`${API}/api/client/comment/mainpost/${items._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -145,7 +155,28 @@ const [getloading,set_loading] = useState(false)
 
             if (response.ok) {
                 console.log("commented")
-                handle_all_post_data()
+                setPosts(
+                    
+                    (prev)=>prev.map((item)=>
+                        item._id === items._id?
+                    {
+...item,
+ comments:[...item.comments,{
+                        user_comment:main_post_comment,
+                        user_id:{
+                            email:profile_data.email,
+                            profileimage:profile_data.profileimage,
+                            username:profile_data.username
+                        }
+                    }]
+
+
+                    }:item
+                   
+                
+            
+            )
+        )
             } else {
                 alert(data.message || "Failed to add comment");
             }
@@ -169,7 +200,7 @@ const [getloading,set_loading] = useState(false)
 
         try {
 set_loading(true)
-            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/all/news", {
+            const data = await fetch(`${API}/api/client/all/news`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -206,10 +237,10 @@ set_loading(true)
 
     }
 
-
+console.log("admin posts",posts)
     const user_profile = async () => {
         try {
-            const response = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/profile", {
+            const response = await fetch(`${API}/api/client/profile`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -249,7 +280,7 @@ set_loading(true)
         ); // pehle UI update kar diya
 
         try {
-            await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/like/${postId}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+            await fetch(`${API}/api/client/like/${postId}`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
         } catch (err) {
             console.log(err);
             // rollback karna ho to yahan karo
@@ -260,7 +291,7 @@ set_loading(true)
 
         set_all_post((prev => prev.map((p) => p._id === postId ? { ...p, likes: p.likes.filter(id => id !== profile_data._id) } : p)))
         try {
-            const res = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/${postId}/unlike`, {
+            const res = await fetch(`${API}/api/client/${postId}/unlike`, {
                 method: "PATCH",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -284,7 +315,7 @@ set_loading(true)
 
         try {
 
-            const data = await fetch(`https://unity-for-change-ggbn.onrender.com/api/client/comment/${items}`, {
+            const data = await fetch(`${API}/api/client/comment/${items}`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -297,9 +328,30 @@ set_loading(true)
             if (!data.ok) {
                 return console.log("not working")
             }
-            set_comment_data("")
+set_all_post((prev) =>
+  prev.map((item) =>
+    item._id === items
+      ? {
+          ...item,
+          comments: [
+            ...item.comments,
+            {
+              comment_by_id: {
+                _id: profile_data._id,
+                username: profile_data.username,
+                profileimage: profile_data.profileimage,
+              },
+              comment_content: comment_data,
+            },
+          ],
+        }
+      : item
+  )
+);
 
-            window.location.reload()
+
+set_comment_data("")
+
             return console.log("data submitted")
         } catch (err) {
             return console.log(err)
@@ -312,7 +364,7 @@ set_loading(true)
 
         try {
 
-            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/user", {
+            const data = await fetch(`${API}/api/client/user`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Beater ${token}`
@@ -337,7 +389,7 @@ set_loading(true)
         // 🔐 JWT token localStorage ya context se lo
         const token = localStorage.getItem("token"); // ya context se
 
-        const response = await fetch("https://unity-for-change-ggbn.onrender.com/api/client/following/post", {
+        const response = await fetch(`${API}/api/client/following/post`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -371,7 +423,7 @@ set_loading(true)
     // main post data
 
     useEffect(() => {
-        fetch("https://unity-for-change-ggbn.onrender.com/api/admin/get_post")
+        fetch(`${API}/api/admin/get_post`)
             .then((res) => res.json())
             .then((data) => {
                 setPosts(data);
@@ -447,7 +499,7 @@ set_loading(true)
 
         try {
 
-            const data = await fetch("https://unity-for-change-ggbn.onrender.com/api/Ai", {
+            const data = await fetch(`${API}/api/Ai`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -481,7 +533,7 @@ set_loading(true)
         }
     }, [acitve_ai]);
 
-
+    console.log("news posts",get_all_post)
 
     return (
         <div className="md:w-full md:h-full w-screen h-screen flex  sm:flex-col-revers  md:pl-10 overflow-hidden md:overflow-scroll bg-white">
@@ -491,7 +543,10 @@ set_loading(true)
 
                     set_active_post(!active_post)
                 }} size={25} className=' cursor-pointer text-sm' />
-                <HiOutlineUserCircle title='profile' onClick={() => set_profile(!profile)} size={25} className=' cursor-pointer text-sm' />
+                <HiOutlineUserCircle title='profile' onClick={() =>{
+                                                                        container1fun()
+
+                    set_profile(!profile)}} size={25} className=' cursor-pointer text-sm' />
                 <GoHome size={25} title='profile' onClick={() => {
 window.location.reload()
                 }} className=' cursor-pointer text-sm' />
@@ -554,7 +609,7 @@ window.location.reload()
                                 }} className='flex md:gap-3 gap-1 md:p-4 p-2  cursor-pointer hover:scale-105 duration-200 hover:shadow-2xl hover:shadow-green-200 duration-200 bg-white shadow rounded'>
 
                                     <div className='md:size-10 size-7 rounded bg-cover overflow-hidden'>
-                                        <img className='h-full w-full' src={ items?.profileimage && items.profileimage.trim() !== ''? `https://unity-for-change-ggbn.onrender.com/uploads/${items.profileimage}`:randomImage}
+                                        <img className='h-full w-full' src={ items?.profileimage && items.profileimage.trim() !== ''? items.profileimage:randomImage}
                                             alt="" />
                                     </div>
 
@@ -650,8 +705,8 @@ window.location.reload()
                                                             <div className="flex  justify-between items-center md:p-3 p-2">
                                                                 <div className="flex md:gap-3 gap-2 items-center">
                                                                     <img
-                                                                        className="md:w-10 md:h-10 h-7 w-7 rounded-full object-cover"
-                                                                        src={items.create_by_id.profileimage &&  items.create_by_id.profileimage.trim() !== ''? `https://unity-for-change-ggbn.onrender.com/uploads/${items.create_by_id.profileimage}`:randomImage}
+                                                                        className="md:w-10 md:h-10 h-7 w-7 rounded-full object-contain"
+                                                                        src={items.create_by_id.profileimage &&  items.create_by_id.profileimage.trim() !== ''? items.create_by_id.profileimage:randomImage}
 
                                                                     />
                                                                     <div className="flex flex-col">
@@ -697,159 +752,206 @@ window.location.reload()
                                                             </div>
 
                                                             {/* Images Section */}
-                                                            <div className="w-full">
-                                                                {items.Images.length === 1 && (
-                                                                    items.Images.map((file, i) => {
-                                                                        const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                        const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+                      <div className="w-full space-y-1">
+  {/* === 1 IMAGE / VIDEO === */}
+  {items.Images?.length === 1 && (
+    items.Images.map((file, i) => {
+      const fileUrl = file;
+      const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                        return isVideo ? (
-                                                                            <video
-                                                                                key={i}
-                                                                                controls
-                                                                                className="w-full h-72 object-cover rounded-md bg-black"
-                                                                            >
-                                                                                <source src={fileUrl} type="video/mp4" />
-                                                                                Your browser does not support the video tag.
-                                                                            </video>
-                                                                        ) : (
-                                                                            <img
-                                                                                key={i}
-                                                                                src={fileUrl}
-                                                                                alt="post-img"
-                                                                                className="w-full h-72 object-cover hover:object-contain"
-                                                                            />
-                                                                        );
-                                                                    })
-                                                                )}
+      return isVideo ? (
+        <video
+          key={i}
+          controls
+          className="w-full h-72 sm:h-80 md:h-96 object-cover rounded-2xl bg-black"
+        >
+          <source src={fileUrl} type="video/mp4" />
+        </video>
+      ) : (
+        <img
+          onClick={() => set_active_zoom({ active: true, url: fileUrl })}
+          key={i}
+          src={fileUrl}
+          alt="post-img"
+          className="w-full h-72 sm:h-80 md:h-96 object-cover rounded-2xl"
+        />
+      );
+    })
+  )}
 
-                                                                {items.Images.length === 2 && (
-                                                                    <div className="grid grid-cols-2 gap-1">
-                                                                        {items.Images.map((file, i) => {
-                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+  {/* === 2 IMAGES / VIDEOS === */}
+  {items.Images?.length === 2 && (
+    <div className="grid grid-cols-2 gap-1">
+      {items.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                            return isVideo ? (
-                                                                                <video
-                                                                                    key={i}
-                                                                                    controls
-                                                                                    className="w-full h-60 object-cover rounded-md bg-black"
-                                                                                >
-                                                                                    <source src={fileUrl} type="video/mp4" />
-                                                                                </video>
-                                                                            ) : (
-                                                                                <img
-                                                                                    key={i}
-                                                                                    src={fileUrl}
-                                                                                    alt={`post-img-${i}`}
-                                                                                    className="w-full h-60 focus:object-contain hover:object-contain object-cover rounded-md"
-                                                                                />
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
+        return (
+          <div key={i} className="w-full overflow-hidden rounded-xl">
+            {isVideo ? (
+              <video
+                controls
+                className="w-full h-56 sm:h-64 md:h-72 object-cover bg-black"
+              >
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                onClick={() => set_active_zoom({ active: true, url: fileUrl })}
+                src={fileUrl}
+                alt={`post-img-${i}`}
+                className="w-full h-56 sm:h-64 md:h-72 object-cover"
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
 
-                                                                {items.Images.length === 3 && (
-                                                                    <div className="grid grid-cols-2 gap-1">
-                                                                        {items.Images.map((file, i) => {
-                                                                            const fileUrl = `https://unity-for-change-ggbn.onrender.com${file}`;
-                                                                            const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+  {/* === 3 IMAGES / VIDEOS === */}
+  {items.Images?.length === 3 && (
+    <div className="grid grid-cols-2 gap-1">
+      {items.Images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
+        const isLast = i === 2;
 
-                                                                            return (
-                                                                                <div
-                                                                                    key={i}
-                                                                                    className={`${i === 2 ? "col-span-2" : ""}`}
-                                                                                >
-                                                                                    {isVideo ? (
-                                                                                        <video
-                                                                                            controls
-                                                                                            className="w-full transition-all duration-500 ease-in-out hover:object-contain h-40 object-cover rounded-md bg-black"
-                                                                                        >
-                                                                                            <source src={fileUrl} type="video/mp4" />
-                                                                                        </video>
-                                                                                    ) : (
-                                                                                        <img
-                                                                                            src={fileUrl}
-                                                                                            alt={`post-img-${i}`}
-                                                                                            className={`w-full transition-all focus:object-contain duration-500 ease-in-out object-cover hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
-                                                                                        />
-                                                                                    )}
-                                                                                </div>
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
-                                                            </div>
+        return (
+          <div
+            key={i}
+            className={`${isLast ? "col-span-2" : ""} w-full overflow-hidden rounded-xl`}
+          >
+            {isVideo ? (
+              <video
+                controls
+                className={`w-full ${
+                  isLast ? "h-60 sm:h-72 md:h-80" : "h-40 sm:h-48 md:h-56"
+                } object-cover bg-black`}
+              >
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                onClick={() => set_active_zoom({ active: true, url: fileUrl })}
+                src={fileUrl}
+                alt={`post-img-${i}`}
+                className={`w-full ${
+                  isLast ? "h-60 sm:h-72 md:h-80" : "h-40 sm:h-48 md:h-56"
+                } object-cover`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
+</div>
+
 
 
                                                             {/* Footer (Like & Comment) */}
-                                                            <div className="flex-col justify-between  items-center px-3 py-2 border-t border-gray-200">
-                                                                <div className='flex justify-between py-3'><div onMouseEnter={() => setlikeindex(index)} onMouseLeave={() => setlikeindex(null)} className="flex gap-2 items-center cursor-pointer hover:text-red-500">
-                                                                    {
-                                                                        is_liked(items.likes) ? <FcLike onClick={() => handle_unlike_post(items._id)} /> : <FaRegHeart onClick={() => handle_like_to_post(items._id)} />
+                                                            <div className="flex flex-col justify-between items-center px-3 py-2 border-t border-gray-200">
+  {/* Like & Comment Buttons */}
+  <div className="flex justify-between w-full py-3">
+    <div
+      onMouseEnter={() => setlikeindex(index)}
+      onMouseLeave={() => setlikeindex(null)}
+      className="flex gap-2 items-center cursor-pointer hover:text-red-500"
+    >
+      {is_liked(items.likes) ? (
+        <FcLike onClick={() => handle_unlike_post(items._id)} />
+      ) : (
+        <FaRegHeart onClick={() => handle_like_to_post(items._id)} />
+      )}
+      <span className="text-sm text-gray-600">{items.likes.length}</span>
+    </div>
 
-                                                                    }
+    <div
+      onMouseEnter={() => {
+        setcommentindex(null);
+        setcommentindex(index);
+      }}
+      onClick={() => setcommitypost(!commitypost)}
+      className="flex gap-2 items-center cursor-pointer hover:text-blue-500"
+    >
+      <MdOutlineModeComment />
+      <span className="text-sm text-gray-600">{items.comments.length}</span>
+    </div>
+  </div>
 
-                                                                    <span className="text-sm text-gray-600">{items.likes.length}</span>
-                                                                </div>
-                                                                    <div
+  {/* Comment Section */}
+  <div
+    className={`w-full overflow-hidden transition-all duration-500 ease-in-out bg-white ${
+      commitypost && openIndexforcomment === index
+        ? "max-h-[360px] h-fit"
+        : "h-0"
+    }`}
+  >
+    {/* Comments List */}
+    <div className="w-full max-h-[300px] overflow-y-auto px-2">
+      {[...items.comments].reverse().map((comment, idx) => (
+        <div key={idx} className="w-full px-3 py-2 border-b border-gray-300">
+          <div className="flex gap-2 items-center">
+            <img
+              className="w-6 h-6 md:w-8 md:h-8 rounded-full"
+              src={
+                comment.comment_by_id.profileimage?.trim()
+                  ? comment.comment_by_id.profileimage
+                  : randomImage
+              }
+              alt="profile"
+            />
+            <h1 className="text-xs md:text-sm font-bold">
+              {comment.comment_by_id.username}
+            </h1>
+          </div>
+          <p className="text-xs md:text-sm mt-2">{comment.comment_content}</p>
+        </div>
+      ))}
+    </div>
 
-                                                                        onMouseEnter={() => {
-                                                                            setcommentindex(null)
-                                                                            setcommentindex(index)
+    {/* Comment Input */}
+    <div className="px-2 py-2 flex gap-2 items-center ">
+      <input
+        type="text"
+        className="flex-1 px-3 py-1 text-xs md:text-sm border border-gray-500 rounded-full"
+        value={comment_data}
+        placeholder="Write a comment..."
+        onChange={(e) => set_comment_data(e.target.value)}
+      />
+      <HiArrowCircleUp
+        className="text-black  cursor-pointer w-6 h-6 md:w-7 md:h-7"
+        onClick={() => handle_comment_to_post(items._id)}
+      />
+    </div>
+  </div>
 
-                                                                        }}
-                                                                        onClick={() => {
+  {/* Last Comment Display */}
+  <div className="w-full flex-col flex gap-2 p-3">
 
+    <div className='flex items-center gap-3'>
+        
+        
+       <img className='h-8 w-8  rounded-full' src={items.comments.at(-1).comment_by_id.profileimage} alt="" />
+       
+       <p>{items.comments.at(-1).comment_by_id.username}</p>
+       
+       
+    </div>
+    <p className="text-black text-xs md:text-sm">
+      {items.comments?.length > 0
+        ? items.comments.at(-1).comment_content
+        : "No comments yet"}
+    </p>
+  </div>
+</div>
 
-                                                                            setcommitypost(!commitypost)
-                                                                        }} className="flex gap-2 items-center cursor-pointer hover:text-blue-500">
-                                                                        <MdOutlineModeComment />
-
-
-                                                                        <span className="text-sm text-gray-600">{items.comments.length}</span>
-
-
-
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div className={`w-full ${commitypost && openIndexforcomment == index ? " md:max-h-90 md:h-fit max-h-60 h-fit" : " h-0  "} overflow-hidden transition-all duration-500 delay-200 ease-in-out   bg-white`}>
-                                                                    <div className=' w-full h-full overflow-y-scroll'>
-                                                                        {
-                                                                            items.comments.map((items, index) => {
-                                                                                return <div className='w-full px-5 py-1 border-b my-2  border-gray-300'>
-                                                                                    <div className='flex-col  gap-2 items-center '>
-
-                                                                                        <div className='flex gap-2'>
-                                                                                            <img className='md:size-8 size-4 rounded-full' src={items.comment_by_id.profileimage && items.comment_by_id.profileimage.trim() !== "" ?`https://unity-for-change-ggbn.onrender.com/uploads/${items.comment_by_id.profileimage}`:randomImage} />
-
-                                                                                            <h1 className='text-[12px] md:text-sm font-bold '>{items.comment_by_id.username}</h1>
-                                                                                        </div>    <p className='text-[12px] md:text-sm mt-3'>{items.comment_content}</p>
-
-                                                                                    </div>
-                                                                                </div>
-
-                                                                            })
-                                                                        }
-                                                                    </div>
-
-                                                                    <div className='px-2 pb-10 md:py-3 w-full   flex justify-around items-center  bg-green h-fit'>
-
-                                                                        <input type="text" className='md:px-4 px-2 py-[4px] text-[12px] md:text-sm  md:py-1 border border-gray-500  rounded-2xl' placeholder='text' onChange={(e) => set_comment_data(e.target.value)} />
-                                                                        <HiArrowCircleUp className='md:size-7 size-5' onClick={() => { handle_comment_to_post(items._id) }} size={35} />
-                                                                    </div>
-                                                                </div>
-
-
-
-                                                            </div>
                                                         </div>
                                                     );
                                                 }):(getloading?<div className="flex justify-center items-center">
       <div className="w-8 h-8 border-4 border-gray-700 border-dashed rounded-full animate-spin"></div>
-    </div>:"null")
+    </div>:<div className="w-full  flex justify-center items-center "><TEXT title={"nothing to show  "}/></div>)
                                             }
 
 
@@ -956,51 +1058,103 @@ window.location.reload()
                                                 }
 
                                                 <div className='my-4'>
-                                                    <h1 className='font-bold '>{items.title}</h1>
-                                                    <p>{items.description}</p>
+                                                    <h1 className='font-bold break-words '>{items.title}</h1>
+                                                    <p className=' break-words'>{items.description}</p>
                                                 </div>
 
                                                 {/* imges */}
                                                 {/* media (images + videos) */}
-                                                <div className="w-full mt-3">
-                                                    {items.images && items.images.length > 0 && (
-                                                        <div
-                                                            className={`grid ${items.images.length === 1
-                                                                ? "grid-cols-1"
-                                                                : items.images.length === 2
-                                                                    ? "grid-cols-2 gap-1"
-                                                                    : "grid-cols-2 grid-rows-2 gap-1"
-                                                                }`}
-                                                        >
-                                                            {items.images.map((file, i) => {
-                                                                // create full URL
-                                                                const fileUrl = `https://unity-for-change-ggbn.onrender.com/${file}`;
-                                                                // check if file is video (based on extension)
-                                                                const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".webm");
+                                <div className="w-full space-y-1">
+  {items.images?.length === 1 && (
+    <div className="w-full">
+      {items.images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-                                                                return (
-                                                                    <div key={i} className="relative">
-                                                                        {isVideo ? (
-                                                                            <video
-                                                                                controls
-                                                                                className="w-full h-60 object-cover rounded-md bg-black"
-                                                                            >
-                                                                                <source src={fileUrl} type="video/mp4" />
-                                                                                Your browser does not support the video tag.
-                                                                            </video>
-                                                                        ) : (
-                                                                            <img
-                                                                                src={fileUrl}
-                                                                                alt={`media-${i}`}
-                                                                                className="w-full h-60 object-cover rounded-md"
-                                                                            />
-                                                                        )}
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    )}
-                                                </div>
+        return isVideo ? (
+          <video
+            key={i}
+            controls
+            className="w-full h-72 sm:h-80 md:h-96 object-cover rounded-2xl bg-black"
+          >
+            <source src={fileUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            onClick={() => set_active_zoom({ active: true, url: fileUrl })}
+            key={i}
+            src={fileUrl}
+            alt="post-img"
+            className="w-full h-72 sm:h-80 md:h-96 object-cover rounded-2xl"
+          />
+        );
+      })}
+    </div>
+  )}
+
+  {items.images?.length === 2 && (
+    <div className="grid grid-cols-2 gap-1">
+      {items.images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
+
+        return (
+          <div key={i} className="w-full">
+            {isVideo ? (
+              <video
+                controls
+                className="w-full h-60 sm:h-72 object-cover rounded-xl bg-black"
+              >
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                onClick={() => set_active_zoom({ active: true, url: fileUrl })}
+                src={fileUrl}
+                alt={`post-img-${i}`}
+                className="w-full h-60 sm:h-72 object-cover rounded-xl"
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
+
+  {items.images?.length === 3 && (
+    <div className="grid grid-cols-2 gap-1">
+      {items.images.map((file, i) => {
+        const fileUrl = file;
+        const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
+        const isLast = i === 2;
+
+        return (
+          <div
+            key={i}
+            className={`${isLast ? "col-span-2" : ""} w-full overflow-hidden rounded-xl`}
+          >
+            {isVideo ? (
+              <video
+                controls
+                className={`w-full ${isLast ? "h-60 sm:h-72" : "h-40 sm:h-48"} object-cover bg-black`}
+              >
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            ) : (
+              <img
+                onClick={() => set_active_zoom({ active: true, url: fileUrl })}
+                src={fileUrl}
+                alt={`post-img-${i}`}
+                className={`w-full ${isLast ? "h-60 sm:h-72" : "h-40 sm:h-48"} object-cover`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  )}
+</div>
+
 
 
                                                 {/* likes and comment suggestion */}
@@ -1030,14 +1184,14 @@ window.location.reload()
 
                                                 {mainpostcommentshow && currentindex == index && (
 
-                                                    <div className='w-full h-40 p-5 flex flex-col  gap-3 h-fit rounded shadow '>
-                                                        <div className='w-full flex justify-around flex-col  gap-3 '>
-                                                            {items.comments.length > 0 ? items?.comments?.map(item => {
+                                                    <div className='w-full max-h-90 p-5 flex flex-col  gap-3 h-fit  rounded shadow '>
+                                                        <div className='w-full flex justify-around overflow-y-scroll max-h-70 h-fit flex-col   gap-3 '>
+                                                            {items.comments.length > 0 ? [...items?.comments].reverse()?.map(item => {
 
                                                                 return <div className='flex rounded-xl p-3 shadow flex-col gap-3'>
 
                                                                     <div className='flex gap-5 items-center'>
-                                                                        <img className='md:size-5 size-3 object-cover rounded' src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?  `https://unity-for-change-ggbn.onrender.com/uploads/${item.user_id.profileimage}`:randomImage} alt="" />
+                                                                        <img className='md:size-5 size-3 object-contain rounded' src={item.user_id.profileimage && item.user_id.profileimage.trim() !== ""?  item.user_id.profileimage:randomImage} alt="" />
 
                                                                         <div className='flexflex-col'>
                                                                             <h1 className=' md:text-sm text-[12px] '>{item.user_id.username}</h1>
@@ -1046,7 +1200,7 @@ window.location.reload()
                                                                         </div>
                                                                     </div>
 
-                                                                    <p className='px-4 text-sm'>{item.user_comment}</p>
+                                                                    <p className='px-4 md:text-sm text-[10px]'>{item.user_comment}</p>
                                                                 </div>
 
 
@@ -1056,8 +1210,8 @@ window.location.reload()
                                                             </div>}
                                                         </div>
                                                         <div className='flex gap-4 items-center '>
-                                                            <input value={main_post_comment} onChange={(e) => set_main_post_comment(e.target.value)} placeholder={"Comments...."} className='w-full md:py-2 py-1 px-2  md:px-4 rounded-2xl border border-gray-300 ' type="text" />
-                                                            <button onClick={() => handleCommentSubmit(items)} className=' px-2 md:px-3 md:py-2 py-1 bg-black rounded text-white cursor-pointer hover:scale-110 duration-150' >send</button>
+                                                            <input value={main_post_comment} onChange={(e) => set_main_post_comment(e.target.value)} placeholder={"Comments...."} className='w-full md:py-2 py-1 px-2 text-[12px] md:text-sm  md:px-4 rounded-2xl border border-gray-300 ' type="text" />
+                                                            <button onClick={() => handleCommentSubmit(items)} className=' px-2 md:px-3 md:py-[6px] py-1 bg-black rounded text-white cursor-pointer hover:scale-110 text-[12px] md:text-sm duration-150' >send</button>
                                                         </div>
                                                     </div>
                                                 )
@@ -1076,16 +1230,16 @@ window.location.reload()
                                                                 key={i}
                                                                 className="mb-2 p-2 bg-white/10 rounded-md"
                                                             >
-                                                                <p className="font-bold md:text-sm text-[12px] text-white">{platform.title}</p>
+                                                                <p className="font-bold break-words md:text-sm text-[12px] text-white">{platform.title}</p>
                                                                 <a
                                                                     href={platform.url}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="text-blue-400 text-[12px] md:text-ms hover:underline break-all"
+                                                                    className="text-blue-400 break-words text-[12px] md:text-ms hover:underline break-all"
                                                                 >
                                                                     {platform.url}
                                                                 </a>
-                                                                <p className="md:text-sm text-[12px] text-white/70">
+                                                                <p className="md:text-sm break-words text-[12px] text-white/70">
                                                                     {platform.description}
                                                                 </p>
                                                             </div>
@@ -1097,6 +1251,7 @@ window.location.reload()
                                     }
 
                                 </div>
+
                             </div>
                         }
 
@@ -1180,9 +1335,22 @@ window.location.reload()
 
             {
 
-                active_feedback && <div className='w-full fixed h-full backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
+                active_feedback && <div className='w-full fixed h-full overflow-hidden backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
 
                     <Feedback is_active={() => set_active_feedback(false)} />
+
+
+                </div>
+
+
+            }
+  {
+
+                active_zoom.active && <div className='w-full  h-full fixed backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
+<ImCancelCircle onClick={(prev)=>set_active_zoom({active:false,...prev})} className=' size-5 text-white absolute left-5 top-5  ' />
+
+
+                    <Zoom data={active_zoom.url} />
 
 
                 </div>
