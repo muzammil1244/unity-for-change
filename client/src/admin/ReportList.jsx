@@ -4,45 +4,7 @@ import { randomImage } from "../profileimage";
 import { API } from "../../domain.js";
 
 // sample repost data
-const repostData = [
-  {
-    id: 1,
-    repostUser: {
-      username: "Muzammil",
-      email: "muzammil@example.com",
-      profileImage: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    message: "This post spreads wrong information.",
-    originalPost: {
-      username: "Rahul",
-      email: "rahul@example.com",
-      profileImage: "https://randomuser.me/api/portraits/men/65.jpg",
-      title: "Important Update",
-      content: "We are launching a new feature soon!",
-      images: [
-        "https://picsum.photos/400/200",
-        "https://picsum.photos/401/200",
-      ],
-    },
-  },
-  {
-    id: 2,
-    repostUser: {
-      username: "Ayesha",
-      email: "ayesha@example.com",
-      profileImage: "https://randomuser.me/api/portraits/women/44.jpg",
-    },
-    message: "Inappropriate language in this post.",
-    originalPost: {
-      username: "Fatima",
-      email: "fatima@example.com",
-      profileImage: "https://randomuser.me/api/portraits/women/12.jpg",
-      title: "Motivation",
-      content: "Never give up on your dreams!",
-      images: ["https://picsum.photos/402/200"],
-    },
-  },
-];
+
 
 export const ReportList = ({activeMessage}) => {
   const [reposts, setReposts] = useState([]);
@@ -53,23 +15,27 @@ export const ReportList = ({activeMessage}) => {
 
     const data = fetch(`${API}/api/${item}/admin//news`)
 
-
+fetchReports()
 
     };
 
 
   console.log("reports ",reposts)
+  const fetchReports = async () => {
+    try {
+      const response = await fetch(`${API}/api/admin/reports`);
+      const repordata = await response.json();
+      setReposts(repordata);
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+    }
+  };
+ useEffect(() => {
 
-  useEffect(async()=>{
 
-    const data = fetch(`${API}/api/admin/reports`,{
+  fetchReports();
+}, []); // Empty dependency array means it runs once on mount
 
-    })
-
-    const repordata = await data.json()
-    
-setReposts(repordata)
-  },[])
 
   console.log("report data",reposts)
   return (

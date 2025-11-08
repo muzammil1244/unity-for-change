@@ -6,10 +6,7 @@ import { API } from "../../domain.js";
 export const Suggestion = ({ user_data,activeMessage }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [menuIndex, setMenuIndex] = useState(null);
-
-  // Fetch suggestions from API
- useEffect(() => {
-  const fetchSuggestions = async () => {
+ const fetchSuggestions = async () => {
     try {
       const res = await fetch(`${API}/api/admin/suggestions`);
       const data = await res.json();
@@ -22,6 +19,9 @@ export const Suggestion = ({ user_data,activeMessage }) => {
       console.error("Error fetching suggestions:", err);
     }
   };
+  // Fetch suggestions from API
+ useEffect(() => {
+ 
 
   fetchSuggestions();
 }, []);
@@ -46,6 +46,7 @@ console.log(suggestionId)
     alert(data.message);
 
     // Remove from local state
+    fetchSuggestions()
     setSuggestions(suggestions.filter((s) => s._id !== suggestionId));
   } catch (err) {
     console.error(err);

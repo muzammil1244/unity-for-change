@@ -689,7 +689,7 @@ console.log("profile_data",profile_data)
                     }
                 </div>:(getloading?<div className="flex justify-center items-center">
       <div className="w-8 h-8 border-4 border-gray-700 border-dashed rounded-full animate-spin"></div>
-    </div>:<div className="w-full  flex justify-center items-center "><TEXT title={"start making post "}/></div>)
+    </div>:<div className="w-full  flex justify-center items-center "><TEXT title={"Create your first post"}/></div>)
             }
 
             {/* acitve follower list */}
@@ -755,7 +755,7 @@ console.log("profile_data",profile_data)
 
 {
     active_liked_post&&
-     <div className="w-full grid lg:grid-cols-2  h-full gap-5 md:px-5 py-5 ">
+     <div className="w-full flex justify-center lg:grid lg:grid-cols-2 h-full gap-5 px-1 py-5 ">
     <Liked_post />
     </div>
 }
@@ -765,7 +765,7 @@ console.log("profile_data",profile_data)
 
 {
     active_commented_post&&
-     <div className="w-full grid lg:grid-cols-2 h-full gap-5 px-5 py-5 ">
+     <div className="w-full flex justify-center lg:grid lg:grid-cols-2 h-full gap-5 px-1 py-5 ">
     <CommentedPosts />
     </div>
 }

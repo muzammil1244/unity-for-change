@@ -43,7 +43,7 @@ export const CommentedPosts = () => {
       if (res.ok) {
         // UI se comment hatao
               setPosts((prev) => prev.filter((p) => p._id !== postId));
-
+fetchCommentedPosts()
       }
 
       console.log("Delete Comment Response:", data);
@@ -57,18 +57,18 @@ export const CommentedPosts = () => {
   }, []);
 
   return (
-    <div className="p-3">
+    <div className=" w-full p-1  ">
       {posts.map((post) => (
         <div
           key={post._id}
           className="mb-5 p-3 relative border rounded-xl shadow-sm bg-white"
         >
           {/* Post Title */}
-          <h2 className="text-lg font-bold">{post.title}</h2>
-          <p className="text-gray-700 text-sm">{post.description}</p>
+          <h2 className="text-lg break-words font-bold">{post.title}</h2>
+          <p className="text-gray-700 break-words text-sm">{post.description}</p>
 
           {/* Images */}
-                                                     <div className="w-full">
+                                                                                         <div className="w-full">
   {post.Images.length === 1 && (
     post.Images.map((file, i) => {
       const fileUrl = file; // ✅ Cloudinary URL direct use
@@ -87,15 +87,17 @@ export const CommentedPosts = () => {
         <img
           key={i}
           src={fileUrl}
+                  onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
           alt="post-img"
-          className="w-full h-72 object-cover hover:object-contain"
+          className="w-full [&>div]:bg-gray-200 h-72 object-contain"
         />
       );
     })
   )}
 
   {post.Images.length === 2 && (
-    <div className="grid grid-cols-2 gap-1">
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
       {post.Images.map((file, i) => {
         const fileUrl = file;
         const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
@@ -112,8 +114,10 @@ export const CommentedPosts = () => {
           <img
             key={i}
             src={fileUrl}
+                    onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
             alt={`post-img-${i}`}
-            className="w-full h-60 focus:object-contain hover:object-contain object-cover rounded-md"
+            className="w-full h-60 object-contain rounded-md"
           />
         );
       })}
@@ -121,7 +125,7 @@ export const CommentedPosts = () => {
   )}
 
   {post.Images.length === 3 && (
-    <div className="grid grid-cols-2 gap-1">
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
       {post.Images.map((file, i) => {
         const fileUrl = file;
         const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
@@ -131,15 +135,17 @@ export const CommentedPosts = () => {
             {isVideo ? (
               <video
                 controls
-                className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md bg-black`}
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"}  rounded-md bg-black`}
               >
                 <source src={fileUrl} type="video/mp4" />
               </video>
             ) : (
               <img
                 src={fileUrl}
+                        onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
                 alt={`post-img-${i}`}
-                className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"} rounded-md`}
               />
             )}
           </div>
@@ -157,7 +163,7 @@ export const CommentedPosts = () => {
                 key={c._id}
                 className="flex justify-between items-center bg-gray-100 p-2 rounded mb-2"
               >
-                <span className="text-sm text-gray-800">
+                <span className="text-sm break-words text-gray-800">
                   {c.comment_content}
                 </span>
                 

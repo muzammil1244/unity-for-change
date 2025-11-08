@@ -8,6 +8,7 @@ import { FaMinusCircle } from "react-icons/fa";
 
 import { BiImageAdd } from "react-icons/bi";
 import { API } from "../../domain.js";
+import { Scroller } from "../user/scroller.jsx";
 
 export const PostForm = ({ postData, close_tab }) => {
   const [title, setTitle] = useState("");
@@ -15,7 +16,7 @@ export const PostForm = ({ postData, close_tab }) => {
   const [images, setImages] = useState([]); // Stores File objects
   const [previewUrls, setPreviewUrls] = useState([]); // Stores local preview URLs
   const [platforms, setPlatforms] = useState([{ url: "", title: "", description: "" }]);
-
+const [creat_post_spiner , set_create_post_spiner] = useState(false)
   useEffect(() => {
     if (postData) {
       setTitle(postData.title || "");
@@ -53,6 +54,7 @@ export const PostForm = ({ postData, close_tab }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    set_create_post_spiner(true)
 
     const formData = new FormData();
     formData.append("title", title);
@@ -79,9 +81,12 @@ export const PostForm = ({ postData, close_tab }) => {
       alert(`✅ Post ${postData ? "updated" : "created"} successfully!`);
       close_tab();
       console.log(data);
+          set_create_post_spiner(false)
     } catch (err) {
+          set_create_post_spiner(false)
+
       console.error(err);
-      alert("❌ Error submitting post!");
+      alert("❌ Error submitting post!",err.message);
     }
   };
 
@@ -208,12 +213,16 @@ export const PostForm = ({ postData, close_tab }) => {
         </div>
 
         {/* Submit */}
-        <button
+        {
+
+          creat_post_spiner?<div className=" md:h-8 md:w-8 h-4 w-4"><Scroller/></div>:<button
           type="submit"
           className="w-full bg-gray-500 hover:bg-gray-600 cursor-pointer text-white py-3 rounded-xl transition"
         >
           {postData ? "🚀 Update Post" : "Create Post"}
         </button>
+        }
+        
       </form>
     </div>
   );

@@ -8,10 +8,7 @@ export const PostList = () => {
   const [posts, setPosts] = useState([]); // API data
   const [search, setSearch] = useState("");
   const [menuIndex, setMenuIndex] = useState(null);
-
-  // 🔹 Fetch posts from API
-  useEffect(() => {
-    const fetchPosts = async () => {
+ const fetchPosts = async () => {
       try {
         const res = await fetch(`${API}/api/client/all/news`);
         const data = await res.json();
@@ -20,6 +17,9 @@ export const PostList = () => {
         console.error("❌ Error fetching posts:", err);
       }
     };
+  // 🔹 Fetch posts from API
+  useEffect(() => {
+   
     fetchPosts();
   }, []);
 
@@ -47,7 +47,7 @@ export const PostList = () => {
 
       const data = await res.json();
       alert(data.message);
-
+fetchPosts()
       // Local state se remove
       setPosts(posts.filter((p) => p._id !== post._id));
     } catch (err) {

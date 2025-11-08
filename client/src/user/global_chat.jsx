@@ -16,6 +16,7 @@ export const Global_chat = () => {
   const [file, setFile] = useState(null);
   const [socket, setSocket] = useState(null);
   const [get_sidebar, set_sidebar] = useState(false)
+  const [send_scroller,set_send_scroller] =useState(false)
   const navigation = useNavigate();
   const location = useLocation();
   const { user_id } = location.state || {}; // group name passed

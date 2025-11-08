@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FcLike } from "react-icons/fc";
 import { randomImage } from "../profileimage";
+import { API } from "../../domain.js";
 
 export const Liked_post = () => {
 const [ likes,setLikes] = useState([])
@@ -48,6 +49,7 @@ console.log("data not founded")
       if (res.ok) {
         // UI se turant hatao
         setLikes(prev => prev.filter(item => item._id !== postId));
+        handle_likes_post()
       }
 
       console.log("Unlike Response:", data);
@@ -67,7 +69,7 @@ handle_likes_post()
     
 
   return (
-<div>
+<div className="p-1 w-full">
       {
                             likes.map((items, index) => {
     
@@ -85,8 +87,8 @@ handle_likes_post()
                                                     alt="profile"
                                                 />
                                                 <div className="flex flex-col">
-                                                    <h1 className="text-sm font-bold text-gray-900">{items.create_by_id?.username}</h1>
-                                                    <p className="text-xs text-gray-500">{items.create_by_id?.email}</p>
+                                                    <h1 className="text-sm font-bold break-words text-gray-900">{items.create_by_id?.username}</h1>
+                                                    <p className="text-xs break-words text-gray-500">{items.create_by_id?.email}</p>
                                                 </div>
                                             </div>
                                             {/* Menu Button */}
@@ -94,17 +96,17 @@ handle_likes_post()
                                         </div>
                                         {/* title */}
                                         <div className="px-3 my-2 ">
-                                            <h1 className=" font-bold text-sm">{items.title}</h1>
+                                            <h1 className=" break-words font-bold text-sm">{items.title}</h1>
                                         </div>
     
                                         {/* Description */}
     
                                         <div className="px-3 pb-2">
-                                            <p className="text-gray-800 text-sm">{items.description}</p>
+                                            <p className="text-gray-800 break-words text-sm">{items.description}</p>
                                         </div>
     
                                         {/* Images Section */}
-                                                                                            <div className="w-full">
+                                                                                          <div className="w-full">
   {items.Images.length === 1 && (
     items.Images.map((file, i) => {
       const fileUrl = file; // ✅ Cloudinary URL direct use
@@ -123,15 +125,17 @@ handle_likes_post()
         <img
           key={i}
           src={fileUrl}
-          alt="post-img"
-          className="w-full h-72 object-cover hover:object-contain"
+                  onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
+          alt="items-img"
+          className="w-full [&>div]:bg-gray-200 h-72 object-contain"
         />
       );
     })
   )}
 
   {items.Images.length === 2 && (
-    <div className="grid grid-cols-2 gap-1">
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
       {items.Images.map((file, i) => {
         const fileUrl = file;
         const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
@@ -148,8 +152,10 @@ handle_likes_post()
           <img
             key={i}
             src={fileUrl}
-            alt={`post-img-${i}`}
-            className="w-full h-60 focus:object-contain hover:object-contain object-cover rounded-md"
+                    onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
+            alt={`items-img-${i}`}
+            className="w-full h-60 object-contain rounded-md"
           />
         );
       })}
@@ -157,7 +163,7 @@ handle_likes_post()
   )}
 
   {items.Images.length === 3 && (
-    <div className="grid grid-cols-2 gap-1">
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
       {items.Images.map((file, i) => {
         const fileUrl = file;
         const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
@@ -167,15 +173,17 @@ handle_likes_post()
             {isVideo ? (
               <video
                 controls
-                className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md bg-black`}
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"}  rounded-md bg-black`}
               >
                 <source src={fileUrl} type="video/mp4" />
               </video>
             ) : (
               <img
                 src={fileUrl}
+                        onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
                 alt={`post-img-${i}`}
-                className={`w-full transition-all duration-500 ease-in-out hover:object-contain ${i === 2 ? "h-60" : "h-40"} object-cover rounded-md`}
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"} rounded-md`}
               />
             )}
           </div>

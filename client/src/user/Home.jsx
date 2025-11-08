@@ -40,6 +40,7 @@ import { RiUserFollowLine } from "react-icons/ri";
 import { Zoom } from './Zoom_image';
 import { TEXT } from './TEXT';
 import { API } from '../../domain.js';
+import { Scroller } from './scroller.jsx';
 
 export const Home = () => {
     console.log("main api for fetching",API)
@@ -64,7 +65,6 @@ export const Home = () => {
     const [openIndex, setOpenIndex] = useState(null);
     const [openIndexforcomment, setcommentindex] = useState(null)
     const [likeindex, setlikeindex] = useState(null)
-    const [like, setlike] = useState(false)
     const [currentindex, setcurrentindex] = useState(null)
 
 
@@ -110,6 +110,11 @@ const  [new_commetn,set_new_comment] = useState({comment_by_id:{
 },
 comment_content:""
 })
+
+
+    const [active_user_post_comment_scroller, set_active_user_post_comment_scroller] = useState(false)
+    const [active_user_client_comment_scroller, set_active_client_post_comment_scroller] = useState(false)
+
 const token = get_token
 
 
@@ -139,7 +144,7 @@ const token = get_token
 
     const handleCommentSubmit = async (items) => {
         if (!main_post_comment.trim()) return;
-
+set_active_client_post_comment_scroller(true)
 
         try {
             const response = await fetch(`${API}/api/client/comment/mainpost/${items._id}`, {
@@ -154,6 +159,7 @@ const token = get_token
             const data = await response.json();
 
             if (response.ok) {
+              set_active_client_post_comment_scroller(false)
                 console.log("commented")
                 setPosts(
                     
@@ -177,11 +183,18 @@ const token = get_token
             
             )
         )
+        set_main_post_comment("")
             } else {
+              set_active_client_post_comment_scroller(false)
                 alert(data.message || "Failed to add comment");
+                        set_main_post_comment("")
+
             }
         } catch (error) {
             console.error("Error posting comment:", error);
+                          set_active_client_post_comment_scroller(false)
+        set_main_post_comment("")
+
         }
 
     };
@@ -237,7 +250,6 @@ set_loading(true)
 
     }
 
-console.log("admin posts",posts)
     const user_profile = async () => {
         try {
             const response = await fetch(`${API}/api/client/profile`, {
@@ -312,8 +324,13 @@ console.log("admin posts",posts)
 
 
     const handle_comment_to_post = async (items) => {
-
+set_active_user_post_comment_scroller(true)
         try {
+          if(comment_data == ""){
+            set_active_user_post_comment_scroller(false)
+
+            return false
+          }
 
             const data = await fetch(`${API}/api/client/comment/${items}`, {
                 method: "POST",
@@ -327,6 +344,8 @@ console.log("admin posts",posts)
 
             if (!data.ok) {
                 return console.log("not working")
+                set_active_user_post_comment_scroller(false)
+
             }
 set_all_post((prev) =>
   prev.map((item) =>
@@ -349,6 +368,7 @@ set_all_post((prev) =>
   )
 );
 
+                set_active_user_post_comment_scroller(false)
 
 set_comment_data("")
 
@@ -638,8 +658,10 @@ window.location.reload()
 
 
                     <div
-                        style={{ width: container1.w }}
-                        className={`h-full     rounded-2xl md:overflow-hidden overflow-y-scroll transition-all duration-500 ease-in-out 
+ style={{
+    width:
+      window.innerWidth < 768 ? "90%" : container1.w, // agar mobile screen hai to 90%
+  }}                        className={`h-full     rounded-2xl md:overflow-hidden overflow-y-scroll transition-all duration-500 ease-in-out 
     ${container1.active ? "shadow-sm" : "md:opacity-10 hidden md:block "}`}
                     >
                         {
@@ -752,93 +774,84 @@ window.location.reload()
                                                             </div>
 
                                                             {/* Images Section */}
-                      <div className="w-full space-y-1">
-  {/* === 1 IMAGE / VIDEO === */}
-  {items.Images?.length === 1 && (
+                                                                                         <div className="w-full">
+  {items.Images.length === 1 && (
     items.Images.map((file, i) => {
-      const fileUrl = file;
+      const fileUrl = file; // ✅ Cloudinary URL direct use
       const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
       return isVideo ? (
         <video
           key={i}
           controls
-          className="w-full h-72 sm:h-80 md:h-96 object-cover rounded-2xl bg-black"
+          className="w-full h-72 object-cover rounded-md bg-black"
         >
           <source src={fileUrl} type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
       ) : (
         <img
-          onClick={() => set_active_zoom({ active: true, url: fileUrl })}
           key={i}
           src={fileUrl}
+                  onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
           alt="post-img"
-          className="w-full h-72 sm:h-80 md:h-96 object-cover rounded-2xl"
+          className="w-full [&>div]:bg-gray-200 h-72 object-contain"
         />
       );
     })
   )}
 
-  {/* === 2 IMAGES / VIDEOS === */}
-  {items.Images?.length === 2 && (
-    <div className="grid grid-cols-2 gap-1">
+  {items.Images.length === 2 && (
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
       {items.Images.map((file, i) => {
         const fileUrl = file;
         const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
 
-        return (
-          <div key={i} className="w-full overflow-hidden rounded-xl">
-            {isVideo ? (
-              <video
-                controls
-                className="w-full h-56 sm:h-64 md:h-72 object-cover bg-black"
-              >
-                <source src={fileUrl} type="video/mp4" />
-              </video>
-            ) : (
-              <img
-                onClick={() => set_active_zoom({ active: true, url: fileUrl })}
-                src={fileUrl}
-                alt={`post-img-${i}`}
-                className="w-full h-56 sm:h-64 md:h-72 object-cover"
-              />
-            )}
-          </div>
+        return isVideo ? (
+          <video
+            key={i}
+            controls
+            className="w-full h-60 object-cover rounded-md bg-black"
+          >
+            <source src={fileUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            key={i}
+            src={fileUrl}
+                    onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
+            alt={`post-img-${i}`}
+            className="w-full h-60 object-contain rounded-md"
+          />
         );
       })}
     </div>
   )}
 
-  {/* === 3 IMAGES / VIDEOS === */}
-  {items.Images?.length === 3 && (
-    <div className="grid grid-cols-2 gap-1">
+  {items.Images.length === 3 && (
+    <div className="grid [&>div]:bg-gray-200 grid-cols-2 gap-1">
       {items.Images.map((file, i) => {
         const fileUrl = file;
         const isVideo = fileUrl.match(/\.(mp4|mov|webm)$/i);
-        const isLast = i === 2;
 
         return (
-          <div
-            key={i}
-            className={`${isLast ? "col-span-2" : ""} w-full overflow-hidden rounded-xl`}
-          >
+          <div key={i} className={`${i === 2 ? "col-span-2" : ""}`}>
             {isVideo ? (
               <video
                 controls
-                className={`w-full ${
-                  isLast ? "h-60 sm:h-72 md:h-80" : "h-40 sm:h-48 md:h-56"
-                } object-cover bg-black`}
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"}  rounded-md bg-black`}
               >
                 <source src={fileUrl} type="video/mp4" />
               </video>
             ) : (
               <img
-                onClick={() => set_active_zoom({ active: true, url: fileUrl })}
                 src={fileUrl}
+                        onClick={()=>set_active_zoom({active:true,url:fileUrl})}
+
                 alt={`post-img-${i}`}
-                className={`w-full ${
-                  isLast ? "h-60 sm:h-72 md:h-80" : "h-40 sm:h-48 md:h-56"
-                } object-cover`}
+                className={`w-full transition-all duration-500 ease-in-out object-contain ${i === 2 ? "h-60" : "h-40"} rounded-md`}
               />
             )}
           </div>
@@ -847,6 +860,8 @@ window.location.reload()
     </div>
   )}
 </div>
+
+
 
 
 
@@ -920,10 +935,15 @@ window.location.reload()
         placeholder="Write a comment..."
         onChange={(e) => set_comment_data(e.target.value)}
       />
-      <HiArrowCircleUp
+      {
+        active_user_post_comment_scroller?<div className='md:h-8 md:w-8 h-4 w-4'>
+          <Scroller/>
+        </div>:<HiArrowCircleUp
         className="text-black  cursor-pointer w-6 h-6 md:w-7 md:h-7"
         onClick={() => handle_comment_to_post(items._id)}
       />
+      }
+      
     </div>
   </div>
 
@@ -933,9 +953,9 @@ window.location.reload()
     <div className='flex items-center gap-3'>
         
         
-       <img className='h-8 w-8  rounded-full' src={items.comments.at(-1).comment_by_id.profileimage} alt="" />
+       <img className='h-8 w-8  rounded-full' src={items.comments.length>0? items.comments.at(-1).comment_by_id.profileimage:""} alt="" />
        
-       <p>{items.comments.at(-1).comment_by_id.username}</p>
+       <p>{items.comments.length>0?items.comments.at(-1).comment_by_id.username:""}</p>
        
        
     </div>
@@ -974,7 +994,10 @@ window.location.reload()
 
                     {/* container 2 */}
                     <div
-                        style={{ width: container2.w }}
+                         style={{
+    width:
+      window.innerWidth < 768 ? "90%" : container2.w, // agar mobile screen hai to 90%
+  }} 
                         className={` relative h-full bg-gray-50 rounded-2xl overflow-hidden  transition-all duration-500 ease-in-out
     ${container2.active ? "shadow-sm " : "md:opacity-10 hidden md:block"}`} >
 
@@ -1057,9 +1080,9 @@ window.location.reload()
 
                                                 }
 
-                                                <div className='my-4'>
-                                                    <h1 className='font-bold break-words '>{items.title}</h1>
-                                                    <p className=' break-words'>{items.description}</p>
+                                                <div className='my-4 flex flex-col gap-3'>
+                                                    <h1 className='font-bold md:text-sm text-[12px] break-words '>{items.title}</h1>
+                                                    <p className=' md:text-sm text-[12px] break-words'>{items.description}</p>
                                                 </div>
 
                                                 {/* imges */}
@@ -1211,7 +1234,9 @@ window.location.reload()
                                                         </div>
                                                         <div className='flex gap-4 items-center '>
                                                             <input value={main_post_comment} onChange={(e) => set_main_post_comment(e.target.value)} placeholder={"Comments...."} className='w-full md:py-2 py-1 px-2 text-[12px] md:text-sm  md:px-4 rounded-2xl border border-gray-300 ' type="text" />
-                                                            <button onClick={() => handleCommentSubmit(items)} className=' px-2 md:px-3 md:py-[6px] py-1 bg-black rounded text-white cursor-pointer hover:scale-110 text-[12px] md:text-sm duration-150' >send</button>
+                                                          
+                                                          {active_user_client_comment_scroller? <div className='md:h-8 h-4 md:w-8 w-8'><Scroller/></div> :                                                            <button onClick={() => handleCommentSubmit(items)} className=' px-2 md:px-3 md:py-[6px] py-1 bg-black rounded text-white cursor-pointer hover:scale-110 text-[12px] md:text-sm duration-150' >send</button>
+}
                                                         </div>
                                                     </div>
                                                 )
