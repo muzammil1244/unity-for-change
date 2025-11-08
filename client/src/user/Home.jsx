@@ -121,7 +121,7 @@ const token = get_token
 
     const container1fun = () => {
         setconatiner1({
-            w: "80%",
+            w: "70%",
             active: true
         })
         setconatiner2({
@@ -131,7 +131,7 @@ const token = get_token
 
     const container2fun = () => {
         setconatiner2({
-            w: "80%",
+            w: "70%",
             active: true
         })
 

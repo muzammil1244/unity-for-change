@@ -13,6 +13,7 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
     image: [],
 
   });
+  const [active_scroller,set_active_scroller] = useState(false)
   const [showEmoji, setShowEmoji] = useState(false);
   const token = localStorage.getItem("token");
 
@@ -54,14 +55,9 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
     }
   };
 
-  const handleEmojiClick = (emoji) => {
-    setPostdata((prev) => ({
-      ...prev,
-      posttext: prev.posttext + emoji.emoji,
-    }));
-  };
-
+  
   const Postdata = async () => {
+    set_active_scroller(true)
     try {
       const formData = new FormData()
       formData.append("title", postdata.title);
@@ -101,13 +97,17 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
       const data = await res.json();
 
       if (res.ok) {
-        console.log("Success:", data);
+    set_active_scroller(false)
         if (onSuccess) onSuccess(); // callback to refresh UI
         window.location.reload()
       } else {
         console.error("Error:", data);
+            set_active_scroller(false)
+
       }
     } catch (error) {
+          set_active_scroller(false)
+
       console.error("Post Error:", error);
     }
   };
