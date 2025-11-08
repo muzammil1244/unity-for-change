@@ -80,7 +80,6 @@ const [active_zoom ,set_active_zoom] = useState({active:false,url:""})
 
 
 
-console.log("users posts ",posts_all)
 
 
 
@@ -120,8 +119,8 @@ console.log("users posts ",posts_all)
             );
 
             const result = await response.json();
-window.location.reload()    
-    } catch (error) {
+get_follower_list_data()  
+  } catch (error) {
             console.log("Error:", error.message);
         }
     };
@@ -158,8 +157,7 @@ window.location.reload()
                     },
                 }
             );
-window.location.reload()
-        } catch (error) {
+handle_list_following()        } catch (error) {
             console.log("Error:", error.message);
         }
 
@@ -470,7 +468,7 @@ console.log("profile_data",profile_data)
             {/* active Profile */}
 
             {
-                active_your_post && posts_all.length ? <div className="w-full lg:grid grid-cols-2 h-full gap-5 md:px-5 py-5 ">
+                active_your_post && posts_all.length ? <div className="w-full lg:grid grid-cols-2 h-full gap-5 mb-30 md:px-5 py-5 ">
                     {
                         posts_all.map((items, index) => {
 
@@ -724,7 +722,7 @@ console.log("profile_data",profile_data)
             {/* following list */}
 
             {
-                active_following_list && <div className="w-full flex flex-col  h-full  gap-5 px-5 py-5 ">
+                active_following_list && following_list.following && <div className="w-full flex flex-col  h-full  gap-5 px-5 py-5 ">
                     <h1 className="text-gray-900 text-lg font-bold"> Following List</h1>
 
                     {

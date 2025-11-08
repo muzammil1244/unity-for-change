@@ -307,7 +307,7 @@ const [active_zoom ,set_active_zoom] = useState({active:false,url:""})
 
       {/* Following List */}
       {active_all_post && get_all_post.length > 0 && (
-        <div>
+        <div className="mb-60">
           {
             get_all_post.map((items, index) => {
 

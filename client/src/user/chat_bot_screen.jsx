@@ -79,7 +79,7 @@ showTypingEffect(final_data.reply || "No response")
       </div>
 
       {/* Response */}
-      <div className="mt-4 p-3 bg-gray-100 rounded whitespace-pre-wrap min-h-[80px]">
+      <div className="mt-4 p-3 overflow-y-scroll bg-gray-100 rounded whitespace-pre-wrap min-h-[80px]">
         {loading && !response ? (
           <span>Thinking...</span>
         ) : (

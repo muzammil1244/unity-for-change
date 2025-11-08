@@ -41,6 +41,7 @@ import { Zoom } from './Zoom_image';
 import { TEXT } from './TEXT';
 import { API } from '../../domain.js';
 import { Scroller } from './scroller.jsx';
+import { set } from 'mongoose';
 
 export const Home = () => {
     console.log("main api for fetching",API)
@@ -114,7 +115,7 @@ comment_content:""
 
     const [active_user_post_comment_scroller, set_active_user_post_comment_scroller] = useState(false)
     const [active_user_client_comment_scroller, set_active_client_post_comment_scroller] = useState(false)
-
+const [active_user_post,set_active_user_post] = useState(true)
 const token = get_token
 
 
@@ -556,22 +557,34 @@ set_comment_data("")
     console.log("news posts",get_all_post)
 
     return (
-        <div className="md:w-full md:h-full w-screen h-screen flex  sm:flex-col-revers  md:pl-10 overflow-hidden md:overflow-scroll bg-white">
-            <div className='md:h-full md:w-fit bg-white py-2 z-10 md:border-0 border-t-2 border border-gray-200  w-full  h-fit fixed  md:static bottom-0 flex sm-px-5    md:flex-col px-5 justify-center items-center gap-10  '>
+        <div className="md:w-full md:h-full w-screen h-screen flex md:px-10  sm:flex-col-revers overflow-hidden md:overflow-y-scroll md:overflow-x-hidden bg-white">
+            <div className='md:h-full md:w-fit bg-white py-2 z-10 md:border-0 border-t-2 border border-gray-200  w-full  h-fit fixed  md:static bottom-0 flex     md:flex-col justify-center items-center gap-10  '>
 
                 <AiOutlinePlusSquare title='add post' onClick={() => {
+                                                container1fun()
 
+set_active_chat_bot(false)
+ set_profile(false)
                     set_active_post(!active_post)
+                    set_active_user_post(!active_user_post)
                 }} size={25} className=' cursor-pointer text-sm' />
                 <HiOutlineUserCircle title='profile' onClick={() =>{
-                                                                        container1fun()
+                         set_active_chat_bot(false)
+     
+                              container1fun()
+                        set_active_post(false)
 
+                    set_active_user_post(!active_user_post)
                     set_profile(!profile)}} size={25} className=' cursor-pointer text-sm' />
                 <GoHome size={25} title='profile' onClick={() => {
 window.location.reload()
                 }} className=' cursor-pointer text-sm' />
                 <SiRobotframework onClick={() =>{
-                                                    container1fun()
+                    set_active_user_post(!active_user_post)
+                                         set_active_post(false)
+                         
+                          set_profile(false)      
+                                    container1fun()
  set_active_chat_bot(!active_chat_bot)}} title='chat with ai bot' size={23} className=' cursor-pointer text-sm' />
             </div>
             <div className='w-full'>
@@ -593,7 +606,7 @@ window.location.reload()
                         {/* search bar */}
                         <div className="px-3 md:w-full w-fit flex gap-3 items-center py-1 border rounded-xl border-black">
                             <CiSearch />
-                            <input type="text" onFocus={() => handle_all_user()} onChange={(e) => set_search_data(e.target.value)} className=' outline-0 w-full' />
+                            <input type="text" value={search_data} onFocus={() => handle_all_user()} onChange={(e) => set_search_data(e.target.value)} className=' outline-0 w-full' />
                         </div>
                         {/* setting */}
                         <div className='w-fit items-center flex gap-2 '>
@@ -622,10 +635,14 @@ window.location.reload()
                             {search_filter.map((items, index) => {
                                 return <div onClick={() => {
                                     set_friend_profile_data({})
+                                                                  container1fun()
 
+set_active_user_post(false)
+set_search_data("")
                                     set_friend_profile(true)
                                     set_friend_profile_data(items)
-                                    console.log(items, "profiledata")
+                                    set_search_filter(0)
+                                    set
                                 }} className='flex md:gap-3 gap-1 md:p-4 p-2  cursor-pointer hover:scale-105 duration-200 hover:shadow-2xl hover:shadow-green-200 duration-200 bg-white shadow rounded'>
 
                                     <div className='md:size-10 size-7 rounded bg-cover overflow-hidden'>
@@ -667,7 +684,9 @@ window.location.reload()
                         {
                             active_chat_bot && <div className=' w-full h-full bg-white '>
 
-                                <Chat_Bot_Screen Inactive_chat_screen={() => set_active_chat_bot(false)} />
+                                <Chat_Bot_Screen Inactive_chat_screen={() =>{
+                                  set_active_user_post(true)
+                                  set_active_chat_bot(false)}} />
 
                             </div>
                         }
@@ -683,10 +702,15 @@ window.location.reload()
 
 
                         {
-                            profile ?
-                                <Profile off_profile={() => set_profile(false)} />
-                                : (
-                                    <div className=' w-full h-full overflow-hidden'>
+                            profile &&
+                                <Profile off_profile={() => {
+                                  set_active_user_post(true)
+                                  set_profile(false)}} />
+                                 
+                        }
+
+                        {
+                          active_user_post &&<div className=' w-full h-full overflow-hidden'>
                                         <div className="sticky top-0 z-2 bg-gray-200 backdrop-blur-md py-6">
                                             <div className="absolute md:top-5 top-2 right-5">
                                                 {container1.active ? (
@@ -978,7 +1002,6 @@ window.location.reload()
 
                                         </div>
                                     </div>
-                                )
                         }
 
 
@@ -1022,7 +1045,7 @@ window.location.reload()
 
 
                                     </div>
-                                    <h1 className='text-center md:text-xl text-sm  font-extrabold text-gray-600  text-shadow-2xs'>News </h1>
+                                    <h1 className="text-center flex items-center justify-center md:gap-20 gap-10  z-2 md:text-xl text-[10px] font-extrabold text-gray-600">News </h1>
 
                                     <button onClick={() => set_active_feedback(true)} className='bg-black absolute md:right-4 right-2 top-4  text-white text-[10px]  md:py-2 py-1 rounded-xl hover:bg-gray-700 duration-150 cursor-pointer px-2 md:px-3' >add suggestion</button>
 
