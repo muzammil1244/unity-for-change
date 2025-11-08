@@ -1,11 +1,10 @@
 
 import { FaBug, FaBiohazard, FaPlusSquare, FaUser } from 'react-icons/fa';
-import { PiUserCircleLight } from "react-icons/pi";
+
 import { CiMenuKebab, CiSearch } from "react-icons/ci";
 import { SlLike, SlSizeActual, SlSizeFullscreen } from "react-icons/sl";
 import { MdOutlineModeComment } from "react-icons/md";
 import { HiArrowCircleUp } from "react-icons/hi";
-import { CgProfile } from "react-icons/cg";
 import { FaRegHeart } from "react-icons/fa6";
 import { LiaCommentsSolid } from "react-icons/lia";
 import { SiRobotframework } from "react-icons/si";
@@ -30,7 +29,6 @@ import { Login } from './login';
 import { CiLogout } from "react-icons/ci";
 import { Register } from './register';
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
-import { FaRegCircleUser } from "react-icons/fa6";
 import { BsStars } from "react-icons/bs";
 import { PostForm } from './post_up_cr';
 import { Friend_Profile } from './Friend_profile';
@@ -41,7 +39,6 @@ import { Zoom } from './Zoom_image';
 import { TEXT } from './TEXT';
 import { API } from '../../domain.js';
 import { Scroller } from './scroller.jsx';
-import { set } from 'mongoose';
 
 export const Home = () => {
     console.log("main api for fetching",API)
