@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 8000
 
 
 app.use(cors({
-  origin:"https://unity-for-change-client.onrender.com"
+  origin:"http://localhost:5173"
 }));
 
 const __filename = fileURLToPath(import.meta.url);
