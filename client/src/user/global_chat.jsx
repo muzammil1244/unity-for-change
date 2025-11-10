@@ -5,9 +5,10 @@ import { IoSendOutline } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsLayoutSidebarInsetReverse } from "react-icons/bs";
 import { BsLayoutSidebarInset } from "react-icons/bs";
-import { RiAttachmentFill } from "react-icons/ri";
+import { RiAttachmentFill, RiScrollToBottomLine } from "react-icons/ri";
 import { randomImage } from "../profileimage";
 import { API } from "../../domain.js";
+import { useRef } from "react";
 
 export const Global_chat = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -23,6 +24,13 @@ export const Global_chat = () => {
 
   console.log("Online Users:", onlineUsers);
   console.log("Messages:", messages);
+let lastMessage = useRef(null)
+
+useEffect(()=>{
+    const container = lastMessage.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }},[messages])
 
   useEffect(() => {
     if (!user_id) return;
@@ -118,7 +126,7 @@ export const Global_chat = () => {
               className="md:text-xl text-sm cursor-pointer"
               onClick={() => navigation(-1)}
             />
-            <h2 className="ml-2 md:text-sm text-[12px] font-bold">Online Users</h2>
+            <h2 className="ml-2 md:text-sm text-[10px] font-bold">Online Users</h2>
           </div>
 
 
@@ -134,11 +142,11 @@ export const Global_chat = () => {
               <img
                 src={user.profileImage && user.profileImage.trim() !== ""?user.profileImage:randomImage}
                 alt="profile"
-                className="w-10 h-10 rounded-full border border-gray-400"
+                className="md:w-10 md:h-10 h-7 w-7 rounded-full border border-gray-400"
               />
               <div>
-                <p className="font-medium">{user.username}</p>
-                <p className="text-xs text-gray-600">{user.email}</p>
+                <p className=" md:text-sm text-[12px] font-medium break-words">{user.username}</p>
+                <p className="md:text-sm text-[12px]  text-gray-600 break-words">{user.email}</p>
               </div>
             </div>
           ))}
@@ -148,7 +156,7 @@ export const Global_chat = () => {
       {/* Right Side - Chat Box */}
       <div className="col-span-3 flex flex-col overflow-y-scroll h-full">
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 overflow-y-scroll bg-gray-50">
+        <div ref={lastMessage} className="flex-1 overflow-y-auto p-4 space-y-3 overflow-y-scroll bg-gray-50">
           {messages.map((msg, i) => (
             <div
               key={i}

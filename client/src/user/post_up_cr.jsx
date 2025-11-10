@@ -4,7 +4,8 @@ import { MdOutlineEmojiEmotions } from "react-icons/md";
 import EmojiPicker from "emoji-picker-react";
 import { IoRemoveCircleOutline } from "react-icons/io5";
 import { API } from "../../domain.js";
-
+import { Scroller } from "./scroller.jsx";
+import { CiVideoOn } from "react-icons/ci";
 export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) => {
   const [postdata, setPostdata] = useState({
     title: "",
@@ -171,8 +172,12 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
   >
     {postdata.image.map((img, i) => (
       <div key={i} className="relative">
+        <h1></h1>
         <img
           src={img.preview}
+          onError={(e)=>{
+e.target.value =<CiVideoOn/>
+          }}
           alt={`preview-${i}`}
           className="w-full h-40 object-cover rounded-lg"
         />
@@ -220,12 +225,13 @@ export const PostForm = ({ mode = "create", postToUpdate = null, onSuccess }) =>
         </div>
 
         {/* Post Button */}
-        <button
+        {active_scroller?<div className=" md:h-8 md:w-8 h-5 w-5"><Scroller/> </div>: <button
           onClick={Postdata}
           className="bg-black cursor-pointer text-white px-4 py-1 rounded-full disabled:opacity-40 hover:bg-gray-600 transition"
         >
           {mode === "create" ? "Post" : "Update"}
-        </button>
+        </button>}
+       
       </div>
     </div>
   );

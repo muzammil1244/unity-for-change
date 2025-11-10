@@ -200,7 +200,6 @@ set_active_client_post_comment_scroller(true)
 
 
 
-    // search data handle  
 
 
     const navigate = useNavigate()
@@ -403,6 +402,9 @@ set_comment_data("")
    
     // ✅ Async function banayi fetch ke liye
     const fetchFollowingPosts = async () => {
+      set_all_post([])
+
+      set_loading(true)
       try {
         // 🔐 JWT token localStorage ya context se lo
         const token = localStorage.getItem("token"); // ya context se
@@ -416,14 +418,16 @@ set_comment_data("")
         });
 
         if (!response.ok) {
-          throw new Error("Server se sahi response nahi aaya");
+          
+          throw new Error("network problem ");
         }
 
         const data = await response.json();
-
         // ✅ Agar posts mil gaye toh state mein daal do
         if (data.length) {
             console.log(data)
+                  set_loading(false)
+
           set_all_post(data);
         }
       } catch (err) {
@@ -725,9 +729,9 @@ set_search_data("")
                                                 )}
                                             </div>
                                             <h1 className="text-center flex items-center justify-center md:gap-20 gap-10  z-2 md:text-xl text-[10px] font-extrabold text-gray-600">
-                                            <span onClick={fetchFollowingPosts} className='flex hover:opacity-50 duration-150 cursor-pointer items-center gap-3 md:gap-5'><RiUserFollowLine className='md:size-5'/>following </span> 
+                                            <span onClick={fetchFollowingPosts} className='flex select-none touch-none hover:opacity-50 duration-150  cursor-pointer items-center gap-3 md:gap-5'><RiUserFollowLine className='md:size-5'/>following </span> 
                                             
-                                            <span className='flex hover:opacity-50 duration-150 cursor-pointer items-center gap-5' onClick={()=>
+                                            <span className='select-none touch-none  hover:opacity-50 duration-150 cursor-pointer items-center gap-5' onClick={()=>
                                                 window.location.reload()
                                             }>Community Voices</span>   
                                             </h1>
@@ -1324,9 +1328,12 @@ set_search_data("")
                 active_post && (
                     <div className='w-full fixed h-full backdrop-blur-[4px] flex items-center justify-center absolute top-0 right-0 z-20 bg-black/30'>
 
-                        <ImCancelCircle className=' absolute md:size-5 size-5 top-9 left-10 text-white cursor-pointer ' onClick={() => set_active_post(false)} />
+                        <ImCancelCircle className=' absolute md:size-5 size-5 top-9 md:left-10 left-4 text-white cursor-pointer ' onClick={() =>   { window.location.reload() 
+                          set_active_post(false)}} />
 
-                        <PostForm mode='create' onSuccess={() => set_active_post(false)} />
+                        <PostForm mode='create' onSuccess={() => {
+                       
+                           set_active_post(false)}} />
                     </div>
                 )
             }

@@ -14,7 +14,6 @@ import { API } from "../../domain.js";
 
 export const Login = ({set_register_active,off_login})=>{
 
-  console.log("main url",API)
 const [active_spinner,set_active_spinner] = useState(false)
   const [login_data, set_login_data] = useState({
   user_email: "",
@@ -75,7 +74,7 @@ return console.log(err.message)
 {/* header */}
 
 <div className="w-full  flex relative justify-center py-4">
-    <IoMdArrowRoundBack onClick={off_login} className=" absolute cursor-pointer top-5 left-3 hover:scale-110"/>
+    <IoMdArrowRoundBack onClick={()=>window.location.reload()} className=" absolute cursor-pointer top-5 left-3 hover:scale-110"/>
     <h1 className="font-bold md:text-xl text-sm  border-b pb-2 flex gap-2 items-center  "> <IoIosLogIn/> Signin</h1>
 </div>
 <div>

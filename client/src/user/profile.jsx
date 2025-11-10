@@ -388,7 +388,7 @@ console.log("profile_data",profile_data)
                                                         set_active_liked_post(false)
 
                     }} className="">
-                        <h1 className=" md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center  hover:text-black  duration-200 gap-[2px]  md:gap-2"> <HiOutlineUserGroup /> following <span className="md:text-sm text-[12px]">{profile_data.following?.length || 0}</span></h1>
+                        <h1 className=" select-none touch-none md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center  hover:text-black  duration-200 gap-[2px]  md:gap-2"> <HiOutlineUserGroup /> following <span className="md:text-sm text-[12px]">{profile_data.following?.length || 0}</span></h1>
 
                     </div>
                     <div onClick={() => {
@@ -399,7 +399,7 @@ console.log("profile_data",profile_data)
 
                     }} className="">
 
-                        <h1 className=" md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center hover:text-black  duration-200 gap-[2px] md:gap-2"> <HiOutlineUserGroup /> follower <span className="md:text-sm text-[12px]">{profile_data.followers?.length || 0}</span></h1>
+                        <h1 className=" select-none touch-none md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center hover:text-black  duration-200 gap-[2px] md:gap-2"> <HiOutlineUserGroup /> follower <span className="md:text-sm text-[12px]">{profile_data.followers?.length || 0}</span></h1>
                     </div>
 
                     <div onClick={() => {
@@ -411,7 +411,7 @@ console.log("profile_data",profile_data)
 
                     }} className="">
 
-                        <h1 className=" md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center hover:text-black  duration-200 gap-[2px] md:gap-2"> <CgLayoutGridSmall /> post <span className="md:text-sm text-[12px]">{posts_all.length}</span></h1>
+                        <h1 className=" select-none touch-none md:text-sm text-[12px] flex cursor-pointer text-gray-500 items-center hover:text-black  duration-200 gap-[2px] md:gap-2"> <CgLayoutGridSmall /> post <span className="md:text-sm text-[12px]">{posts_all.length}</span></h1>
                     </div>
                 </div>
                     
@@ -427,14 +427,14 @@ console.log("profile_data",profile_data)
                         set_active_following_list(false)
                                                 set_active_commented_post(false)
 
-                            }} className="md:text-sm text-[12px] flex gap-2 items-center hover:text-gray-800 font-semibold lack text-gray-700 cursor-pointer  "><FaRegHeart />  like posts</h1>
+                            }} className="md:text-sm text-[12px] flex gap-2 items-center select-none touch-none hover:text-gray-800 font-semibold lack text-gray-700 cursor-pointer  "><FaRegHeart />  like posts</h1>
                             <h1  onClick={()=>{
                                 set_active_liked_post(false)
                                   set_active_your_post(false)
                         set_follower_list(false)
                         set_active_following_list(false)
                         set_active_commented_post(true)
-                            }} className="md:text-sm text-[12px] flex gap-2 my-2 items-center hover:text-gray-800 lack font-semibold text-gray-700 cursor-pointer "><LiaCommentsSolid /> comment posts</h1>
+                            }} className="md:text-sm text-[12px] flex gap-2 my-2 items-center select-none touch-none hover:text-gray-800 lack font-semibold text-gray-700 cursor-pointer "><LiaCommentsSolid /> comment posts</h1>
 
                         </div>
 
@@ -458,7 +458,7 @@ console.log("profile_data",profile_data)
 {/* heading and icon */}
 
 <div onClick={()=>set_active_aboute(!active_aboute)} className="flex bg-white/50 mb-3 px-2 py-1 rounded border w-fit cursor-pointer  border-gray-500 backdrop-blur-[4px] items-center gap-2" >
-    <h1 className=" font-bold md:text-sm text-[12px] text-gray-500  ">about user</h1>
+    <h1 className=" select-none touch-none font-bold md:text-sm text-[12px] text-gray-500  ">about user</h1>
 </div>
 {/* user about section */}
 <p className=" md:text-sm  text-[11px] ">

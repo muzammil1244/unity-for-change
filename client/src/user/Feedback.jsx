@@ -46,8 +46,8 @@ export const Feedback = ({is_active}) => {
   };
 
   return (
-    <div className="flex relative md:w-1/2 w-[100%] justify-center flex-col items-center min-h-screen bg-gradient-to-br bg-white p-4">
-     <MdOutlineCancel onClick={is_active} className=" absolute top-4 left-4 size-5 text-gray-500  cursor-pointer"/>
+    <div className="flex relative md:w-1/2 w-[100%] justify-center flex-col items-center min-h-screen bg-gradient-to-br bg-transparent p-4">
+     <MdOutlineCancel onClick={is_active} className=" absolute top-8 left-4 size-5 text-white  cursor-pointer"/>
      
      <h1 className="text-gray-500 font-bold ">We Value Your <span className="text-gray-700">Feedback</span>  </h1>   
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
