@@ -110,7 +110,7 @@ console.log(suggestionId)
           {/* === DROPDOWN MENU === */}
           {menuIndex === index && (
             <div
-              className="absolute left-top-1 bg-white shadow-xl rounded-lg w-36 flex flex-col z-50 border border-gray-100 overflow-hidden"
+              className="absolute bottom-3 right-5 bg-white shadow-xl rounded-lg w-36 flex flex-col z-50 border border-gray-100 overflow-hidden"
               style={{ maxWidth: "200px" }}
             >
               <button
