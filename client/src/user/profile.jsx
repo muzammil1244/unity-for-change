@@ -279,6 +279,7 @@ set_loading(true)
 
 
 
+     handle_All_user_posts()
 
 
           

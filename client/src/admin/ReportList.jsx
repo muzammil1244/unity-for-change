@@ -11,16 +11,15 @@ export const ReportList = ({activeMessage}) => {
   const [menuOpen, setMenuOpen] = useState(null);
   const [viewPost, setViewPost] = useState(null);
 
-  const handleDelete = (item) => {
+  const handleDelete = async(item) => {
 
-    const data = fetch(`${API}/api/${item}/admin//news`)
+    const data = await fetch(`${API}/api/${item}/admin//news`)
 
 fetchReports()
 
     };
 
 
-  console.log("reports ",reposts)
   const fetchReports = async () => {
     try {
       const response = await fetch(`${API}/api/admin/reports`);

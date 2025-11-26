@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MdOutlineCancel } from "react-icons/md";
+import { API } from "../../domain";
 
 export const Feedback = ({is_active}) => {
   const [suggestion, setSuggestion] = useState("");
@@ -22,7 +23,7 @@ export const Feedback = ({is_active}) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // 👈 agar token use karte ho
+          Authorization: ` Bearer ${localStorage.getItem("token")}`, // 👈 agar token use karte ho
         },
         body: JSON.stringify({ suggestion }),
       });

@@ -92,7 +92,7 @@ navigate("/")
     const res = await fetch(`${API}/api/admin/${id}/message`, {
       method: "DELETE",
     });
-
+ messageport()
     const data = await res.json();
     console.log(data.message);
   } catch (err) {
@@ -149,10 +149,7 @@ set_active_view_post(true)
 set_post_data(items)
 }
 
-
-  useEffect(()=>{
-
-    const messageport=async()=>{
+  const messageport=async()=>{
 
 const data = await fetch(`${API}/api/admin/reports`,{
 method:"GET",
@@ -166,6 +163,9 @@ console.log(" reportmesages",repordata[0].report)
 setReposts(repordata[0].report)
 
     }
+  useEffect(()=>{
+
+  
 
     messageport()
 
@@ -290,7 +290,6 @@ return(
                 </button>
                 <button
                   onClick={() =>{
-console.log("delted post id ",item.report_by_id._id)
                     handleDelete(item.report_by_id._id)
                   } }
                   className="w-full text-sm text-left px-4 py-1 hover:bg-gray-100"
